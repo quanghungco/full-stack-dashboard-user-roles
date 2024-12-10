@@ -3,11 +3,14 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
-import { Class, Prisma, Subject, Teacher } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";
+import { Class, Subject, Teacher} from "@prisma/client/wasm";
+
+
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -78,7 +81,7 @@ const TeacherListPage = async ({
       </td>
       <td className="hidden md:table-cell">{item.username}</td>
       <td className="hidden md:table-cell">
-        {item.subjects.map((subject) => subject.name).join(",")}
+        {item.subjects.map((subject: { name: any; }) => subject.name).join(",")}
       </td>
       <td className="hidden md:table-cell">
         {item.classes.map((classItem) => classItem.name).join(",")}
