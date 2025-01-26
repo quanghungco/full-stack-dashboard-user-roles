@@ -8,12 +8,76 @@ import {
   SubjectSchema,
   TeacherSchema,
   LessonSchema,
-  ParentSchema
+  ParentSchema,
+  AnnouncementSchema
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
 
 type CurrentState = { success: boolean; error: boolean };
+
+export const createAnnouncement = async (
+  currentState: CurrentState,
+  data: AnnouncementSchema
+) => {
+  try {
+    await prisma.announcement.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        date: data.date,
+      },
+    });
+
+    // revalidatePath("/list/announcements");
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
+  }
+};
+
+export const updateAnnouncement = async (
+  currentState: CurrentState,
+  data: AnnouncementSchema
+) => {
+  try {
+    await prisma.announcement.update({
+      where: {
+        id: Number(data.id), // Ensure id is a number
+      },
+      data: {
+        title: data.title,
+        description: data.description,
+        date: data.date,
+      },
+    });
+
+    // revalidatePath("/list/announcements");
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
+  }
+};
+
+export const deleteAnnouncement = async (
+  currentState: CurrentState,
+  id: string
+) => {
+  try {
+    await prisma.announcement.delete({
+      where: {
+        id: Number(id), // Ensure id is a number
+      },
+    });
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
+  }
+};
+
 
 export const createSubject = async (
   currentState: CurrentState,

@@ -39,7 +39,6 @@ const StudentForm = ({
   );
 
   const onSubmit = handleSubmit((data) => {
-    // console.log("dsfhjhdsa", data);
     formAction(data); // Submit data to the database
   });
 
@@ -50,23 +49,19 @@ const StudentForm = ({
       toast(`Student has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
-    } else {
-      toast(
-        `Student has been ${type !== "create" ? "Not created" : "Not updated"}!`
-      );
+    } else if (state.error) {
+      toast(`Student has not been ${type === "create" ? "created" : "updated"}!`);
     }
   }, [state, router, type, setOpen]);
 
   const { grades, classes } = relatedData || {};
 
   return (
-    <form className="flex flex-col gap-8" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-4" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create a new student" : "Update the student"}
       </h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
+      <span className="text-xs text-gray-400 font-medium">Authentication Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="Username"
@@ -91,9 +86,7 @@ const StudentForm = ({
           error={errors?.password}
         />
       </div>
-      <span className="text-xs text-gray-400 font-medium">
-        Personal Information
-      </span>
+      <span className="text-xs text-gray-400 font-medium">Personal Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="First Name"
@@ -123,13 +116,26 @@ const StudentForm = ({
           register={register}
           error={errors.address}
         />
-        <InputField
-          label="Blood Type"
-          name="bloodType"
-          defaultValue={data?.bloodType}
-          register={register}
-          error={errors.bloodType}
-        />
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Blood Group</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("bloodType")}
+            defaultValue={data?.bloodType}
+          >
+            <option value="A_positive">A[+] positive</option>
+            <option value="A_negative">A[-] negative</option>
+            <option value="B_positive">B[+] positive</option>
+            <option value="B_negative">B[-] negative</option>
+            <option value="O_positive">O[+] positive</option>
+            <option value="O_negative">O[-] negative</option>
+            <option value="AB_positive">AB[+] positive</option>
+            <option value="AB_negative">AB[-] negative</option>
+          </select>
+          {errors.bloodType?.message && (
+            <p className="text-xs text-red-400">{errors.bloodType.message.toString()}</p>
+          )}
+        </div>
         <InputField
           label="Birthday"
           name="birthday"
@@ -166,9 +172,7 @@ const StudentForm = ({
             <option value="FEMALE">Female</option>
           </select>
           {errors.sex?.message && (
-            <p className="text-xs text-red-400">
-              {errors.sex.message.toString()}
-            </p>
+            <p className="text-xs text-red-400">{errors.sex.message.toString()}</p>
           )}
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4">
@@ -185,9 +189,7 @@ const StudentForm = ({
             ))}
           </select>
           {errors.gradeId?.message && (
-            <p className="text-xs text-red-400">
-              {errors.gradeId.message.toString()}
-            </p>
+            <p className="text-xs text-red-400">{errors.gradeId.message.toString()}</p>
           )}
         </div>
         <div className="flex flex-col gap-2 w-full md:w-1/4">
@@ -205,22 +207,17 @@ const StudentForm = ({
                 _count: { students: number };
               }) => (
                 <option value={classItem.id} key={classItem.id}>
-                  {classItem.name} - {classItem._count.students}/
-                  {classItem.capacity} Capacity
+                  {classItem.name} - {classItem._count.students}/{classItem.capacity} Capacity
                 </option>
               )
             )}
           </select>
           {errors.classId?.message && (
-            <p className="text-xs text-red-400">
-              {errors.classId.message.toString()}
-            </p>
+            <p className="text-xs text-red-400">{errors.classId.message.toString()}</p>
           )}
         </div>
       </div>
-      {state.error && (
-        <span className="text-red-500">Something went wrong!</span>
-      )}
+      {state.error && <span className="text-red-500">Something went wrong!</span>}
       <button type="submit" className="bg-blue-400 text-white p-2 rounded-md">
         {type === "create" ? "Create" : "Update"}
       </button>

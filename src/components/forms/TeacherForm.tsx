@@ -39,8 +39,8 @@ const TeacherForm = ({
   );
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     formAction(data); // Submit data to the database
+    console.log(data);
   });
 
   const router = useRouter();
@@ -180,7 +180,7 @@ const TeacherForm = ({
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Subjects</label>
           <select
-            
+            multiple
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("subjects")}
             defaultValue={data?.subjects}

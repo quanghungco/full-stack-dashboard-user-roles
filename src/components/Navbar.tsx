@@ -1,6 +1,7 @@
 import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = async () => {
   const user = await currentUser();
@@ -21,7 +22,9 @@ const Navbar = async () => {
           <Image src="/message.png" alt="" width={20} height={20} />
         </div>
         <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer relative">
+          <Link href={"/announcements"} >
           <Image src="/announcement.png" alt="" width={20} height={20} />
+          </Link>
           <div className="absolute -top-3 -right-3 w-5 h-5 flex items-center justify-center bg-purple-500 text-white rounded-full text-xs">
             1
           </div>
