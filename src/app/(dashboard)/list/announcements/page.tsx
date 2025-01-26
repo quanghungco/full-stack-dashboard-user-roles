@@ -4,12 +4,12 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Announcement, Class, Prisma } from "@prisma/client";
+import { Announcement, Prisma } from "@prisma/client";
 import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 
 
-type AnnouncementList = Announcement & { class: Class };
+type AnnouncementList = Announcement;
 const AnnouncementListPage = async ({
   searchParams,
 }: {
@@ -26,8 +26,8 @@ const AnnouncementListPage = async ({
       accessor: "title",
     },
     {
-      header: "Class",
-      accessor: "class",
+      header: "Description", // Corrected spelling from "Discription" to "Description"
+      accessor: "description", // Corrected accessor from "discription" to "description"
     },
     {
       header: "Date",
@@ -49,9 +49,9 @@ const AnnouncementListPage = async ({
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center gap-4 p-4">{item.title}</td>
-      <td>{item.class?.name || "-"}</td>
-      <td className="hidden md:table-cell">
+      <td className="flex items-center p-4">{item.title}</td>
+      <td className="hidden md:table-cell w-1/4 gap-4">{item.description}</td> {/* Updated to display description */}
+      <td className="hidden md:table-cell gap-4 ">
         {new Intl.DateTimeFormat("en-US").format(item.date)}
       </td>
       <td>
@@ -88,27 +88,9 @@ const AnnouncementListPage = async ({
     }
   }
 
-  // ROLE CONDITIONS
-
-  const roleConditions = {
-    teacher: { lessons: { some: { teacherId: currentUserId! } } },
-    student: { students: { some: { id: currentUserId! } } },
-    parent: { students: { some: { parentId: currentUserId! } } },
-  };
-
-  query.OR = [
-    { classId: null },
-    {
-      class: roleConditions[role as keyof typeof roleConditions] || {},
-    },
-  ];
-
   const [data, count] = await prisma.$transaction([
     prisma.announcement.findMany({
       where: query,
-      include: {
-        class: true,
-      },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),

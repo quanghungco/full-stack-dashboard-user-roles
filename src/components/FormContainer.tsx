@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import FormModal from "./FormModal";
 import { auth } from "@clerk/nextjs/server";
-import LessonForm from "./forms/LessonForm";
 
 export type FormContainerProps = {
   table:
@@ -31,6 +30,13 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
 
   if (type !== "delete") {
     switch (table) {
+
+      case "announcement":
+        const announcementClasses = await prisma.class.findMany({
+          select: { id: true, name: true },
+        });
+        relatedData = { classes: announcementClasses };
+        break;
       case "subject":
         const subjectTeachers = await prisma.teacher.findMany({
           select: { id: true, name: true, surname: true },
@@ -93,7 +99,7 @@ const FormContainer = async ({ table, type, data, id }: FormContainerProps) => {
   }
 
   return (
-    <div className="">
+    <div className="h-fit">
       <FormModal
         table={table}
         type={type}

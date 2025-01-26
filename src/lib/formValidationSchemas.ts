@@ -1,25 +1,16 @@
 import { z } from "zod";
 
-
-
 export const subjectSchema = z.object({
-
   id: z.coerce.number().optional(),
 
   name: z.string().min(1, { message: "Subject name is required!" }),
 
   teachers: z.array(z.string()), //teacher ids
-
 });
-
-
 
 export type SubjectSchema = z.infer<typeof subjectSchema>;
 
-
-
 export const classSchema = z.object({
-
   id: z.coerce.number().optional(),
 
   name: z.string().min(1, { message: "Class name is required!" }),
@@ -29,17 +20,11 @@ export const classSchema = z.object({
   gradeId: z.coerce.number().min(1, { message: "Grade ID is required!" }),
 
   supervisorId: z.coerce.string().optional(),
-
 });
-
-
 
 export type ClassSchema = z.infer<typeof classSchema>;
 
-
-
 export const teacherSchema = z.object({
-
   id: z.string().optional(),
 
   username: z
@@ -87,17 +72,22 @@ export const teacherSchema = z.object({
   sex: z.enum(["MALE", "FEMALE"], { message: "Sex is required!" }),
 
   subjects: z.array(z.string()).optional(), // subject ids
-
 });
-
-
 
 export type TeacherSchema = z.infer<typeof teacherSchema>;
 
-
+export const announcementSchema = z.object({
+  id: z.string().optional(),
+  
+  title: z.string().min(1, { message: "Title is required!" }),
+  
+  description: z.string().min(1, { message: "Description is required!" }),
+  
+  date: z.coerce.date({ message: "Date is required!" }),
+});
+export type AnnouncementSchema = z.infer<typeof announcementSchema>;
 
 export const studentSchema = z.object({
-
   id: z.string().optional(),
 
   username: z
@@ -149,22 +139,24 @@ export const studentSchema = z.object({
   classId: z.coerce.number().min(1, { message: "Class is required!" }),
 
   parentId: z.string().min(1, { message: "Parent Id is required!" }),
-
 });
-
-
 
 export type StudentSchema = z.infer<typeof studentSchema>;
 
-
-
 export const lessonSchema = z.object({
-
   id: z.number().optional(),
 
   name: z.string().min(1, "Name is required"),
 
-  day: z.enum(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]),
+  day: z.enum([
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY",
+  ]),
 
   startTime: z.string().min(1, "Start time is required"),
 
@@ -175,19 +167,11 @@ export const lessonSchema = z.object({
   classId: z.number(),
 
   teacherId: z.string(),
-
 });
-
-
-
-
 
 export type LessonSchema = z.infer<typeof lessonSchema>;
 
-
-
 export const examSchema = z.object({
-
   id: z.coerce.number().optional(),
 
   title: z.string().min(1, { message: "Title name is required!" }),
@@ -197,17 +181,11 @@ export const examSchema = z.object({
   endTime: z.coerce.date({ message: "End time is required!" }),
 
   lessonId: z.coerce.number({ message: "Lesson is required!" }),
-
 });
-
-
 
 export type ExamSchema = z.infer<typeof examSchema>;
 
-
-
 export const parentSchema = z.object({
-
   id: z.string().optional(),
 
   username: z.string().min(1, "Username is required"),
@@ -225,11 +203,6 @@ export const parentSchema = z.object({
   address: z.string().nullable().optional(), // Allow null
 
   // Add any other fields as necessary
-
 });
 
-
-
 export type ParentSchema = z.infer<typeof parentSchema>;
-
-

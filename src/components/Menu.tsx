@@ -1,8 +1,23 @@
+// Menu.tsx (Server Component)
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
+import DropdownToggle from "./DropdownToggle";
 
-const menuItems = [
+// Define the structure of the menu items
+interface MenuItem {
+  icon: string;
+  label: string;
+  href: string;
+  visible: string[];
+}
+
+interface MenuSection {
+  title: string;
+  items: MenuItem[];
+}
+
+const menuItems: MenuSection[] = [
   {
     title: "MENU",
     items: [
@@ -10,6 +25,12 @@ const menuItems = [
         icon: "/home.png",
         label: "Home",
         href: "/",
+        visible: ["admin", "teacher", "student", "parent"],
+      },
+      {
+        icon: "/announcement.png",
+        label: "Announcements",
+        href: "/list/announcements",
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
@@ -84,12 +105,7 @@ const menuItems = [
         href: "/list/messages",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/announcement.png",
-        label: "Announcements",
-        href: "/list/announcements",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+
     ],
   },
   {
@@ -120,28 +136,16 @@ const menuItems = [
 const Menu = async () => {
   const user = await currentUser();
   const role = user?.publicMetadata.role as string;
+
   return (
     <div className="mt-4 text-sm">
-      {menuItems.map((i) => (
-        <div className="flex flex-col gap-2" key={i.title}>
-          <span className="hidden lg:block text-gray-400 font-light my-4">
-            {i.title}
-          </span>
-          {i.items.map((item) => {
-            if (item.visible.includes(role)) {
-              return (
-                <Link
-                  href={item.href}
-                  key={item.label}
-                  className="flex items-center justify-center lg:justify-start gap-4 text-gray-500 py-2 md:px-2 rounded-md hover:bg-lamaSkyLight"
-                >
-                  <Image src={item.icon} alt="" width={20} height={20} />
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
-              );
-            }
-          })}
-        </div>
+      {menuItems.map((section) => (
+        <DropdownToggle
+          key={section.title}
+          title={section.title}
+          items={section.items}
+          role={role}
+        />
       ))}
     </div>
   );
