@@ -36,6 +36,8 @@ const CountChart = ({ boys, girls }: { boys: number; girls: number }) => {
           outerRadius="100%"
           barSize={32}
           data={data}
+          startAngle={180} 
+          endAngle={-180}
         >
           <RadialBar background dataKey="count" />
         </RadialBarChart>

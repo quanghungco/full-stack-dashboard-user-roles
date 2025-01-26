@@ -75,12 +75,23 @@ const LessonForm = ({
           register={register}
           error={errors?.name}
         />
-        <InputField
-          label="Day"
-          name="day"
-          defaultValue={data?.day}
-          register={register}
-        />
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Day</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("day")}
+            defaultValue={data?.day}
+          >
+            <option value="">Select Day</option>
+            <option value="MONDAY">Monday</option>
+            <option value="TUESDAY">Tuesday</option>
+            <option value="WEDNESDAY">Wednesday</option>
+            <option value="THURSDAY">Thursday</option>
+            <option value="FRIDAY">Friday</option>
+            <option value="SATURDAY">Saturday</option>
+            <option value="SUNDAY">Sunday</option>
+          </select>
+        </div>
         <InputField
           label="Start Time"
           name="startTime"
@@ -95,34 +106,55 @@ const LessonForm = ({
           register={register}
           type="datetime-local"
         />
-        <select {...register("subjectId")} defaultValue={data?.subjectId}>
-          <option value="">Select Subject</option>
-          {relatedData?.subjects?.map((subject: { id: string }) => (
+
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Subject</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("subjectId")} 
+            defaultValue={data?.subjectId}
+          >
+          {relatedData?.subjects?.map((subject: { id: string; name: string }) => (
             <option key={subject.id} value={subject.id}>
-              {subject.id}
+              {subject.name}
             </option>
           ))}
-        </select>
-        <select {...register("classId")} defaultValue={data?.classId}>
-          <option value="">Select Class</option>
-          {relatedData?.classes?.map(
-            (classItem: { id: string; name: string }) => (
-              <option key={classItem.id} value={classItem.id}>
-                {classItem.id}
-              </option>
-            )
-          )}
-        </select>
-        <select {...register("teacherId")} defaultValue={data?.teacherId}>
-          <option value="">Select Teacher</option>
-          {relatedData?.teachers?.map(
-            (teacher: { id: string; name: string; surname: string }) => (
-              <option key={teacher.id} value={teacher.id}>
-                {teacher.id}
-              </option>
-            )
-          )}
-        </select>
+          </select>
+        </div>
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Class</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("classId")}
+            defaultValue={data?.classId}
+          >
+            <option value="">Select Class</option>
+            {relatedData?.classes?.map(
+              (classItem: { id: string; name: string }) => (
+                <option key={classItem.id} value={classItem.id}>
+                  {classItem.name}
+                </option>
+              )
+            )}
+          </select>
+        </div>
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Teacher</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("teacherId")}
+            defaultValue={data?.teacherId}
+          >
+            <option value="">Select Teacher</option>
+            {relatedData?.teachers?.map(
+              (teacher: { id: string; name: string; surname: string }) => (
+                <option key={teacher.id} value={teacher.id}>
+                  {teacher.name} {teacher.surname}
+                </option>
+              )
+            )}
+          </select>
+        </div>
       </div>
       {state.error && (
         <span className="text-red-500">Something went wrong!</span>
