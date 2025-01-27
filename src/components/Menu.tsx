@@ -45,12 +45,12 @@ const menuItems: MenuSection[] = [
         href: "/list/students",
         visible: ["admin", "teacher"],
       },
-      {
-        icon: "/parent.png",
-        label: "Parents",
-        href: "/list/parents",
-        visible: ["admin", "teacher"],
-      },
+      // {
+      //   icon: "/parent.png",
+      //   label: "Parents",
+      //   href: "/list/parents",
+      //   visible: ["admin", "teacher"],
+      // },
       {
         icon: "/subject.png",
         label: "Subjects",
@@ -67,7 +67,7 @@ const menuItems: MenuSection[] = [
         icon: "/lesson.png",
         label: "Lessons",
         href: "/list/lessons",
-        visible: ["admin", "teacher"],
+        visible: ["teacher"],
       },
       {
         icon: "/exam.png",
@@ -79,7 +79,7 @@ const menuItems: MenuSection[] = [
         icon: "/assignment.png",
         label: "Assignments",
         href: "/list/assignments",
-        visible: ["admin", "teacher", "student", "parent"],
+        visible: [ "teacher", "student", "parent"],
       },
       {
         icon: "/result.png",
@@ -99,12 +99,12 @@ const menuItems: MenuSection[] = [
         href: "/list/events",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/message.png",
-        label: "Messages",
-        href: "/list/messages",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: "/message.png",
+      //   label: "Messages",
+      //   href: "/list/messages",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
 
     ],
   },
