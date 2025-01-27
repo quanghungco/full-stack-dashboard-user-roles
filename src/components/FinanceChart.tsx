@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -83,7 +83,7 @@ const FinanceChart = () => {
         <Image src="/moreDark.png" alt="" width={20} height={20} />
       </div>
       <ResponsiveContainer width="100%" height="90%">
-        <LineChart
+        <BarChart
           width={500}
           height={300}
           data={data}
@@ -114,19 +114,9 @@ const FinanceChart = () => {
             verticalAlign="top"
             wrapperStyle={{ paddingTop: "10px", paddingBottom: "30px" }}
           />
-          <Line
-            type="monotone"
-            dataKey="income"
-            stroke="#27B6E9"
-            strokeWidth={5}
-          />
-          <Line
-            type="monotone"
-            dataKey="expense"
-            stroke="#A09EF5"
-            strokeWidth={5}
-          />
-        </LineChart>
+          <Bar dataKey="income" fill="#27B6E9" barSize={20} />
+          <Bar dataKey="expense" fill="#A09EF5" barSize={20} />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );
