@@ -4,11 +4,13 @@ import { auth } from "@clerk/nextjs/server";
 const Announcements = async () => {
   const { userId, sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
+  // console.log("hdsajhjds =====", sessionClaims);
+  
 
   const roleConditions = {
     teacher: { lessons: { some: { teacherId: userId! } } },
     student: { students: { some: { id: userId! } } },
-    parent: { students: { some: { parentId: userId! } } },
+    // parent: { students: { some: { parentId: userId! } } },
   };
 
   const data = await prisma.announcement.findMany({

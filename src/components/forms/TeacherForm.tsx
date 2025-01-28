@@ -128,14 +128,14 @@ const TeacherForm = ({
             defaultValue={data?.bloodType}
           >
             
-            <option value="A_positive">A[+] positive</option>
-            <option value="A_negative">A[-] negative</option>
-            <option value="B_positive">B[+] positive</option>
-            <option value="B_negative">B[-] negative</option>
-            <option value="O_positive">O[+] positive</option>
-            <option value="O_negative">O[-] negative</option>
-            <option value="AB_positive">AB[+] positive</option>
-            <option value="AB_negative">AB[-] negative</option>
+            <option value="A(+ve)">A(+ve)</option>
+            <option value="A(-ve)">A(-ve)</option>
+            <option value="B(+ve)">B(+ve)</option>
+            <option value="B(-ve)">B(-ve)</option>
+            <option value="O(+ve)">O(+ve)</option>
+            <option value="O(-ve)">O(-ve)</option>
+            <option value="AB(+ve)">AB(+ve)</option>
+            <option value="AB(-ve)">AB(-ve)</option>
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">
@@ -143,12 +143,13 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+            {/* Joining Date */}
         <InputField
-          label="Birthday"
-          name="birthday"
-          defaultValue={data?.birthday?.toISOString().split("T")[0]}
+          label="Joining Date"
+          name="joiningDate"
+          defaultValue={data?.joiningDate?.toISOString().split("T")[0]}
           register={register}
-          error={errors.birthday}
+          error={errors.joiningDate}
           type="date"
         />
         {data && (

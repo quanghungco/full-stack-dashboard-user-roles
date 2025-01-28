@@ -24,8 +24,8 @@ model Student {
   bloodType   String
   sex         UserSex
   createdAt   DateTime     @default(now())
-  parentId    String
-  parent      Parent       @relation(fields: [parentId], references: [id])
+  parentNId   Int?
+  parentName  String?
   classId     Int
   class       Class        @relation(fields: [classId], references: [id])
   gradeId     Int
@@ -50,7 +50,7 @@ model Teacher {
   subjects  Subject[]
   lessons   Lesson[]
   classes   Class[]
-  birthday  DateTime
+  joiningDate  DateTime?
 }
 
 model Parent {
@@ -62,7 +62,6 @@ model Parent {
   phone     String    @unique
   address   String
   createdAt DateTime  @default(now())
-  students  Student[]
 }
 
 model Grade {

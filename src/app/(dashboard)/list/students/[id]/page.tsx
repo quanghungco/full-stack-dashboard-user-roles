@@ -10,6 +10,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { FaPhoneAlt } from "react-icons/fa";
+import { HiCalendarDateRange } from "react-icons/hi2";
+import { IoMail } from "react-icons/io5";
+import { MdBloodtype, MdOutlineBloodtype } from "react-icons/md";
 
 const SingleStudentPage = async ({
   params: { id },
@@ -41,14 +45,14 @@ const SingleStudentPage = async ({
         {/* TOP */}
         <div className="flex flex-col lg:flex-row gap-4">
           {/* USER INFO CARD */}
-          <div className="bg-lamaSky py-6 px-4 rounded-md flex-1 flex gap-4">
+          {/* <div className="bg-lamaSky py-6 px-4 rounded-md flex-1 flex gap-4">
             <div className="w-1/3">
               <Image
                 src={student.img || "/noAvatar.png"}
                 alt=""
                 width={144}
                 height={144}
-                className="w-36 h-36 rounded-full object-cover"
+                className="w-36 h-30 rounded-full object-cover"
               />
             </div>
             <div className="w-2/3 flex flex-col justify-between gap-4">
@@ -82,6 +86,61 @@ const SingleStudentPage = async ({
                   <Image src="/phone.png" alt="" width={14} height={14} />
                   <span>{student.phone || "-"}</span>
                 </div>
+              </div>
+            </div>
+          </div> */}
+
+          <div className="bg-lamaSky py-6 px-4 rounded-md lg:max-w-[400px] w-full">
+            <div className=" flex-1 flex gap-4">
+              <div className="w-1/3">
+                <Image
+                  src={student.img || "/noAvatar.png"}
+                  alt=""
+                  width={144}
+                  height={144}
+                  className="w-36 h-30 rounded-full object-cover"
+                />
+              </div>
+              <div className="w-2/3 flex flex-col justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-4">
+                    <h1 className="text-xl font-semibold">
+                      {student.name + " " + student.surname}
+                    </h1>
+                    {role === "admin" && (
+                      <FormContainer
+                        table="teacher"
+                        type="update"
+                        data={student}
+                      />
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="items-center text-xs font-medium mt-5 flex flex-col gap-2">
+              <div className="w-full  flex items-center gap-2">
+                <MdBloodtype className="h-[18px] w-[18px]" />
+                <span>Blood: {student.bloodType}</span>
+              </div>
+              <div className="w-full  flex items-center gap-2">
+                <HiCalendarDateRange className="h-4 w-4" />
+                <span>
+                  Birth Date:{" "}
+                  {new Intl.DateTimeFormat("en-GB").format(student.birthday)}
+                </span>
+              </div>
+              <div className=" w-full flex items-center gap-2">
+                
+                  <IoMail className="w-4 h-4" /> <span>Email: {student.email || "-"}</span>
+             
+              </div>
+              <div className="w-full  flex items-center gap-2">
+                <FaPhoneAlt className="w-4 h-4" />
+                <span>Phone: {student.phone || "-"}</span>
               </div>
             </div>
           </div>
@@ -192,7 +251,7 @@ const SingleStudentPage = async ({
           </div>
         </div>
         <Performance />
-        <Announcements />
+        {/* <Announcements /> */}
       </div>
     </div>
   );

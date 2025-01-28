@@ -69,7 +69,7 @@ async function main() {
         sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
         subjects: { connect: [{ id: (i % 10) + 1 }] }, 
         classes: { connect: [{ id: (i % 6) + 1 }] }, 
-        birthday: new Date(new Date().setFullYear(new Date().getFullYear() - 30)),
+        joiningDate: new Date(new Date().setFullYear(new Date().getFullYear() - 30)),
       },
     });
   }
@@ -121,7 +121,8 @@ async function main() {
         address: `Address${i}`,
         bloodType: "O-",
         sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
-        parentId: `parentId${Math.ceil(i / 2) % 25 || 25}`, 
+        parentName: `ParentName${Math.ceil(i / 2)}`,
+        parentNId: Math.ceil(i / 2), 
         gradeId: (i % 6) + 1, 
         classId: (i % 6) + 1, 
         birthday: new Date(new Date().setFullYear(new Date().getFullYear() - 10)),

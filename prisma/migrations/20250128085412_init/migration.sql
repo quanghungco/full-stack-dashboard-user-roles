@@ -25,7 +25,8 @@ CREATE TABLE "Student" (
     "bloodType" TEXT NOT NULL,
     "sex" "UserSex" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "parentId" TEXT NOT NULL,
+    "parentNId" INTEGER,
+    "parentName" TEXT,
     "classId" INTEGER NOT NULL,
     "gradeId" INTEGER NOT NULL,
     "birthday" TIMESTAMP(3) NOT NULL,
@@ -46,7 +47,7 @@ CREATE TABLE "Teacher" (
     "bloodType" TEXT NOT NULL,
     "sex" "UserSex" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "birthday" TIMESTAMP(3) NOT NULL,
+    "joiningDate" TIMESTAMP(3),
 
     CONSTRAINT "Teacher_pkey" PRIMARY KEY ("id")
 );
@@ -222,9 +223,6 @@ CREATE UNIQUE INDEX "Subject_name_key" ON "Subject"("name");
 
 -- CreateIndex
 CREATE INDEX "_SubjectToTeacher_B_index" ON "_SubjectToTeacher"("B");
-
--- AddForeignKey
-ALTER TABLE "Student" ADD CONSTRAINT "Student_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Parent"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

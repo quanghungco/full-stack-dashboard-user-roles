@@ -282,7 +282,7 @@ export const createTeacher = async (
         img: data.img || null,
         bloodType: data.bloodType,
         sex: data.sex,
-        birthday: data.birthday,
+        joiningDate: data.joiningDate,
         subjects: {
           connect: data.subjects?.map((subjectId: string) => ({
             id: parseInt(subjectId),
@@ -329,7 +329,7 @@ export const updateTeacher = async (
         img: data.img || null,
         bloodType: data.bloodType,
         sex: data.sex,
-        birthday: data.birthday,
+        joiningDate: data.joiningDate,
         subjects: {
           set: data.subjects?.map((subjectId: string) => ({
             id: parseInt(subjectId),
@@ -405,7 +405,8 @@ export const createStudent = async (
         birthday: data.birthday,
         gradeId: data.gradeId,
         classId: data.classId,
-        parentId: data.parentId,
+        parentNId: data.parentNId,
+        parentName: data.parentName,
       },
     });
 
@@ -450,7 +451,8 @@ export const updateStudent = async (
         birthday: data.birthday,
         gradeId: data.gradeId,
         classId: data.classId,
-        parentId: data.parentId,
+        parentName: data.parentName,
+        parentNId: data.parentNId,
       },
     });
     // revalidatePath("/list/students");

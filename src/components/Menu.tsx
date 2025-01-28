@@ -137,6 +137,8 @@ const Menu = async () => {
   const user = await currentUser();
   const role = user?.publicMetadata.role as string;
 
+  // console.log("jfhjhjjhhjhhhhh=====", user);
+  
   return (
     <div className="mt-4 text-sm">
       {menuItems.map((section) => (

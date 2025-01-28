@@ -56,6 +56,12 @@ const StudentForm = ({
 
   const { grades, classes } = relatedData || {};
 
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   const parsedValue = name === "parentNId" ? parseFloat(value) : value; // Parse to number if it's parentNId
+  //   setValue(name, parsedValue); // Use setValue from react-hook-form
+  // };
+
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
@@ -64,21 +70,21 @@ const StudentForm = ({
       <span className="text-xs text-gray-400 font-medium">Authentication Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="Username"
+          label="Username*"
           name="username"
           defaultValue={data?.username}
           register={register}
           error={errors?.username}
         />
         <InputField
-          label="Email"
+          label="Email*"
           name="email"
           defaultValue={data?.email}
           register={register}
           error={errors?.email}
         />
         <InputField
-          label="Password"
+          label="Password*"
           name="password"
           type="password"
           defaultValue={data?.password}
@@ -89,28 +95,28 @@ const StudentForm = ({
       <span className="text-xs text-gray-400 font-medium">Personal Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="First Name"
+          label="First Name*"
           name="name"
           defaultValue={data?.name}
           register={register}
           error={errors.name}
         />
         <InputField
-          label="Last Name"
+          label="Last Name*"
           name="surname"
           defaultValue={data?.surname}
           register={register}
           error={errors.surname}
         />
         <InputField
-          label="Phone"
+          label="Phone*"
           name="phone"
           defaultValue={data?.phone}
           register={register}
           error={errors.phone}
         />
         <InputField
-          label="Address"
+          label="Address*"
           name="address"
           defaultValue={data?.address}
           register={register}
@@ -123,33 +129,41 @@ const StudentForm = ({
             {...register("bloodType")}
             defaultValue={data?.bloodType}
           >
-            <option value="A_positive">A[+] positive</option>
-            <option value="A_negative">A[-] negative</option>
-            <option value="B_positive">B[+] positive</option>
-            <option value="B_negative">B[-] negative</option>
-            <option value="O_positive">O[+] positive</option>
-            <option value="O_negative">O[-] negative</option>
-            <option value="AB_positive">AB[+] positive</option>
-            <option value="AB_negative">AB[-] negative</option>
+            <option value="A(+ve)">A(+ve)</option>
+            <option value="A(-ve)">A(-ve)</option>
+            <option value="B(+ve)">B(+ve)</option>
+            <option value="B(-ve)">B(-ve)</option>
+            <option value="O(+ve)">O(+ve)</option>
+            <option value="O(-ve)">O(-ve)</option>
+            <option value="AB(+ve)">AB(+ve)</option>
+            <option value="AB(-ve)">AB(-ve)</option>
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">{errors.bloodType.message.toString()}</p>
           )}
         </div>
         <InputField
-          label="Birthday"
+          label="Birthday*"
           name="birthday"
           defaultValue={data?.birthday?.toISOString().split("T")[0]}
           register={register}
           error={errors.birthday}
           type="date"
         />
-        <InputField
-          label="Parent Id"
-          name="parentId"
-          defaultValue={data?.parentId}
+          <InputField
+          label="Parent Name*"
+          name="parentName"
+          defaultValue={data?.surname}
           register={register}
-          error={errors.parentId}
+          error={errors.surname}
+        />
+        <InputField
+          label="Parent NID*"
+          name="parentNId"
+          defaultValue={data?.parentNId ? String(data.parentNId) : undefined}
+          register={register}
+          error={errors.parentNId}
+          type="number"
         />
         {data && (
           <InputField
@@ -162,7 +176,7 @@ const StudentForm = ({
           />
         )}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Sex</label>
+          <label className="text-xs text-gray-500">Sex*</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("sex")}
@@ -218,7 +232,7 @@ const StudentForm = ({
         </div>
       </div>
       {state.error && <span className="text-red-500">Something went wrong!</span>}
-      <button type="submit" className="bg-blue-400 text-white p-2 rounded-md">
+      <button type="submit" className="bg-blue-400 text-white p-2 rounded-md md:w-1/3 md:mx-auto mt-5">
         {type === "create" ? "Create" : "Update"}
       </button>
     </form>
