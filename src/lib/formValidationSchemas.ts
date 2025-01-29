@@ -83,7 +83,11 @@ export const announcementSchema = z.object({
   
   description: z.string().min(1, { message: "Description is required!" }),
   
-  date: z.coerce.date({ message: "Date is required!" }),
+  startDate: z.coerce.date({ message: "Start Date is required!" }),
+
+  endDate: z.coerce.date({ message: "End Date is required!" }),
+
+  img: z.string().optional(),
 });
 export type AnnouncementSchema = z.infer<typeof announcementSchema>;
 

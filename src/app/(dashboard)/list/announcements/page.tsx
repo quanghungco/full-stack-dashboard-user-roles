@@ -30,8 +30,13 @@ const AnnouncementListPage = async ({
       accessor: "description", // Corrected accessor from "discription" to "description"
     },
     {
-      header: "Date",
-      accessor: "date",
+      header: "Start Date",
+      accessor: "startDate",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "End Date",
+      accessor: "endDate",
       className: "hidden md:table-cell",
     },
     ...(role === "admin"
@@ -50,10 +55,18 @@ const AnnouncementListPage = async ({
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
       <td className="flex items-center p-4">{item.title}</td>
-      <td className="hidden md:table-cell w-1/4 gap-4">{item.description}</td> {/* Updated to display description */}
-      <td className="hidden md:table-cell gap-4 ">
-        {new Intl.DateTimeFormat("en-US").format(item.date)}
+      <td className="hidden md:table-cell w-1/4 gap-4">
+        {item.description.length > 10 
+          ? item.description.split(' ').slice(0, 10).join(' ') + '...'
+          : item.description}
       </td>
+      <td className="hidden md:table-cell gap-4 ">
+        {new Intl.DateTimeFormat("en-US").format(item.startDate)}
+      </td>
+      <td className="hidden md:table-cell gap-4 ">
+        {new Intl.DateTimeFormat("en-US").format(item.endDate)}
+      </td>
+
       <td>
         <div className="flex items-center gap-2">
           {role === "admin" && (

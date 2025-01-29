@@ -3,12 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { announcementSchema, AnnouncementSchema } from "@/lib/formValidationSchemas";
 import { createAnnouncement, updateAnnouncement } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from "react-toastify"; // Import the ImageUpload component
+import ImageUpload from "./ImageUpload";
 
 interface AnnouncementFormProps {
   type: "create" | "update";
@@ -28,6 +29,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) => {
+  const [imageUrl, setImageUrl] = useState(data?.image || ""); // State to hold the uploaded image URL
   const {
     register,
     handleSubmit,
@@ -44,8 +46,10 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
     }
   );
 
-  const onSubmit = handleSubmit((data) => {
-    formAction(data);
+  // console.log("imageUrl-------",imageUrl);
+  const onSubmit = handleSubmit((formData) => {
+    const payload = { ...formData, img: imageUrl }; // Include the image URL in the form data
+    formAction(payload);
   });
 
   const router = useRouter();
@@ -79,14 +83,35 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           error={errors?.description}
         />
         <InputField
-          label="Date"
-          name="date"
-          defaultValue={data?.date}
+          label="Start Date"
+          name="startDate"
+          defaultValue={data?.startDate}
           register={register}
-          error={errors?.date}
+          error={errors?.startDate}
+          type="datetime-local"
+        />
+        <InputField
+          label="End Date"
+          name="endDate"
+          defaultValue={data?.endDate}
+          register={register}
+          error={errors?.endDate}
           type="datetime-local"
         />
       </div>
+
+      {/* Add Image Upload Field */}
+      <div className="flex flex-col gap-4">
+        <label className="text-gray-700 font-medium">Upload Image</label>
+        <ImageUpload
+          defaultImage={data?.img}
+          onUpload={(url: string) => setImageUrl(url)} // Update image URL state on successful upload
+        />
+        {errors?.img && (
+          <span className="text-red-500">Image upload is required.</span>
+        )}
+      </div>
+
       {data && (
         <InputField
           label="Id"

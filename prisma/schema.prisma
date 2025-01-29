@@ -84,7 +84,6 @@ model Class {
   gradeId       Int
   grade         Grade          @relation(fields: [gradeId], references: [id])
   events        Event[]
-  announcements Announcement[]
 }
 
 model Subject {
@@ -172,10 +171,9 @@ model Announcement {
   id          Int      @id @default(autoincrement())
   title       String
   description String
-  date        DateTime
-
-  classId Int?
-  class   Class? @relation(fields: [classId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  img         String?
 }
 
 enum UserSex {

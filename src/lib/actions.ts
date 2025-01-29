@@ -20,13 +20,13 @@ export const createAnnouncement = async (
   currentState: CurrentState,
   data: AnnouncementSchema
 ) => {
+  // console.log("data)))))", data);
   try {
+    // Exclude 'id' from the data object when creating a new announcement
+    const { id, ...createData } = data;
+
     await prisma.announcement.create({
-      data: {
-        title: data.title,
-        description: data.description,
-        date: data.date,
-      },
+      data: createData,
     });
 
     // revalidatePath("/list/announcements");
@@ -49,7 +49,9 @@ export const updateAnnouncement = async (
       data: {
         title: data.title,
         description: data.description,
-        date: data.date,
+        startDate: data.startDate,
+        endDate: data.endDate,
+        img: data.img,
       },
     });
 

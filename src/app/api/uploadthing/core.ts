@@ -1,43 +1,37 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
+// Initialize UploadThing
 const f = createUploadthing();
 
-const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
+// Fake authentication function (replace this with your real auth logic)
+const auth = (req: Request) => ({ id: "fakeId" });
 
-// FileRouter for your app, can contain multiple FileRoutes
+// Define the FileRouter for your application
 export const ourFileRouter = {
-  // Define as many FileRoutes as you like, each with a unique routeSlug
   imageUploader: f({
     image: {
-      /**
-       * For full list of options and defaults, see the File Route API reference
-       * @see https://docs.uploadthing.com/file-routes#route-config
-       */
-      maxFileSize: "4MB",
-      maxFileCount: 1,
+      maxFileSize: "4MB", // Limit file size to 4MB
+      maxFileCount: 1,    // Allow only one file to be uploaded
     },
   })
-    // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
-      // This code runs on your server before upload
       const user = await auth(req);
 
-      // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError("Unauthorized");
+      if (!user) {
+        throw new UploadThingError("Unauthorized"); // Reject unauthorized requests
+      }
 
-      // Whatever is returned here is accessible in onUploadComplete as `metadata`
+      // Pass metadata (e.g., user ID) to the `onUploadComplete` callback
       return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
+      console.log("File URL:", file.url);
 
-      console.log("file url", file.url);
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+      // Handle the uploaded file (e.g., save to your database)
     }),
 } satisfies FileRouter;
 
+// Export the FileRouter type for use in client-side uploads
 export type OurFileRouter = typeof ourFileRouter;

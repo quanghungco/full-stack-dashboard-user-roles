@@ -11,6 +11,8 @@ import { createTeacher, updateTeacher } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
+const bloodTypes = ["A(+ve)", "A(-ve)", "B(+ve)", "B(-ve)", "O(+ve)", "O(-ve)", "AB(+ve)", "AB(-ve)"];
+
 const TeacherForm = ({
   type,
   data,
@@ -60,9 +62,6 @@ const TeacherForm = ({
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create a new teacher" : "Update the teacher"}
       </h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="Username"
@@ -88,9 +87,6 @@ const TeacherForm = ({
           error={errors?.password}
         />
       </div>
-      <span className="text-xs text-gray-400 font-medium">
-        Personal Information
-      </span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="First Name"
@@ -128,14 +124,12 @@ const TeacherForm = ({
             defaultValue={data?.bloodType}
           >
             
-            <option value="A(+ve)">A(+ve)</option>
-            <option value="A(-ve)">A(-ve)</option>
-            <option value="B(+ve)">B(+ve)</option>
-            <option value="B(-ve)">B(-ve)</option>
-            <option value="O(+ve)">O(+ve)</option>
-            <option value="O(-ve)">O(-ve)</option>
-            <option value="AB(+ve)">AB(+ve)</option>
-            <option value="AB(-ve)">AB(-ve)</option>
+            {bloodTypes.map((bloodType) => (
+              <option value={bloodType} key={bloodType}>
+                {bloodType}
+              </option>
+            ))}
+     
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">

@@ -24,7 +24,7 @@ const Navbar = async () => {
         <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer relative">
           <Link href={"/announcements"}>
             <Image
-              className="shadow"
+              className="cursor-pointer"
               src="/announcement.png"
               alt=""
               width={20}
