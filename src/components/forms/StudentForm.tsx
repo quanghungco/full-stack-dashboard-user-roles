@@ -24,7 +24,6 @@ const StudentForm = ({
   relatedData?: any;
 }) => {
   const bloodGroups = ["A(-ve)", "B(+ve)", "B(-ve)", "O(+ve)", "O(-ve)", "AB(+ve)", "AB(-ve)"];
-  const [imageUrl, setImageUrl] = useState(data?.image || ""); // State to hold the uploaded image URL
   const {
     register,
     handleSubmit,
@@ -40,11 +39,45 @@ const StudentForm = ({
       error: false,
     }
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState(data?.image || "");
+  const [loading, setLoading] = useState(false);
+  const uploadImage = async () => {
+    if (!selectedFile) return imageUrl; // If no new file, use existing URL
 
-  const onSubmit = handleSubmit((data) => {
-    const payload = { ...data, img: imageUrl }; // Include the image URL in the form data
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        return data.data.url; // Return the uploaded image URL
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch (error) {
+      console.error(error);
+      return ""; // Return empty string if upload fails
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = handleSubmit(async (formData) => {
+    const uploadedImageUrl = await uploadImage(); // Upload image before form submission
+    const payload = { ...formData, img: uploadedImageUrl }; // Include image URL in payload
+
     formAction(payload);
-    console.log("student)))))))+++",payload);
   });
 
   const router = useRouter();
@@ -61,11 +94,6 @@ const StudentForm = ({
 
   const { grades, classes } = relatedData || {};
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   const parsedValue = name === "parentNId" ? parseFloat(value) : value; // Parse to number if it's parentNId
-  //   setValue(name, parsedValue); // Use setValue from react-hook-form
-  // };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
@@ -236,17 +264,17 @@ const StudentForm = ({
       <div className="flex flex-col w-full md:w-1/4 gap-2">
         <label className="text-gray-700 font-medium">Upload Image</label>
         <ImageUpload
-          defaultImage={data?.img}
-          onUpload={(url: string) => setImageUrl(url)} // Update image URL state on successful upload
-        />
+            defaultImage={data?.img}
+            onFileSelect={setSelectedFile}
+          />
         {errors?.img && (
           <span className="text-red-500">Image upload is required.</span>
         )}
       </div>
       </div>
       {state.error && <span className="text-red-500">Something went wrong!</span>}
-      <button type="submit" className="bg-blue-400 text-white p-2 rounded-md md:w-1/3 md:mx-auto mt-5">
-        {type === "create" ? "Create" : "Update"}
+      <button type="submit" disabled={loading} className={`bg-blue-400 text-white p-2 rounded-md ${loading ? "opacity-50" : ""}`}>
+        {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );

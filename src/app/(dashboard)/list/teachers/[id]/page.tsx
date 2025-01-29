@@ -49,7 +49,7 @@ const SingleTeacherPage = async ({
         {/* TOP */}
         <div className="flex flex-col lg:flex-row gap-4">
           {/* USER INFO CARD */}
-          <div className="bg-lamaSky py-6 px-4 rounded-md lg:max-w-[400px] w-full">
+          <div className="bg-lamaSky py-6 px-4 rounded-md lg:max-w-[350px] w-full">
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
                 <Image
@@ -57,7 +57,7 @@ const SingleTeacherPage = async ({
                   alt=""
                   width={100}
                   height={100}
-                  className="w-30 h-24 rounded-full object-cover"
+                  className="w-26 h-24 rounded-full object-cover"
                 />
               </div>
               <div className="w-2/3 flex flex-col justify-between gap-4">

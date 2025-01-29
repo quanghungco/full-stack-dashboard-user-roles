@@ -90,7 +90,7 @@ const SingleStudentPage = async ({
             </div>
           </div> */}
 
-          <div className="bg-lamaSky py-6 px-4 rounded-md lg:max-w-[400px] w-full">
+          <div className="bg-lamaSky py-6 px-4 rounded-md lg:max-w-[350px] w-full">
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
                 <Image
@@ -98,7 +98,7 @@ const SingleStudentPage = async ({
                   alt=""
                   width={100}
                   height={100}
-                  className="w-30 h-24 rounded-full object-cover"
+                  className="w-26 h-24 rounded-full object-cover"
                 />
               </div>
               <div className="w-2/3 flex flex-col justify-between gap-4">
@@ -151,10 +151,11 @@ const SingleStudentPage = async ({
               <Image
                 src="/singleAttendance.png"
                 alt=""
-                width={24}
-                height={24}
-                className="w-6 h-6"
+                width={20}
+                height={20}
+                className="w-5 h-5"
               />
+
               <Suspense fallback="loading...">
                 <StudentAttendanceCard id={student.id} />
               </Suspense>
@@ -164,13 +165,14 @@ const SingleStudentPage = async ({
               <Image
                 src="/singleBranch.png"
                 alt=""
-                width={24}
-                height={24}
-                className="w-6 h-6"
+                width={20}
+                height={20}
+                className="w-5 h-5"
               />
+
               <div className="">
                 <h1 className="text-xl font-semibold">
-                  {student.class.name.charAt(0)}th
+                  {student.class.name.charAt(0)}
                 </h1>
                 <span className="text-sm text-gray-400">Grade</span>
               </div>
@@ -180,11 +182,12 @@ const SingleStudentPage = async ({
               <Image
                 src="/singleLesson.png"
                 alt=""
-                width={24}
-                height={24}
-                className="w-6 h-6"
+                width={20}
+                height={20}
+                className="w-5 h-5"
               />
               <div className="">
+
                 <h1 className="text-xl font-semibold">
                   {student.class._count.lessons}
                 </h1>
@@ -196,11 +199,12 @@ const SingleStudentPage = async ({
               <Image
                 src="/singleClass.png"
                 alt=""
-                width={24}
-                height={24}
-                className="w-6 h-6"
+                width={20}
+                height={20}
+                className="w-5 h-5"
               />
               <div className="">
+
                 <h1 className="text-xl font-semibold">{student.class.name}</h1>
                 <span className="text-sm text-gray-400">Class</span>
               </div>
@@ -222,31 +226,31 @@ const SingleStudentPage = async ({
               className="p-3 rounded-md bg-lamaSkyLight"
               href={`/list/lessons?classId=${student.class.id}`}
             >
-              Student&apos;s Lessons
+              Student Lessons
             </Link>
             <Link
               className="p-3 rounded-md bg-lamaPurpleLight"
               href={`/list/teachers?classId=${student.class.id}`}
             >
-              Student&apos;s Teachers
+              Student Teachers
             </Link>
             <Link
               className="p-3 rounded-md bg-pink-50"
               href={`/list/exams?classId=${student.class.id}`}
             >
-              Student&apos;s Exams
+              Student Exams
             </Link>
             <Link
               className="p-3 rounded-md bg-lamaSkyLight"
               href={`/list/assignments?classId=${student.class.id}`}
             >
-              Student&apos;s Assignments
+              Student Assignments
             </Link>
             <Link
               className="p-3 rounded-md bg-lamaYellowLight"
               href={`/list/results?studentId=${student.id}`}
             >
-              Student&apos;s Results
+              Student Results
             </Link>
           </div>
         </div>

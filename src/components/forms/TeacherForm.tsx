@@ -12,7 +12,16 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ImageUpload from "./ImageUpload";
 
-const bloodTypes = ["A(+ve)", "A(-ve)", "B(+ve)", "B(-ve)", "O(+ve)", "O(-ve)", "AB(+ve)", "AB(-ve)"];
+const bloodTypes = [
+  "A(+ve)",
+  "A(-ve)",
+  "B(+ve)",
+  "B(-ve)",
+  "O(+ve)",
+  "O(-ve)",
+  "AB(+ve)",
+  "AB(-ve)",
+];
 
 const TeacherForm = ({
   type,
@@ -25,7 +34,6 @@ const TeacherForm = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) => {
-  const [imageUrl, setImageUrl] = useState(data?.image || ""); // State to hold the uploaded image URL
   const {
     register,
     handleSubmit,
@@ -33,6 +41,9 @@ const TeacherForm = ({
   } = useForm<TeacherSchema>({
     resolver: zodResolver(teacherSchema),
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState(data?.image || "");
+  const [loading, setLoading] = useState(false);
 
   const [state, formAction] = useFormState(
     type === "create" ? createTeacher : updateTeacher,
@@ -42,10 +53,42 @@ const TeacherForm = ({
     }
   );
 
-  const onSubmit = handleSubmit((data) => {
-    const payload = { ...data, img: imageUrl }; // Include the image URL in the form data
+  const uploadImage = async () => {
+    if (!selectedFile) return imageUrl; // If no new file, use existing URL
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        return data.data.url; // Return the uploaded image URL
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch (error) {
+      console.error(error);
+      return ""; // Return empty string if upload fails
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = handleSubmit(async (formData) => {
+    const uploadedImageUrl = await uploadImage(); // Upload image before form submission
+    const payload = { ...formData, img: uploadedImageUrl }; // Include image URL in payload
+
     formAction(payload);
-    console.log(payload);
   });
 
   const router = useRouter();
@@ -74,7 +117,6 @@ const TeacherForm = ({
           error={errors?.username}
         />
         <InputField
-          
           label="Email"
           name="email"
           defaultValue={data?.email}
@@ -126,13 +168,11 @@ const TeacherForm = ({
             {...register("bloodType")}
             defaultValue={data?.bloodType}
           >
-            
             {bloodTypes.map((bloodType) => (
               <option value={bloodType} key={bloodType}>
                 {bloodType}
               </option>
             ))}
-     
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">
@@ -140,7 +180,7 @@ const TeacherForm = ({
             </p>
           )}
         </div>
-            {/* Joining Date */}
+        {/* Joining Date */}
         <InputField
           label="Joining Date"
           name="joiningDate"
@@ -195,23 +235,20 @@ const TeacherForm = ({
             </p>
           )}
         </div>
-              {/* Add Image Upload Field */}
-      <div className="flex flex-col w-full md:w-1/4 gap-2">
-        <label className="text-gray-700 font-medium">Upload Image</label>
-        <ImageUpload
-          defaultImage={data?.img}
-          onUpload={(url: string) => setImageUrl(url)} // Update image URL state on successful upload
-        />
-        {errors?.img && (
-          <span className="text-red-500">Image upload is required.</span>
-        )}
-      </div>
+        {/* Add Image Upload Field */}
+        <div className="flex flex-col gap-4">
+          <label className="text-gray-700 font-medium">Upload Image</label>
+          <ImageUpload
+            defaultImage={data?.img}
+            onFileSelect={setSelectedFile}
+          />
+        </div>
       </div>
       {state.error && (
         <span className="text-red-500">Something went wrong!</span>
       )}
-      <button className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
+     <button type="submit" disabled={loading} className={`bg-blue-400 text-white p-2 rounded-md ${loading ? "opacity-50" : ""}`}>
+        {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );
