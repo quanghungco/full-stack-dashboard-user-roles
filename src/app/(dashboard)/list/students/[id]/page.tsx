@@ -96,9 +96,9 @@ const SingleStudentPage = async ({
                 <Image
                   src={student.img || "/noAvatar.png"}
                   alt=""
-                  width={144}
-                  height={144}
-                  className="w-36 h-30 rounded-full object-cover"
+                  width={100}
+                  height={100}
+                  className="w-30 h-24 rounded-full object-cover"
                 />
               </div>
               <div className="w-2/3 flex flex-col justify-between gap-4">

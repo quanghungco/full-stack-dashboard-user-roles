@@ -4,12 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { studentSchema, StudentSchema } from "@/lib/formValidationSchemas";
 import { useFormState } from "react-dom";
 import { createStudent, updateStudent } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import ImageUpload from "./ImageUpload";
 
 const StudentForm = ({
   type,
@@ -22,6 +23,8 @@ const StudentForm = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) => {
+  const bloodGroups = ["A(-ve)", "B(+ve)", "B(-ve)", "O(+ve)", "O(-ve)", "AB(+ve)", "AB(-ve)"];
+  const [imageUrl, setImageUrl] = useState(data?.image || ""); // State to hold the uploaded image URL
   const {
     register,
     handleSubmit,
@@ -39,7 +42,9 @@ const StudentForm = ({
   );
 
   const onSubmit = handleSubmit((data) => {
-    formAction(data); // Submit data to the database
+    const payload = { ...data, img: imageUrl }; // Include the image URL in the form data
+    formAction(payload);
+    console.log("student)))))))+++",payload);
   });
 
   const router = useRouter();
@@ -129,14 +134,11 @@ const StudentForm = ({
             {...register("bloodType")}
             defaultValue={data?.bloodType}
           >
-            <option value="A(+ve)">A(+ve)</option>
-            <option value="A(-ve)">A(-ve)</option>
-            <option value="B(+ve)">B(+ve)</option>
-            <option value="B(-ve)">B(-ve)</option>
-            <option value="O(+ve)">O(+ve)</option>
-            <option value="O(-ve)">O(-ve)</option>
-            <option value="AB(+ve)">AB(+ve)</option>
-            <option value="AB(-ve)">AB(-ve)</option>
+            {bloodGroups.map((group) => (
+              <option value={group} key={group}>
+                {group}
+              </option>
+            ))}
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">{errors.bloodType.message.toString()}</p>
@@ -230,6 +232,17 @@ const StudentForm = ({
             <p className="text-xs text-red-400">{errors.classId.message.toString()}</p>
           )}
         </div>
+              {/* Add Image Upload Field */}
+      <div className="flex flex-col w-full md:w-1/4 gap-2">
+        <label className="text-gray-700 font-medium">Upload Image</label>
+        <ImageUpload
+          defaultImage={data?.img}
+          onUpload={(url: string) => setImageUrl(url)} // Update image URL state on successful upload
+        />
+        {errors?.img && (
+          <span className="text-red-500">Image upload is required.</span>
+        )}
+      </div>
       </div>
       {state.error && <span className="text-red-500">Something went wrong!</span>}
       <button type="submit" className="bg-blue-400 text-white p-2 rounded-md md:w-1/3 md:mx-auto mt-5">

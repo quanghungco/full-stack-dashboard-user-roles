@@ -34,11 +34,18 @@ const menuItems: MenuSection[] = [
         visible: ["admin", "teacher", "student", "parent"],
       },
       {
+        icon: "/student.png",
+        label: "Addmission",
+        href: "/list/addmission",
+        visible: ["admin",],
+      },
+      {
         icon: "/teacher.png",
         label: "Teachers",
         href: "/list/teachers",
         visible: ["admin", "teacher"],
       },
+     
       {
         icon: "/student.png",
         label: "Students",

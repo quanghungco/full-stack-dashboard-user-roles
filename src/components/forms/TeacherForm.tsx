@@ -4,12 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { teacherSchema, TeacherSchema } from "@/lib/formValidationSchemas";
 import { useFormState } from "react-dom";
 import { createTeacher, updateTeacher } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import ImageUpload from "./ImageUpload";
 
 const bloodTypes = ["A(+ve)", "A(-ve)", "B(+ve)", "B(-ve)", "O(+ve)", "O(-ve)", "AB(+ve)", "AB(-ve)"];
 
@@ -24,6 +25,7 @@ const TeacherForm = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) => {
+  const [imageUrl, setImageUrl] = useState(data?.image || ""); // State to hold the uploaded image URL
   const {
     register,
     handleSubmit,
@@ -41,8 +43,9 @@ const TeacherForm = ({
   );
 
   const onSubmit = handleSubmit((data) => {
-    formAction(data); // Submit data to the database
-    console.log(data);
+    const payload = { ...data, img: imageUrl }; // Include the image URL in the form data
+    formAction(payload);
+    console.log(payload);
   });
 
   const router = useRouter();
@@ -192,6 +195,17 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+              {/* Add Image Upload Field */}
+      <div className="flex flex-col w-full md:w-1/4 gap-2">
+        <label className="text-gray-700 font-medium">Upload Image</label>
+        <ImageUpload
+          defaultImage={data?.img}
+          onUpload={(url: string) => setImageUrl(url)} // Update image URL state on successful upload
+        />
+        {errors?.img && (
+          <span className="text-red-500">Image upload is required.</span>
+        )}
+      </div>
       </div>
       {state.error && (
         <span className="text-red-500">Something went wrong!</span>

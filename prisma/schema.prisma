@@ -24,7 +24,7 @@ model Student {
   bloodType   String
   sex         UserSex
   createdAt   DateTime     @default(now())
-  parentNId   Int?
+  parentNId   BigInt?
   parentName  String?
   classId     Int
   class       Class        @relation(fields: [classId], references: [id])
@@ -162,7 +162,6 @@ model Event {
   description String
   startTime   DateTime
   endTime     DateTime
-
   classId Int?
   class   Class? @relation(fields: [classId], references: [id])
 }

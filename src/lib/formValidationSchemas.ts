@@ -78,11 +78,11 @@ export type TeacherSchema = z.infer<typeof teacherSchema>;
 
 export const announcementSchema = z.object({
   id: z.string().optional(),
-  
+
   title: z.string().min(1, { message: "Title is required!" }),
-  
+
   description: z.string().min(1, { message: "Description is required!" }),
-  
+
   startDate: z.coerce.date({ message: "Start Date is required!" }),
 
   endDate: z.coerce.date({ message: "End Date is required!" }),
@@ -125,10 +125,10 @@ export const studentSchema = z.object({
   gradeId: z.coerce.number().min(1, { message: "Grade is required!" }),
 
   classId: z.coerce.number().min(1, { message: "Class is required!" }),
-
-  parentNId: z.number().min(1, { message: "Parent NID must be a positive number" }),
+  parentNId: z.coerce
+    .number()
+    .min(1, { message: "Parent NID must be a positive number" }),
   parentName: z.string(),
-
 });
 
 export type StudentSchema = z.infer<typeof studentSchema>;
