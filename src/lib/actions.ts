@@ -9,7 +9,8 @@ import {
   TeacherSchema,
   LessonSchema,
   ParentSchema,
-  AnnouncementSchema
+  AnnouncementSchema,
+  AdmissionSchema
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -20,7 +21,6 @@ export const createAnnouncement = async (
   currentState: CurrentState,
   data: AnnouncementSchema
 ) => {
-  // console.log("data)))))", data);
   try {
     // Exclude 'id' from the data object when creating a new announcement
     const { id, ...createData } = data;
@@ -80,6 +80,30 @@ export const deleteAnnouncement = async (
   }
 };
 
+export const createAdmission = async (data: AdmissionSchema) => {
+  try {
+    await prisma.admission.create({
+      data,
+    });
+    return { success: true, error: false };
+  } catch (err) {
+    console.error("Error creating admission:", err);
+    return { success: false, error: true };
+  }
+};
+
+export const updateAdmission = async (id: number, data: Partial<AdmissionSchema>) => {
+  try {
+    await prisma.admission.update({
+      where: { id },
+      data,
+    });
+    return { success: true, error: false };
+  } catch (err) {
+    console.error("Error updating admission:", err);
+    return { success: false, error: true };
+  }
+};
 
 export const createSubject = async (
   currentState: CurrentState,

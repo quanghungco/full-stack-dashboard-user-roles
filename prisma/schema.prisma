@@ -12,6 +12,44 @@ model Admin {
   username String @unique
 }
 
+model Admission {
+  id                Int      @id @default(autoincrement())
+  studentName       String
+  contactNumber     String
+  bloodGroup        String
+  email             String
+  nationality       String
+  gender            String
+  image             String?
+  birthCertificate  String
+  religion          String
+  dateOfBirth       DateTime
+  presentAddress    String
+  fatherName        String
+  fatherPhone       String
+  fatherOccupation  String?
+  motherName        String
+  motherPhone       String?
+  motherOccupation  String
+  sscEquivalent     String?
+  sscGroup          String?
+  sscBoard          String?
+  sscBoardRoll      String?
+  sscGPA            String?
+  sscPassingYear    String?
+  sscInstituteName  String?
+
+  hscEquivalent     String?
+  hscGroup          String?
+  hscBoard          String?
+  hscBoardRoll      String?
+  hscGPA            String?
+  hscPassingYear    String?
+  hscInstituteName  String?
+
+  createdAt         DateTime @default(now())
+}
+
 model Student {
   id          String       @id
   username    String       @unique

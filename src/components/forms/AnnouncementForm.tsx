@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import ImageUpload from "./ImageUpload";
 
-interface AnnouncementFormProps {
+export interface FormProps {
   type: "create" | "update";
   data?: any;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,7 +19,7 @@ interface AnnouncementFormProps {
 }
 
 
-const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
+const AnnouncementForm: React.FC<FormProps> = ({
   type,
   data,
   setOpen,

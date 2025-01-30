@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
-import { FormContainerProps } from "./FormContainer";
+  import { FormContainerProps } from "./FormContainer";
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
@@ -23,6 +23,7 @@ const deleteActionMap = {
   exam: deleteExam,
   parent: deleteParent,
   lesson: deleteSubject,
+  admission: deleteSubject,
   assignment: deleteSubject,
   result: deleteSubject,
   attendance: deleteSubject,
@@ -36,6 +37,9 @@ const deleteActionMap = {
 // import StudentForm from "./forms/StudentForm";
 
 const AnnouncementForm = dynamic(() => import("./forms/AnnouncementForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const AdmissionForm = dynamic(() => import("./forms/AdmissionForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
@@ -101,6 +105,17 @@ const forms: {
     // No need for Cloudinary configuration
     return (
       <AnnouncementForm
+        type={type}
+        data={data}
+        setOpen={setOpen}
+        relatedData={relatedData}
+      />
+    );
+  },
+  admission: (setOpen, type, data, relatedData) => {
+    // No need for Cloudinary configuration
+    return (
+      <AdmissionForm
         type={type}
         data={data}
         setOpen={setOpen}
@@ -208,8 +223,8 @@ const FormModal = ({
         <Image src={`/${type}.png`} alt="" width={16} height={16} />
       </button>
       {open && (
-        <div className="w-screen h-screen absolute left-0 top-20 bg-black bg-opacity-40 z-50 flex items-center justify-center ">
-          <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[70%] xl:w-[70%] 2xl:w-[40%] ">
+        <div className="w-screen h-full absolute left-0 top-0 bg-black bg-opacity-40 z-50 flex items-center justify-center ">
+          <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[80%] xl:w-[80%] 2xl:w-[60%]  mt-[65rem]">
             <Form />
             <div
               className="absolute top-4 right-4 cursor-pointer"

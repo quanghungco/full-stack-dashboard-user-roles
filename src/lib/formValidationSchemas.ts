@@ -91,6 +91,43 @@ export const announcementSchema = z.object({
 });
 export type AnnouncementSchema = z.infer<typeof announcementSchema>;
 
+export const admissionSchema = z.object({
+  id: z.number().optional(),
+  studentName: z.string().min(1, { message: "Student's name is required" }),
+  contactNumber: z.string().min(1, { message: "Contact number is required" }),
+  bloodGroup: z.string().min(1, { message: "Blood group is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  nationality: z.string().min(1, { message: "Nationality is required" }),
+  gender: z.enum(["Male", "Female", "Others"], { message: "Gender is required" }),
+  image: z.string().optional(),
+  birthCertificate: z.string().min(1, { message: "Birth certificate/NID is required" }),
+  religion: z.string().min(1, { message: "Religion is required" }),
+  dateOfBirth: z.coerce.date({ message: "Date of birth is required" }),
+  presentAddress: z.string().min(1, { message: "Present address is required" }),
+  fatherName: z.string().min(1, { message: "Father's name is required" }),
+  fatherPhone: z.string().min(1, { message: "Father's phone number is required" }),
+  fatherOccupation: z.string().min(1, { message: "Father's occupation is required" }),
+  motherName: z.string().min(1, { message: "Mother's name is required" }),
+  motherPhone: z.string().min(1, { message: "Mother's phone number is required" }),
+  motherOccupation: z.string().min(1, { message: "Mother's occupation is required" }),
+  sscEquivalent: z.string().min(1, { message: "SSC/Equivalent is required" }),
+  sscGroup: z.string().min(1, { message: "SSC group is required" }),
+  sscBoard: z.string().min(1, { message: "SSC board is required" }),
+  sscBoardRoll: z.string().min(1, { message: "SSC board roll is required" }),
+  sscGPA: z.string().min(1, { message: "SSC GPA is required" }),
+  sscPassingYear: z.string().min(1, { message: "SSC passing year is required" }),
+  sscInstituteName: z.string().min(1, { message: "SSC institute name is required" }),
+  hscEquivalent: z.string().min(1, { message: "HSC/Equivalent is required" }),
+  hscGroup: z.string().min(1, { message: "HSC group is required" }),
+  hscBoard: z.string().min(1, { message: "HSC board is required" }),
+  hscBoardRoll: z.string().min(1, { message: "HSC board roll is required" }),
+  hscGPA: z.string().min(1, { message: "HSC GPA is required" }),
+  hscPassingYear: z.string().min(1, { message: "HSC passing year is required" }),
+  hscInstituteName: z.string().min(1, { message: "HSC institute name is required" }),
+});
+
+export type AdmissionSchema = z.infer<typeof admissionSchema>;
+
 export const studentSchema = z.object({
   id: z.string().optional(),
   username: z

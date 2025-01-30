@@ -31,7 +31,7 @@ const DropdownToggle: FC<DropdownMenuProps> = ({ title, items, role }) => {
         onClick={toggleMenu}
         className="flex justify-between items-center cursor-pointer text-gray-500 py-2 px-4 rounded-md hover:bg-lamaSkyLight"
       >
-        <span>{title}</span>
+        
         <span>{isOpen ? "▲" : "▼"}</span>
       </div>
       <AnimatePresence>
@@ -49,7 +49,7 @@ const DropdownToggle: FC<DropdownMenuProps> = ({ title, items, role }) => {
                   <Link
                     href={item.href}
                     key={item.label}
-                    className="flex items-center gap-4 text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight"
+                    className="flex items-center gap-4 text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight hover:shadow-md hover:scale-105 transition-all duration-300 mr-2"
                   >
                     <Image src={item.icon} alt="" width={20} height={20} />
                     <span>{item.label}</span>
