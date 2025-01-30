@@ -8,6 +8,7 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 import DownloadPDF from "@/components/forms/DownloadPDF";
+import React from "react";
 
 export type AdmissionList = Admission;
 

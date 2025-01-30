@@ -215,16 +215,16 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Subjects</label>
           <select
-            multiple
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("subjects")}
             defaultValue={data?.subjects}
           >
             {subjects?.map((subject: { id: number; name: string }) => (
-              <option value={subject.id} key={subject.id}>
+              <option value={subject.id} key={subject.id} selected={data && subject.id === data.subjects}>
                 {subject.name}
               </option>
             ))}
@@ -236,7 +236,7 @@ const TeacherForm = ({
           )}
         </div>
         {/* Add Image Upload Field */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-gray-700 font-medium">Upload Image</label>
           <ImageUpload
             defaultImage={data?.img}

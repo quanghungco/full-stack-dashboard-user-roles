@@ -310,9 +310,7 @@ export const createTeacher = async (
         sex: data.sex,
         joiningDate: data.joiningDate,
         subjects: {
-          connect: data.subjects?.map((subjectId: string) => ({
-            id: parseInt(subjectId),
-          })),
+          connect: data.subjects ? [{ id: parseInt(data.subjects) }] : [],
         },
       },
     });
@@ -357,9 +355,7 @@ export const updateTeacher = async (
         sex: data.sex,
         joiningDate: data.joiningDate,
         subjects: {
-          set: data.subjects?.map((subjectId: string) => ({
-            id: parseInt(subjectId),
-          })),
+          set: data.subjects ? [{ id: parseInt(data.subjects) }] : [],
         },
       },
     });
@@ -701,5 +697,45 @@ export const deleteParent = async (
   } catch (err) {
     console.error("Error deleting parent:", err);
     return { success: false, error: true };
+  }
+};
+
+// Create a new result
+export const createResult = async (data: any) => {
+  try {
+    const result = await prisma.result.create({
+      data,
+    });
+    return { success: true, result };
+  } catch (error) {
+    console.error("Error creating result:", error);
+    return { success: false, error };
+  }
+};
+
+// Update an existing result
+export const updateResult = async (id: number, data: any) => {
+  try {
+    const result = await prisma.result.update({
+      where: { id },
+      data,
+    });
+    return { success: true, result };
+  } catch (error) {
+    console.error("Error updating result:", error);
+    return { success: false, error };
+  }
+};
+
+// Delete a result
+export const deleteResult = async (id: number) => {
+  try {
+    await prisma.result.delete({
+      where: { id },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting result:", error);
+    return { success: false, error };
   }
 };

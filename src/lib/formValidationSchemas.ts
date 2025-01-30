@@ -71,7 +71,7 @@ export const teacherSchema = z.object({
 
   sex: z.enum(["MALE", "FEMALE"], { message: "Sex is required!" }),
 
-  subjects: z.array(z.string()).optional(), // subject ids
+  subjects: z.string().optional(), // subject ids
 });
 
 export type TeacherSchema = z.infer<typeof teacherSchema>;
@@ -233,3 +233,12 @@ export const parentSchema = z.object({
 });
 
 export type ParentSchema = z.infer<typeof parentSchema>;
+
+export const resultSchema = z.object({
+  score: z.number().min(0, "Score must be a positive number"),
+  examId: z.number().optional(),
+  assignmentId: z.number().optional(),
+  studentId: z.string().nonempty("Student ID is required"),
+});
+
+export type ResultSchema = z.infer<typeof resultSchema>;

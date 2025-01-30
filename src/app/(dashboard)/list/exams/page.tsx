@@ -29,21 +29,27 @@ const currentUserId = userId;
 
 const columns = [
   {
+    header: "Exam Type",
+    accessor: "title",
+  },
+  {
     header: "Subject Name",
     accessor: "name",
   },
+
   {
     header: "Class",
     accessor: "class",
   },
+
   {
-    header: "Teacher",
-    accessor: "teacher",
+    header: "Start Date",
+    accessor: "startTime",
     className: "hidden md:table-cell",
   },
   {
-    header: "Date",
-    accessor: "date",
+    header: "End Date",
+    accessor: "endDate",
     className: "hidden md:table-cell",
   },
   ...(role === "admin" || role === "teacher"
@@ -61,14 +67,18 @@ const renderRow = (item: ExamList) => (
     key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
-    <td className="flex items-center gap-4 p-4">{item.lesson.subject.name}</td>
-    <td>{item.lesson.class.name}</td>
-    <td className="hidden md:table-cell">
-      {item.lesson.teacher.name + " " + item.lesson.teacher.surname}
-    </td>
+
+    <td className="flex items-center gap-4 p-4">{item.title}</td>
+    <td className="">{item.lesson.subject.name}</td>
+    <td className="">{item.lesson.class.name}</td>
+   
     <td className="hidden md:table-cell">
       {new Intl.DateTimeFormat("en-US").format(item.startTime)}
     </td>
+    <td className="hidden md:table-cell">
+      {new Intl.DateTimeFormat("en-US").format(item.endTime)}
+    </td>
+
     <td>
       <div className="flex items-center gap-2">
         {(role === "admin" || role === "teacher") && (

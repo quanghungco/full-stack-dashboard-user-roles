@@ -14,7 +14,9 @@ import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
-  import { FormContainerProps } from "./FormContainer";
+import { FormContainerProps } from "./FormContainer";
+import ResultForm from "./forms/ResultForm";
+
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
@@ -161,6 +163,9 @@ const forms: {
   parent: (setOpen, type, data, relatedData) => (
     <ParentForm type={type} data={data} setOpen={setOpen} />
   ),
+  result: (setOpen, type, data, relatedData) => (
+    <ResultForm type={type} data={data} setOpen={setOpen} />
+  ),
 };
 type TableType = keyof typeof forms;
 
@@ -224,7 +229,7 @@ const FormModal = ({
       </button>
       {open && (
         <div className="w-screen h-full absolute left-0 top-0 bg-black bg-opacity-40 z-50 flex items-center justify-center ">
-          <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[80%] xl:w-[80%] 2xl:w-[60%]  mt-[65rem]">
+          <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[80%] xl:w-[80%] 2xl:w-[60%]  overflow-y-auto max-h-[90vh]">
             <Form />
             <div
               className="absolute top-4 right-4 cursor-pointer"

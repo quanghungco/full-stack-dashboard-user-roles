@@ -4,6 +4,9 @@ import { useState, FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { TfiMenuAlt } from "react-icons/tfi";
+import { RiMenuFold2Fill } from "react-icons/ri";
+
 
 interface MenuItem {
   icon: string;
@@ -32,7 +35,8 @@ const DropdownToggle: FC<DropdownMenuProps> = ({ title, items, role }) => {
         className="flex justify-between items-center cursor-pointer text-gray-500 py-2 px-4 rounded-md hover:bg-lamaSkyLight"
       >
         
-        <span>{isOpen ? "▲" : "▼"}</span>
+        <span>{isOpen ? <TfiMenuAlt className="w-6 h-6"/> : <RiMenuFold2Fill className="w-6 h-6   "/>
+        }</span>
       </div>
       <AnimatePresence>
         {isOpen && (
@@ -49,10 +53,10 @@ const DropdownToggle: FC<DropdownMenuProps> = ({ title, items, role }) => {
                   <Link
                     href={item.href}
                     key={item.label}
-                    className="flex items-center gap-4 text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight hover:shadow-md hover:scale-105 transition-all duration-300 mr-2"
+                    className="flex items-center gap-4 w-fit text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight hover:shadow-md hover:scale-105 transition-all duration-300 mr-2"
                   >
                     <Image src={item.icon} alt="" width={20} height={20} />
-                    <span>{item.label}</span>
+                    <span className="hidden lg:block">{item.label}</span>
                   </Link>
                 );
               }

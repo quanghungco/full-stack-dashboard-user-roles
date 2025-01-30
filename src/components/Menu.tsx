@@ -3,6 +3,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import DropdownToggle from "./DropdownToggle";
+import { UserButton } from "@clerk/nextjs";
 
 // Define the structure of the menu items
 interface MenuItem {
@@ -100,12 +101,12 @@ const menuItems: MenuSection[] = [
         href: "/list/attendance",
         visible: ["admin", "teacher", "student", "parent"],
       },
-      {
-        icon: "/calendar.png",
-        label: "Events",
-        href: "/list/events",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
+      // {
+      //   icon: "/calendar.png",
+      //   label: "Events",
+      //   href: "/list/events",
+      //   visible: ["admin", "teacher", "student", "parent"],
+      // },
       // {
       //   icon: "/message.png",
       //   label: "Messages",
@@ -115,31 +116,32 @@ const menuItems: MenuSection[] = [
 
     ],
   },
+];
+const otherMenuItems = [
   {
     title: "OTHER",
     items: [
       {
-        icon: "/profile.png",
-        label: "Profile",
-        href: "/profile",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: "/setting.png",
-        label: "Settings",
-        href: "/settings",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-      {
-        icon: "/logout.png",
-        label: "Logout",
-        href: "/logout",
-        visible: ["admin", "teacher", "student", "parent"],
-      },
-    ],
+      icon: "/profile.png",
+      label: "Profile",
+      href: "/profile",
+      visible: ["admin", "teacher", "student", "parent"],
+    },
+    {
+      icon: "/setting.png",
+      label: "Settings",
+      href: "/settings",
+      visible: ["admin", "teacher", "student", "parent"],
+    },
+    {
+      icon: "/logout.png",
+      label: "Logout",
+      href: "/logout",
+      visible: ["admin", "teacher", "student", "parent"],
+    },
+  ],
   },
 ];
-
 const Menu = async () => {
   const user = await currentUser();
   const role = user?.publicMetadata.role as string;
@@ -147,7 +149,7 @@ const Menu = async () => {
   // console.log("jfhjhjjhhjhhhhh=====", user);
   
   return (
-    <div className="mt-4 text-sm">
+    <div className="mt-4 text-sm w-[14%]  lg:w-[17rem]">
       {menuItems.map((section) => (
         <DropdownToggle
           key={section.title}
@@ -155,6 +157,28 @@ const Menu = async () => {
           items={section.items}
           role={role}
         />
+      ))}
+      {otherMenuItems.map((section) => (
+        <div className="flex flex-col gap-4 py-10 pl-4" key={section.title}>
+          <h1 className="text-sm font-semibold text-gray-500">{section.title}</h1>
+          <div className="flex items-center gap-2">
+          <UserButton />
+          <span className=" font-medium">
+            
+          </span>
+          <span className="text-lg text-gray-500">
+            {user?.firstName ? `${user.firstName}` : `${user?.publicMetadata?.role as string}`}
+          </span>
+        </div>
+          {/* {section.items.map((item) => (
+            <Link href={item.href} key={item.label}>
+              <div className="flex items-center gap-2">
+                <Image src={item.icon} alt={item.label} width={20} height={20} />
+                <span>{item.label}</span>
+              </div>
+            </Link>
+          ))} */}
+        </div>
       ))}
     </div>
   );
