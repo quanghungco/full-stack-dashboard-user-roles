@@ -195,16 +195,14 @@ const StudentForm = ({
           error={errors.parentNId}
           type="number"
         />
-        {data && (
+        
           <InputField
-            label="Id"
+            label="Student Id*"
             name="id"
             defaultValue={data?.id}
             register={register}
-            error={errors?.id}
-            hidden
+            error={errors.id}
           />
-        )}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Sex*</label>
           <select

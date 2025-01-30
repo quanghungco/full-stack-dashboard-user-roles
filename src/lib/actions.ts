@@ -178,7 +178,7 @@ export const createLesson = async (
   data: LessonSchema
 ) => {
   try {
-    console.log("Creating lesson with data:", data); // Log the data being created
+   
 
     await prisma.lesson.create({
       data: {
@@ -238,7 +238,7 @@ export const createClass = async (
     // revalidatePath("/list/class");
     return { success: true, error: false };
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     return { success: false, error: true };
   }
 };

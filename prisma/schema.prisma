@@ -176,8 +176,6 @@ model Result {
   score Int
   examId       Int?
   exam         Exam?       @relation(fields: [examId], references: [id])
-  assignmentId Int?
-  assignment   Assignment? @relation(fields: [assignmentId], references: [id])
   studentId    String
   student      Student     @relation(fields: [studentId], references: [id])
 }
