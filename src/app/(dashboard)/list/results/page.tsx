@@ -154,7 +154,7 @@ const renderRow = (item: ResultList) => (
   }
 
   const [dataRes, count] = await prisma.$transaction([
-    prisma.result.findMany({
+    prisma?.result?.findMany({
       where: query,
       include: {
         student: { select: { name: true, surname: true } },
@@ -186,7 +186,7 @@ const renderRow = (item: ResultList) => (
   ]);
 
   const data = dataRes.map((item) => {
-    const assessment = item.exam || item.assignment;
+    const assessment = item?.exam || item?.assignment;
 
     if (!assessment) return null;
 

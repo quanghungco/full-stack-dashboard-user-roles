@@ -215,3 +215,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+.cl-userButtonPopoverRootBox{
+  width: fit-content !important;
+}
+.cl-userButtonPopoverCard{
+  width: 200px !important;
+}

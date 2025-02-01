@@ -126,7 +126,7 @@ const Menu = async () => {
                 <Link
                   href={item.href}
                   key={item.label}
-                  className="flex items-center w-44 gap-4 text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight hover:shadow-md transition-all duration-300"
+                  className="flex items-center w-44 gap-4 text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight hover:shadow-md hover:scale-105 transition-all duration-300"
                 >
                   <Image src={item.icon} alt="" width={20} height={20} />
                   <span className="hidden lg:block">{item.label}</span>
@@ -135,7 +135,7 @@ const Menu = async () => {
             }
             return null; // Return null if the item is not visible
           })}
-          <div className="flex gap-4 py-10 pl-2">
+          <div className="flex gap-4 py-10 pl-2 border-t-2 border-gray-200">
             <UserButton />
             <span className="text-lg text-gray-500">
               {user?.firstName ? `${user.firstName}` : `${user?.publicMetadata?.role as string}`}

@@ -238,7 +238,7 @@ export const resultSchema = z.object({
   score: z.number().min(0, "Score must be a positive number"),
   examId: z.number().optional(),
   assignmentId: z.number().optional(),
-  studentId: z.string().nonempty("Student ID is required"),
+  studentId: z.string().min(1,"Student ID is required"),
 });
 
 export type ResultSchema = z.infer<typeof resultSchema>;
