@@ -70,17 +70,15 @@ const SubjectForm = ({
           register={register}
           error={errors?.name}
         />
-        {data && (
+        
           <InputField
-            label="Id"
+            label="Subject Id"
             name="id"
             defaultValue={data?.id}
             register={register}
             error={errors?.id}
-            hidden
           />
-        )}
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        {/* <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Teachers</label>
           <select
             multiple
@@ -101,7 +99,7 @@ const SubjectForm = ({
               {errors.teachers.message.toString()}
             </p>
           )}
-        </div>
+        </div> */}
       </div>
       {state.error && (
         <span className="text-red-500">Something went wrong!</span>

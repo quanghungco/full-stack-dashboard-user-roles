@@ -104,7 +104,7 @@ const renderRow = (item: ResultList) => (
             break;
           case "search":
             query.OR = [
-              { student: { name: { contains: value, mode: "insensitive" } } },
+              { student: { id: { contains: value, mode: "insensitive" } } },
             ];
             break;
           default:

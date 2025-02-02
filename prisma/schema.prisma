@@ -130,6 +130,7 @@ model Subject {
   name     String    @unique
   teachers Teacher[]
   lessons  Lesson[]
+  results  Result[]
 }
 
 model Lesson {
@@ -173,7 +174,6 @@ model Assignment {
 model AllSubject {
   id        String   @id @default(uuid())
   name      String?   @unique
-  results   Result[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -181,13 +181,13 @@ model AllSubject {
 model Result {
   id         String   @id @default(uuid())
   studentId  String
-  subjectId  String
+  subjectId  Int
   marks      Int?
   grade      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  subject    AllSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subject    Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
 
 model Attendance {

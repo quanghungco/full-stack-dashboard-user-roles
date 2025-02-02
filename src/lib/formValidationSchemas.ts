@@ -238,7 +238,7 @@ export const resultSchema = z.object({
   id: z.number().optional(),
   score: z.number().optional(),
   subjects: z.array(z.object({
-    id: z.string().min(1, "Subject ID is required"),
+    subjectId: z.number().min(1, "Subject ID is required"),
     subjectName: z.string().min(1, "Subject Name is required"),
     marks: z.number().min(0, "Marks must be a non-negative number"), // Marks should be a number
   })).min(1, "At least one subject is required"), // Ensure at least one subject is provided

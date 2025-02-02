@@ -15,6 +15,7 @@ import {
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
+import { Prisma } from "@prisma/client";
 
 type CurrentState = { success: boolean; error: boolean };
 
@@ -122,10 +123,9 @@ export const createSubject = async (
   try {
     await prisma.subject.create({
       data: {
+        id: data.id,
         name: data.name,
-        teachers: {
-          connect: data.teachers.map((teacherId) => ({ id: teacherId })),
-        },
+      
       },
     });
 
@@ -147,10 +147,9 @@ export const updateSubject = async (
         id: data.id,
       },
       data: {
+        id: data.id,
         name: data.name,
-        teachers: {
-          set: data.teachers.map((teacherId) => ({ id: teacherId })),
-        },
+    
       },
     });
 
@@ -708,8 +707,62 @@ export const deleteParent = async (
 };
 
 // Create a new result
+// export const createResult = async (
+//   data: { studentId: string; subjectId: number; marks: number; grade: string }[]
+// ) => {
+//   console.log("Function createResult called with data:", data);
+
+//   try {
+//     if (!data || data.length === 0) {
+//       throw new Error("No data provided for insertion.");
+//     }
+
+//     // Validate if student exists
+//     const studentExists = await prisma.student.findUnique({
+//       where: { id: data[0].studentId },
+//     });
+
+//     if (!studentExists) {
+//       throw new Error(`Student with ID '${data[0].studentId}' not found.`);
+//     }
+
+//     // Validate if subjects exist
+//     const subjectIds = data.map((entry) => entry.subjectId);
+//     const subjects = await prisma.subject.findMany({
+//       where: { id: { in: subjectIds.map(id => Number(id)) } },
+//     });
+
+//     if (subjects.length !== subjectIds.length) {
+//       throw new Error("One or more subject IDs are invalid.");
+//     }
+
+//     // Insert data using Prisma transaction
+//     const results = await prisma.$transaction(
+//       data.map((result) =>
+//         prisma.result.create({
+//           data: {
+//             studentId: result.studentId,
+//             subjectId: result.subjectId.toString(), // Convert number to string
+//             marks: result.marks,
+//             grade: result.grade,
+//           },
+//         })
+//       )
+//     );
+
+//     console.log("Inserted results:", results);
+//     return { success: true, results };
+//   } catch (error) {
+//     console.error("Error creating results:", error);
+//     return {
+//       success: false,
+//       error: error instanceof Error ? error.message : "Unknown error",
+//     };
+//   }
+// };
+
 export const createResult = async (
-  data: { studentId: string; subjectId: string; marks: number; grade: string }[]
+  data: { studentId: string; subjectId: number; marks: number; grade: string }[]
 ) => {
   console.log("Function createResult called with data:", data);
 
@@ -718,7 +771,7 @@ export const createResult = async (
       throw new Error("No data provided for insertion.");
     }
 
-    // Validate if student and subjects exist
+    // Validate if student exists
     const studentExists = await prisma.student.findUnique({
       where: { id: data[0].studentId },
     });
@@ -727,8 +780,11 @@ export const createResult = async (
       throw new Error(`Student with ID '${data[0].studentId}' not found.`);
     }
 
+    console.log("Student validation passed.");
+
+    // Validate if subjects exist
     const subjectIds = data.map((entry) => entry.subjectId);
-    const subjects = await prisma.allSubject.findMany({
+    const subjects = await prisma.subject.findMany({
       where: { id: { in: subjectIds } },
     });
 
@@ -736,13 +792,15 @@ export const createResult = async (
       throw new Error("One or more subject IDs are invalid.");
     }
 
+    console.log("Subject validation passed.");
+
     // Insert data using Prisma transaction
     const results = await prisma.$transaction(
       data.map((result) =>
         prisma.result.create({
           data: {
             studentId: result.studentId,
-            subjectId: result.subjectId,
+            subjectId: result.subjectId, // Keep as number since schema expects number
             marks: result.marks,
             grade: result.grade,
           },
@@ -754,6 +812,9 @@ export const createResult = async (
     return { success: true, results };
   } catch (error) {
     console.error("Error creating results:", error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error("Prisma Client Error:", error);
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
@@ -761,15 +822,17 @@ export const createResult = async (
   }
 };
 
+
+
 // Update an existing result
-export const updateResult = async (id: string, data: ResultSchema) => {
+export const updateResult = async (id: number, data: ResultSchema) => {
   try {
     console.log("data", data);
     const result = await prisma.result.update({
-      where: { id },
+      where: { id: id.toString() },
       data: {
         studentId: data.studentId,
-        subjectId: data.subjects[0].id,
+        subjectId: data.subjects[0].subjectId, // Keep as number since schema expects number
         marks: data.subjects[0].marks,
       },
     });
@@ -799,17 +862,4 @@ export const deleteResult = async (id: string) => {
   }
 };
 
-const testPayload = [
-  {
-    studentId: "testStudentId", // Replace with a valid student ID
-    subjectId: "testSubjectId", // Replace with a valid subject ID
-    marks: 85,
-    grade: "A",
-  },
-];
 
-// IIFE to allow top-level await
-(async () => {
-  const response = await createResult(testPayload);
-  console.log("Test Response:", response);
-})();

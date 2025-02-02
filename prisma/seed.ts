@@ -164,7 +164,7 @@ async function main() {
         marks: 90,
         grade: "A+",
         studentId: `student${i}`,
-        subjectId: String((i % 6) + 1), // Match existing subject IDs (1-6)
+        subjectId: ((i % 10) + 1), // Match existing subject IDs (1-10)
       },
     });
   }
