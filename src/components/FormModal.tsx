@@ -15,7 +15,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import { FormContainerProps } from "./FormContainer";
-import ResultForm from "./forms/ResultForm";
+import ResultForm2 from "./forms/Resultform2";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -164,7 +164,8 @@ const forms: {
     <ParentForm type={type} data={data} setOpen={setOpen} />
   ),
   result: (setOpen, type, data, relatedData) => (
-    <ResultForm type={type} data={data} setOpen={setOpen} />
+    // <ResultForm type={type} data={data} setOpen={setOpen} />
+    <ResultForm2 type={type} data={data} setOpen={setOpen} relatedData={relatedData} />
   ),
 };
 type TableType = keyof typeof forms;

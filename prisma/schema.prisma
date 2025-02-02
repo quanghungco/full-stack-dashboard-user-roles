@@ -71,6 +71,7 @@ model Student {
   attendances Attendance[]
   results     Result[]
   birthday    DateTime
+
 }
 
 model Teacher {
@@ -154,10 +155,9 @@ model Exam {
   title     String
   startTime DateTime
   endTime   DateTime
-
   lessonId Int
   lesson   Lesson   @relation(fields: [lessonId], references: [id])
-  results  Result[]
+  
 }
 
 model Assignment {
@@ -165,20 +165,29 @@ model Assignment {
   title     String
   startDate DateTime
   dueDate   DateTime
-  lessonId Int
-  lesson   Lesson   @relation(fields: [lessonId], references: [id])
-  results  Result[]
+  lessonId  Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  
+}
+
+model AllSubject {
+  id        String   @id @default(uuid())
+  name      String?   @unique
+  results   Result[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Result {
-  id           Int         @id @default(autoincrement())
-  score        Int
-  examId      Int?
-  exam        Exam?       @relation(fields: [examId], references: [id])
-  studentId    String
-  student      Student     @relation(fields: [studentId], references: [id])
-  assignmentId Int?        // Ensure this field exists
-  assignment   Assignment? @relation(fields: [assignmentId], references: [id]) // Ensure this is correctly defined
+  id         String   @id @default(uuid())
+  studentId  String
+  subjectId  String
+  marks      Int?
+  grade      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subject    AllSubject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
 
 model Attendance {

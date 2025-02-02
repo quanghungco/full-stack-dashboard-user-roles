@@ -3,18 +3,20 @@ const prisma = new PrismaClient();
 
 async function main() {
   // ADMIN
-  await prisma.admin.create({
-    data: {
-      id: "admin1",
-      username: "admin1",
-    },
-  });
-  await prisma.admin.create({
-    data: {
-      id: "admin2",
-      username: "admin2",
-    },
-  });
+  const adminIds = ["admin1", "admin2"];
+  for (const id of adminIds) {
+    const existingAdmin = await prisma.admin.findUnique({ where: { id } });
+    if (!existingAdmin) {
+      await prisma.admin.create({
+        data: {
+          id,
+          username: id,
+        },
+      });
+    } else {
+      console.log(`Admin with ID ${id} already exists.`);
+    }
+  }
 
   // GRADE
   for (let i = 1; i <= 6; i++) {
@@ -158,9 +160,11 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.result.create({
       data: {
-        score: 90, 
-        studentId: `student${i}`, 
-        ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }), 
+        id: i.toString(),
+        marks: 90,
+        grade: "A+",
+        studentId: `student${i}`,
+        subjectId: String((i % 6) + 1), // Match existing subject IDs (1-6)
       },
     });
   }

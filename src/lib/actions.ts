@@ -10,12 +10,19 @@ import {
   LessonSchema,
   ParentSchema,
   AnnouncementSchema,
-  AdmissionSchema
+  AdmissionSchema,
+  ResultSchema,
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
 
 type CurrentState = { success: boolean; error: boolean };
+
+type ResultActionResponse = {
+  success: boolean;
+  result?: any; // Adjust this type based on your actual result structure
+  error?: string; // Use string for error messages
+};
 
 export const createAnnouncement = async (
   currentState: CurrentState,
@@ -92,7 +99,10 @@ export const createAdmission = async (data: AdmissionSchema) => {
   }
 };
 
-export const updateAdmission = async (id: number, data: Partial<AdmissionSchema>) => {
+export const updateAdmission = async (
+  id: number,
+  data: Partial<AdmissionSchema>
+) => {
   try {
     await prisma.admission.update({
       where: { id },
@@ -172,14 +182,11 @@ export const deleteSubject = async (
   }
 };
 
-
 export const createLesson = async (
   currentState: CurrentState,
   data: LessonSchema
 ) => {
   try {
-   
-
     await prisma.lesson.create({
       data: {
         name: data.name,
@@ -293,7 +300,7 @@ export const createTeacher = async (
       password: data.password,
       firstName: data.name,
       lastName: data.surname,
-      publicMetadata:{role:"teacher"}
+      publicMetadata: { role: "teacher" },
     });
 
     await prisma.teacher.create({
@@ -409,7 +416,7 @@ export const createStudent = async (
       password: data.password,
       firstName: data.name,
       lastName: data.surname,
-      publicMetadata:{role:"student"}
+      publicMetadata: { role: "student" },
     });
 
     await prisma.student.create({
@@ -628,9 +635,9 @@ export const createParent = async (
       data: {
         id: user.id,
         username: data.username,
-        email: data.email || '',
-        name: data.name || '',
-        surname: data.surname || '',
+        email: data.email || "",
+        name: data.name || "",
+        surname: data.surname || "",
         phone: data?.phone || "",
         address: data?.address || "",
       },
@@ -664,9 +671,9 @@ export const updateParent = async (
       },
       data: {
         username: data.username,
-        email: data.email || '',
-        name: data.name || '',
-        surname: data.surname || '',
+        email: data.email || "",
+        name: data.name || "",
+        surname: data.surname || "",
         phone: data?.phone || "",
         address: data?.address || "",
       },
@@ -701,34 +708,83 @@ export const deleteParent = async (
 };
 
 // Create a new result
-export const createResult = async (data: any) => {
+export const createResult = async (
+  data: { studentId: string; subjectId: string; marks: number; grade: string }[]
+) => {
+  console.log("Function createResult called with data:", data);
+
   try {
-    const result = await prisma.result.create({
-      data,
+    if (!data || data.length === 0) {
+      throw new Error("No data provided for insertion.");
+    }
+
+    // Validate if student and subjects exist
+    const studentExists = await prisma.student.findUnique({
+      where: { id: data[0].studentId },
     });
-    return { success: true, result };
+
+    if (!studentExists) {
+      throw new Error(`Student with ID '${data[0].studentId}' not found.`);
+    }
+
+    const subjectIds = data.map((entry) => entry.subjectId);
+    const subjects = await prisma.allSubject.findMany({
+      where: { id: { in: subjectIds } },
+    });
+
+    if (subjects.length !== subjectIds.length) {
+      throw new Error("One or more subject IDs are invalid.");
+    }
+
+    // Insert data using Prisma transaction
+    const results = await prisma.$transaction(
+      data.map((result) =>
+        prisma.result.create({
+          data: {
+            studentId: result.studentId,
+            subjectId: result.subjectId,
+            marks: result.marks,
+            grade: result.grade,
+          },
+        })
+      )
+    );
+
+    console.log("Inserted results:", results);
+    return { success: true, results };
   } catch (error) {
-    console.error("Error creating result:", error);
-    return { success: false, error };
+    console.error("Error creating results:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
 
 // Update an existing result
-export const updateResult = async (id: number, data: any) => {
+export const updateResult = async (id: string, data: ResultSchema) => {
   try {
+    console.log("data", data);
     const result = await prisma.result.update({
       where: { id },
-      data,
+      data: {
+        studentId: data.studentId,
+        subjectId: data.subjects[0].id,
+        marks: data.subjects[0].marks,
+      },
     });
     return { success: true, result };
   } catch (error) {
     console.error("Error updating result:", error);
-    return { success: false, error };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
 
 // Delete a result
-export const deleteResult = async (id: number) => {
+export const deleteResult = async (id: string) => {
   try {
     await prisma.result.delete({
       where: { id },
@@ -736,6 +792,24 @@ export const deleteResult = async (id: number) => {
     return { success: true };
   } catch (error) {
     console.error("Error deleting result:", error);
-    return { success: false, error };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
+
+const testPayload = [
+  {
+    studentId: "testStudentId", // Replace with a valid student ID
+    subjectId: "testSubjectId", // Replace with a valid subject ID
+    marks: 85,
+    grade: "A",
+  },
+];
+
+// IIFE to allow top-level await
+(async () => {
+  const response = await createResult(testPayload);
+  console.log("Test Response:", response);
+})();

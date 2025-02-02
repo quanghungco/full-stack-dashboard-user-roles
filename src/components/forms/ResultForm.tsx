@@ -1,103 +1,73 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { resultSchema, ResultSchema } from "@/lib/formValidationSchemas";
-import { createResult, updateResult } from "@/lib/actions";
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useState } from 'react';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
-const ResultForm = ({
-  type,
-  data,
-  setOpen,
-}: {
-  type: "create" | "update";
-  data?: any;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResultSchema>({
-    resolver: zodResolver(resultSchema),
-    defaultValues: data || {},
-  });
 
-  const onSubmit = handleSubmit(async (formData) => {
-    const response = type === "create"
-      ? await createResult(formData)
-      : await updateResult(data.id, formData);
+export default function ExamResultForm() {
+  const [subjects, setSubjects] = useState([{ id: Date.now(), name: '', score: '' }]);
 
-    if (response.success) {
-      toast(`Result has been ${type === "create" ? "created" : "updated"}!`);
-      setOpen(false);
-      router.refresh();
-    } else {
-      toast("Failed to submit result data.");
-    }
-  });
+  const addSubject = () => {
+    setSubjects([...subjects, { id: Date.now(), name: '', score: '' }]);
+  };
 
-  const router = useRouter();
+  const removeSubject = (id: number) => {
+    setSubjects(subjects.filter(subject => subject.id !== id));
+  };
+
+  const handleChange = (id: number, field: 'name' | 'score', value: string) => {
+    setSubjects(subjects.map(subject => 
+      subject.id === id ? { ...subject, [field]: value } : subject
+    ));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const studentId = form.elements.namedItem('studentId') as HTMLInputElement;
+    console.log({ subjects, studentId: studentId.value });
+    console.log([...subjects]);
+  };
+ 
 
   return (
-    <form className="flex flex-col gap-8" onSubmit={onSubmit}>
-      <h1 className="text-xl font-semibold">
-        {type === "create" ? "Create a new result" : "Update the result"}
-      </h1>
-      <div className="flex justify-between flex-wrap gap-4">
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Score</label>
-          <input
-            type="number"
-            {...register("score")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          />
-          {errors.score && (
-            <p className="text-xs text-red-400">{errors.score.message}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Exam ID</label>
-          <input
-            type="number"
-            {...register("examId")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          />
-          {errors.examId && (
-            <p className="text-xs text-red-400">{errors.examId.message}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Assignment ID</label>
-          <input
-            type="number"
-            {...register("assignmentId")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          />
-          {errors.assignmentId && (
-            <p className="text-xs text-red-400">{errors.assignmentId.message}</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Student ID</label>
-          <input
-            type="text"
-            {...register("studentId")}
-            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          />
-          {errors.studentId && (
-            <p className="text-xs text-red-400">{errors.studentId.message}</p>
-          )}
-        </div>
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 border rounded-lg">
+      <div>
+        <label className="block font-medium">Student ID:</label>
+        <Input name="studentId" type="text" placeholder="Enter Student ID" required className="w-full" />
       </div>
-      <button className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
-      </button>
+
+
+      {subjects.map((subject, index) => (
+        <div key={subject.id} className="flex space-x-2 items-center">
+          <Input
+            type="text"
+            placeholder="Subject Name"
+            value={subject.name}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(subject.id, 'name', e.target.value)}
+            required
+          />
+          <Input
+            type="number"
+            placeholder="Score"
+            value={subject.score}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(subject.id, 'score', e.target.value)}
+            required
+          />
+          {index > 0 && (
+            <Button type="button" onClick={() => removeSubject(subject.id)} variant="destructive">
+              Remove
+            </Button>
+          )}
+        </div>
+      ))}
+
+      <Button type="button" onClick={addSubject} variant="outline">
+        Add Subject
+      </Button>
+
+      <Button type="submit">Submit</Button>
     </form>
   );
-};
-
-export default ResultForm; 
+}
