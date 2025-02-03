@@ -175,8 +175,6 @@ async function main() {
       data: {
         date: new Date(),
         present: 1,
-        studentId: `student${i}`,
-        lessonId: (i % 30) + 1,
         className: `Class ${(i % 6) + 1}`,
         day: Day[
           Object.keys(Day)[

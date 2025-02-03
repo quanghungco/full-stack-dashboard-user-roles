@@ -68,7 +68,6 @@ model Student {
   class       Class        @relation(fields: [classId], references: [id])
   gradeId     Int
   grade       Grade        @relation(fields: [gradeId], references: [id])
-  attendances Attendance[]
   results     Result[]
   birthday    DateTime
 
@@ -148,7 +147,6 @@ model Lesson {
   teacher     Teacher      @relation(fields: [teacherId], references: [id])
   exams       Exam[]
   assignments Assignment[]
-  attendances Attendance[]
 }
 
 model Exam {
@@ -218,10 +216,6 @@ model Attendance {
   day       Day      // Enum for the day of the week
   present   Int   // Field to indicate if the student is present 
   total     Int   
-  studentId String   // Foreign key to the Student model
-  student   Student  @relation(fields: [studentId], references: [id]) // Relation to the Student model
-  lessonId  Int      // Foreign key to the Lesson model
-  lesson    Lesson   @relation(fields: [lessonId], references: [id]) // Relation to the Lesson model
 }
 
 enum UserSex {

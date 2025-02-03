@@ -862,19 +862,61 @@ export const deleteResult = async (id: number) => {
 };
 
 
+// export const createAttendance = async (data: AttendanceSchema) => {
+//   try {
+//     console.log("data", data);
+//     const attendance = await prisma.attendance.create({
+//       data: {
+//         className: data.className,
+//         date: data.date,
+//         day: data.day,
+//         present: data.present, // Assuming present is a number (0 or 1)
+//         total: data.total, // Total number of students
+//         studentId: data.studentId, // Ensure you have studentId in the data
+//         lessonId: data.lessonId, // Ensure you have lessonId in the data
+//       },
+//     });
+//     return { success: true, attendance };
+//   } catch (error) {
+//     console.error("Error creating attendance:", error);
+//     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+//   }
+// };
+
+// export const updateAttendance = async (id: number, data: AttendanceSchema) => {
+//   try {
+//     const attendance = await prisma.attendance.update({
+//       where: { id },
+//       data: {
+//         className: data.className,
+//         date: data.date,
+//         day: data.day,
+//         present: data.present,
+//         total: data.total,
+//         studentId: data.studentId,
+//         lessonId: data.lessonId,
+//       },
+//     });
+//     return { success: true, attendance };
+//   } catch (error) {
+//     console.error("Error updating attendance:", error);
+//     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+//   }
+// };
+
 export const createAttendance = async (data: AttendanceSchema) => {
   try {
+    console.log("Submitting data to database:", data);
     const attendance = await prisma.attendance.create({
       data: {
         className: data.className,
-        date: data.date,
+        date: new Date(data.date), // Ensure valid Date object
         day: data.day,
-        present: data.present, // Assuming present is a number (0 or 1)
-        total: data.total, // Total number of students
-        studentId: data.studentId, // Ensure you have studentId in the data
-        lessonId: data.lessonId, // Ensure you have lessonId in the data
+        present: data.present,
+        total: data.total,
       },
     });
+    console.log("Created Attendance:", attendance);
     return { success: true, attendance };
   } catch (error) {
     console.error("Error creating attendance:", error);
@@ -884,18 +926,18 @@ export const createAttendance = async (data: AttendanceSchema) => {
 
 export const updateAttendance = async (id: number, data: AttendanceSchema) => {
   try {
+    console.log("Updating data in database:", data);
     const attendance = await prisma.attendance.update({
       where: { id },
       data: {
         className: data.className,
-        date: data.date,
+        date: new Date(data.date),
         day: data.day,
         present: data.present,
         total: data.total,
-        studentId: data.studentId,
-        lessonId: data.lessonId,
       },
     });
+    console.log("Updated Attendance:", attendance);
     return { success: true, attendance };
   } catch (error) {
     console.error("Error updating attendance:", error);

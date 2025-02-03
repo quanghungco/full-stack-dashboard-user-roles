@@ -250,8 +250,6 @@ export type ResultSchema = z.infer<typeof resultSchema>;
 
 export const attendanceSchema = z.object({
   id: z.number().optional(),
-  studentId: z.string().min(1, "Student ID is required"),
-  lessonId: z.number().min(1, "Lesson ID is required"),
   present: z.number().min(0, "Present is required"),
   total: z.number().min(0, "Total is required"),
   date: z.coerce.date({ message: "Date is required" }),
