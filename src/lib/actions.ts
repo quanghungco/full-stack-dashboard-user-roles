@@ -118,10 +118,31 @@ export const updateAdmission = async (
   }
 };
 
+export const deleteAdmission = async (
+  prevState: { success: boolean; error: boolean },
+  formData: FormData
+) => {
+  try {
+    const id = formData.get('id') as string;
+    await prisma.admission.delete({
+      where: {
+        id: Number(id), // Ensure id is a number
+      },
+    });
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
+  }
+};
+
+
 export const createSubject = async (
   currentState: CurrentState,
   data: SubjectSchema
+
 ) => {
+  console.log(data);
   try {
     await prisma.subject.create({
       data: {
@@ -708,60 +729,6 @@ export const deleteParent = async (
   }
 };
 
-// Create a new result
-// export const createResult = async (
-//   data: { studentId: string; subjectId: number; marks: number; grade: string }[]
-// ) => {
-//   console.log("Function createResult called with data:", data);
-
-//   try {
-//     if (!data || data.length === 0) {
-//       throw new Error("No data provided for insertion.");
-//     }
-
-//     // Validate if student exists
-//     const studentExists = await prisma.student.findUnique({
-//       where: { id: data[0].studentId },
-//     });
-
-//     if (!studentExists) {
-//       throw new Error(`Student with ID '${data[0].studentId}' not found.`);
-//     }
-
-//     // Validate if subjects exist
-//     const subjectIds = data.map((entry) => entry.subjectId);
-//     const subjects = await prisma.subject.findMany({
-//       where: { id: { in: subjectIds.map(id => Number(id)) } },
-//     });
-
-//     if (subjects.length !== subjectIds.length) {
-//       throw new Error("One or more subject IDs are invalid.");
-//     }
-
-//     // Insert data using Prisma transaction
-//     const results = await prisma.$transaction(
-//       data.map((result) =>
-//         prisma.result.create({
-//           data: {
-//             studentId: result.studentId,
-//             subjectId: result.subjectId.toString(), // Convert number to string
-//             marks: result.marks,
-//             grade: result.grade,
-//           },
-//         })
-//       )
-//     );
-
-//     console.log("Inserted results:", results);
-//     return { success: true, results };
-//   } catch (error) {
-//     console.error("Error creating results:", error);
-//     return {
-//       success: false,
-//       error: error instanceof Error ? error.message : "Unknown error",
-//     };
-//   }
-// };
 
 export const createResult = async (
   data: { studentId: string; subjectId: number; marks: number; grade: string }[]
@@ -847,63 +814,30 @@ export const updateResult = async (id: number, data: ResultSchema) => {
 };
 
 // Delete a result
-export const deleteResult = async (id: number) => {
+export const deleteResult = async (
+  prevState: { success: boolean; error: boolean },
+  formData: FormData
+) => {
   try {
+    const id = formData.get("id") as string;
+
+    if (!id) {
+      return { success: false, error: true };
+    }
+
     await prisma.result.delete({
-      where: { id: id.toString() }, // Ensure id is a string if your schema expects it
+      where: {
+        id: id, // Use the ID as a string directly
+      },
     });
-    return { success: true };
+
+    return { success: true, error: false };
   } catch (error) {
     console.error("Error deleting result:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return { success: false, error: true };
   }
 };
 
-
-// export const createAttendance = async (data: AttendanceSchema) => {
-//   try {
-//     console.log("data", data);
-//     const attendance = await prisma.attendance.create({
-//       data: {
-//         className: data.className,
-//         date: data.date,
-//         day: data.day,
-//         present: data.present, // Assuming present is a number (0 or 1)
-//         total: data.total, // Total number of students
-//         studentId: data.studentId, // Ensure you have studentId in the data
-//         lessonId: data.lessonId, // Ensure you have lessonId in the data
-//       },
-//     });
-//     return { success: true, attendance };
-//   } catch (error) {
-//     console.error("Error creating attendance:", error);
-//     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
-//   }
-// };
-
-// export const updateAttendance = async (id: number, data: AttendanceSchema) => {
-//   try {
-//     const attendance = await prisma.attendance.update({
-//       where: { id },
-//       data: {
-//         className: data.className,
-//         date: data.date,
-//         day: data.day,
-//         present: data.present,
-//         total: data.total,
-//         studentId: data.studentId,
-//         lessonId: data.lessonId,
-//       },
-//     });
-//     return { success: true, attendance };
-//   } catch (error) {
-//     console.error("Error updating attendance:", error);
-//     return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
-//   }
-// };
 
 export const createAttendance = async (data: AttendanceSchema) => {
   try {
@@ -943,17 +877,30 @@ export const updateAttendance = async (id: number, data: AttendanceSchema) => {
   }
 };
 
-export const deleteAttendance = async (id: number) => {
+export const deleteAttendance = async (
+  prevState: { success: boolean; error: boolean },
+  formData: FormData
+) => {
   try {
+    const id = formData.get("id") as string;
+
+    if (!id) {
+      return { success: false, error: true };
+    }
+
     await prisma.attendance.delete({
-      where: { id },
+      where: {
+        id: Number(id), // Convert ID to a number
+      },
     });
-    return { success: true };
-  } catch (error) {
-    console.error("Error deleting attendance:", error);
-    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+
+    return { success: true, error: false };
+  } catch (err) {
+    console.error("Error deleting attendance:", err);
+    return { success: false, error: true };
   }
 };
+
 
 
 

@@ -1,11 +1,10 @@
 import { z } from "zod";
 
 export const subjectSchema = z.object({
-  id: z.coerce.number().optional(),
+  id: z.coerce.number().min(1, { message: "Subject ID is required!" }),
 
   name: z.string().min(1, { message: "Subject name is required!" }),
 
-  teachers: z.array(z.string()), //teacher ids
 });
 
 export type SubjectSchema = z.infer<typeof subjectSchema>;

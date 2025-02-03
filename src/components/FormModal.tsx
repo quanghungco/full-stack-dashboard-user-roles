@@ -9,6 +9,8 @@ import {
   deleteParent,
   deleteAnnouncement,
   deleteAttendance,
+  deleteAdmission,
+  deleteResult,
 } from "@/lib/actions";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -17,7 +19,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import { FormContainerProps } from "./FormContainer";
-import ResultForm2 from "./forms/Resultform2";
+
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -27,10 +29,10 @@ const deleteActionMap = {
   exam: deleteExam,
   parent: deleteParent,
   lesson: deleteSubject,
-  admission: deleteSubject,
+  admission: deleteAdmission,
   assignment: deleteSubject,
-  result: deleteSubject,
-  attendance: deleteSubject,
+  result: deleteResult,
+  attendance: deleteAttendance,
   event: deleteSubject,
   announcement: deleteAnnouncement,
 };
@@ -70,7 +72,11 @@ const ParentForm = dynamic(() => import("./forms/ParentForm"), {
 const AttendanceForm = dynamic(() => import("./forms/AttendanceForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const ResultForm = dynamic(() => import("./forms/Resultform"), {
+  loading: () => <h1>Loading...</h1>,
+});
 // TODO: OTHER FORMS
+
 
 
 const forms: {
@@ -178,7 +184,7 @@ const forms: {
   ),
   result: (setOpen, type, data, relatedData) => (
     // <ResultForm type={type} data={data} setOpen={setOpen} />
-    <ResultForm2 type={type} data={data} setOpen={setOpen}  />
+    <ResultForm type={type} data={data} setOpen={setOpen}  />
   ),
 };
 type TableType = keyof typeof forms;
