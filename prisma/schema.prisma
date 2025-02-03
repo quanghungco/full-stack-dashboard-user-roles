@@ -190,16 +190,7 @@ model Result {
   subject    Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
 
-model Attendance {
-  id      Int      @id @default(autoincrement())
-  date    DateTime
-  present Boolean
 
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id])
-  lessonId  Int
-  lesson    Lesson  @relation(fields: [lessonId], references: [id])
-}
 
 model Event {
   id          Int      @id @default(autoincrement())
@@ -220,17 +211,31 @@ model Announcement {
   img         String?
 }
 
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  className String   // Field for the class name
+  date      DateTime // Field for the date of attendance
+  day       Day      // Enum for the day of the week
+  present   Int   // Field to indicate if the student is present 
+  total     Int   
+  studentId String   // Foreign key to the Student model
+  student   Student  @relation(fields: [studentId], references: [id]) // Relation to the Student model
+  lessonId  Int      // Foreign key to the Lesson model
+  lesson    Lesson   @relation(fields: [lessonId], references: [id]) // Relation to the Lesson model
+}
+
 enum UserSex {
   MALE
   FEMALE
 }
 
 enum Day {
+  SUNDAY
   MONDAY
   TUESDAY
   WEDNESDAY
   THURSDAY
   FRIDAY
   SATURDAY
-  SUNDAY
+  
 }

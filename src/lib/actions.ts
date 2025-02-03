@@ -12,6 +12,7 @@ import {
   AnnouncementSchema,
   AdmissionSchema,
   ResultSchema,
+  AttendanceSchema,
 } from "./formValidationSchemas";
 import prisma from "./prisma";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -822,17 +823,15 @@ export const createResult = async (
   }
 };
 
-
-
 // Update an existing result
 export const updateResult = async (id: number, data: ResultSchema) => {
   try {
-    console.log("data", data);
+    console.log("Updating result with data:", data);
     const result = await prisma.result.update({
-      where: { id: id.toString() },
+      where: { id: id.toString() }, // Ensure id is a string if your schema expects it
       data: {
         studentId: data.studentId,
-        subjectId: data.subjects[0].subjectId, // Keep as number since schema expects number
+        subjectId: data.subjects[0].subjectId, // Assuming you want to update the first subject
         marks: data.subjects[0].marks,
       },
     });
@@ -847,10 +846,10 @@ export const updateResult = async (id: number, data: ResultSchema) => {
 };
 
 // Delete a result
-export const deleteResult = async (id: string) => {
+export const deleteResult = async (id: number) => {
   try {
     await prisma.result.delete({
-      where: { id },
+      where: { id: id.toString() }, // Ensure id is a string if your schema expects it
     });
     return { success: true };
   } catch (error) {
@@ -861,5 +860,60 @@ export const deleteResult = async (id: string) => {
     };
   }
 };
+
+
+export const createAttendance = async (data: AttendanceSchema) => {
+  try {
+    const attendance = await prisma.attendance.create({
+      data: {
+        className: data.className,
+        date: data.date,
+        day: data.day,
+        present: data.present, // Assuming present is a number (0 or 1)
+        total: data.total, // Total number of students
+        studentId: data.studentId, // Ensure you have studentId in the data
+        lessonId: data.lessonId, // Ensure you have lessonId in the data
+      },
+    });
+    return { success: true, attendance };
+  } catch (error) {
+    console.error("Error creating attendance:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+};
+
+export const updateAttendance = async (id: number, data: AttendanceSchema) => {
+  try {
+    const attendance = await prisma.attendance.update({
+      where: { id },
+      data: {
+        className: data.className,
+        date: data.date,
+        day: data.day,
+        present: data.present,
+        total: data.total,
+        studentId: data.studentId,
+        lessonId: data.lessonId,
+      },
+    });
+    return { success: true, attendance };
+  } catch (error) {
+    console.error("Error updating attendance:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+};
+
+export const deleteAttendance = async (id: number) => {
+  try {
+    await prisma.attendance.delete({
+      where: { id },
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting attendance:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" };
+  }
+};
+
 
 

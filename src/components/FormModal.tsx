@@ -65,7 +65,11 @@ const ExamForm = dynamic(() => import("./forms/ExamForm"), {
 const ParentForm = dynamic(() => import("./forms/ParentForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const AttendanceForm = dynamic(() => import("./forms/AttendanceForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 // TODO: OTHER FORMS
+
 
 const forms: {
   [key: string]: (
@@ -81,6 +85,13 @@ const forms: {
       data={data}
       setOpen={setOpen}
       relatedData={relatedData}
+    />
+  ),
+  attendance: (setOpen, type, data) => (
+    <AttendanceForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
     />
   ),
   class: (setOpen, type, data, relatedData) => (
@@ -165,7 +176,7 @@ const forms: {
   ),
   result: (setOpen, type, data, relatedData) => (
     // <ResultForm type={type} data={data} setOpen={setOpen} />
-    <ResultForm2 type={type} data={data} setOpen={setOpen} relatedData={relatedData} />
+    <ResultForm2 type={type} data={data} setOpen={setOpen}  />
   ),
 };
 type TableType = keyof typeof forms;

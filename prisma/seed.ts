@@ -173,10 +173,17 @@ async function main() {
   for (let i = 1; i <= 10; i++) {
     await prisma.attendance.create({
       data: {
-        date: new Date(), 
-        present: true, 
-        studentId: `student${i}`, 
-        lessonId: (i % 30) + 1, 
+        date: new Date(),
+        present: 1,
+        studentId: `student${i}`,
+        lessonId: (i % 30) + 1,
+        className: `Class ${(i % 6) + 1}`,
+        day: Day[
+          Object.keys(Day)[
+            Math.floor(Math.random() * Object.keys(Day).length)
+          ] as keyof typeof Day
+        ],
+        total: 30
       },
     });
   }

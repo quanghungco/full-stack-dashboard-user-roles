@@ -25,7 +25,7 @@ const data = [
   },
   {
     name: "Mar",
-    income: 2000,
+    income: 7000,
     expense: 9800,
   },
   {
@@ -114,8 +114,25 @@ const FinanceChart = () => {
             verticalAlign="top"
             wrapperStyle={{ paddingTop: "10px", paddingBottom: "30px" }}
           />
-          <Bar dataKey="income" fill="#27B6E9" barSize={20} />
-          <Bar dataKey="expense" fill="#A09EF5" barSize={20} />
+          <Bar 
+            dataKey="income" 
+            fill="#27B6E9"
+            barSize={16} 
+            radius={[10, 10, 0, 0]}
+            fillOpacity={0.9}
+            strokeWidth={1}
+            stroke="#1a90bc"
+          />
+          <Bar 
+            dataKey="expense" 
+            fill="#A09EF5"
+            barSize={16} 
+            radius={[10, 10, 0, 0]}
+            fillOpacity={0.9} 
+            strokeWidth={1}
+            stroke="#8280c4"
+          
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

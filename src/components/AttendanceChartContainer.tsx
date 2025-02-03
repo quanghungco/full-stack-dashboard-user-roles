@@ -28,11 +28,11 @@ const AttendanceChartContainer = async () => {
 
   const attendanceMap: { [key: string]: { present: number; absent: number } } =
     {
-      Sun: { present: 0, absent: 0 },
-      Mon: { present: 0, absent: 0 },
-      Tue: { present: 0, absent: 0 },
-      Wed: { present: 0, absent: 0 },
-      Thu: { present: 0, absent: 0 },
+      Sun: { present: 30, absent: 20 },
+      Mon: { present: 40, absent: 10 },
+      Tue: { present: 30, absent: 20 },
+      Wed: { present: 40, absent: 10 },
+      Thu: { present: 30, absent: 20 },
     };
 
   resData.forEach((item) => {
