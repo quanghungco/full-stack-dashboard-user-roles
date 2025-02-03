@@ -73,10 +73,11 @@ export const updateAnnouncement = async (
 };
 
 export const deleteAnnouncement = async (
-  currentState: CurrentState,
-  id: string
+  prevState: { success: boolean; error: boolean },
+  formData: FormData
 ) => {
   try {
+    const id = formData.get('id') as string;
     await prisma.announcement.delete({
       where: {
         id: Number(id), // Ensure id is a number
@@ -906,7 +907,6 @@ export const deleteResult = async (id: number) => {
 
 export const createAttendance = async (data: AttendanceSchema) => {
   try {
-    console.log("Submitting data to database:", data);
     const attendance = await prisma.attendance.create({
       data: {
         className: data.className,
@@ -916,7 +916,6 @@ export const createAttendance = async (data: AttendanceSchema) => {
         total: data.total,
       },
     });
-    console.log("Created Attendance:", attendance);
     return { success: true, attendance };
   } catch (error) {
     console.error("Error creating attendance:", error);
@@ -926,7 +925,6 @@ export const createAttendance = async (data: AttendanceSchema) => {
 
 export const updateAttendance = async (id: number, data: AttendanceSchema) => {
   try {
-    console.log("Updating data in database:", data);
     const attendance = await prisma.attendance.update({
       where: { id },
       data: {

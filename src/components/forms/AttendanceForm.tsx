@@ -31,13 +31,9 @@ const AttendanceForm = ({
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("Form errors:", errors);
-  }, [errors]);
+
 
   const onSubmit = handleSubmit(async (formData: AttendanceSchema) => {
-    console.log("onSubmit triggered");
-    console.log("formData", formData);
 
     try {
       const response =
