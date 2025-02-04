@@ -68,14 +68,16 @@ const renderRow = (item: ResultList) => (
     key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
-    <td>{item.studentId}</td>
-    <td>{item.studentName + " " + item.studentSurname}</td>
-    <td>{item.subjectId}</td>
-    <td>{item.subjectName}</td>
-    <td className="">{item.marks}</td>
+    <td className="flex items-center gap-4 p-4 justify-center">{item.studentId}</td>
+    <td className=" text-center">{item.studentName + " " + item.studentSurname}</td>
+    <td className="flex items-center gap-4 p-4 justify-center">{item.subjectId}</td>
+    <td className=" text-center">{item.subjectName}</td>
+    <td className="flex items-center gap-4 p-4 justify-center">{item.marks}</td>
+
  
     <td>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 justify-center">
+
         {(role === "admin" || role === "teacher") && (
           <>
             <FormContainer table="result" type="update" data={item} />
