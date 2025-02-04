@@ -7,8 +7,6 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Attendance, Prisma } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
-type AttendanceList = Attendance;
-
 const AttendanceListPage = async ({
   searchParams,
 }: {
@@ -25,10 +23,12 @@ const AttendanceListPage = async ({
     {
       header: "Date",
       accessor: "date",
+      className: "hidden md:table-cell",
     },
     {
       header: "Day",
       accessor: "day",
+      className: "hidden md:table-cell",
     },
     {
       header: "Present Students",
@@ -48,21 +48,19 @@ const AttendanceListPage = async ({
       : []),
   ];
 
-  const renderRow = (item: AttendanceList) => (
+  const renderRow = (item: Attendance) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
       <td className="flex items-center justify-center gap-4 p-4">{item.className}</td>
-      <td className="text-center">{item.date.toISOString().split('T')[0]}</td>
-      <td className="text-center">{item.day}</td>
+      <td className="hidden md:table-cell text-center">{item.date.toISOString().split("T")[0]}</td>
+      <td className="hidden md:table-cell text-center">{item.day}</td>
       <td className="text-center">{item.present}</td>
       <td className="text-center">{item.total}</td>
       <td>
-        <div className="flex items-center justify-center gap-2">
-
-
-          {role === "admin" || role === "teacher" && (
+        <div className="flex items-center gap-2 justify-center">
+          {(role === "admin" || role === "teacher") && (
             <>
               <FormContainer table="attendance" type="update" data={item} />
               <FormContainer table="attendance" type="delete" id={item.id} />
@@ -74,11 +72,27 @@ const AttendanceListPage = async ({
   );
 
   const { page, ...queryParams } = searchParams;
-
   const p = page ? parseInt(page) : 1;
 
   // URL PARAMS CONDITION
   const query: Prisma.AttendanceWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "className":
+            query.className = { contains: value, mode: "insensitive" };
+            break;
+          case "date":
+            query.date = new Date(value);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
 
   const [data, count] = await prisma.$transaction([
     prisma.attendance.findMany({
