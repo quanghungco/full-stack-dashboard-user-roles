@@ -3,9 +3,10 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { admissionSchema, AdmissionSchema } from "@/lib/formValidationSchemas";
-import { createAdmission, updateAdmission } from "@/lib/actions";
+// import { createAdmission, updateAdmission } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { createAdmission, updateAdmission } from "@/lib/admissionAction";
 
 export interface FormProps {
   type: "create" | "update";

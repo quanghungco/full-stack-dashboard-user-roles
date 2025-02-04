@@ -1,17 +1,5 @@
 "use client";
 
-import {
-  deleteClass,
-  deleteExam,
-  deleteStudent,
-  deleteSubject,
-  deleteTeacher,
-  deleteParent,
-  deleteAnnouncement,
-  deleteAttendance,
-  deleteAdmission,
-  deleteResult,
-} from "@/lib/actions";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -19,6 +7,16 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import { FormContainerProps } from "./FormContainer";
+import { deleteAnnouncement } from "@/lib/announcementAction";
+import { deleteSubject } from "@/lib/subjectAction";
+import { deleteClass } from "@/lib/classAction";
+import { deleteTeacher } from "@/lib/teacherAction";
+import { deleteStudent } from "@/lib/studentAction";
+import { deleteAttendance } from "@/lib/attendenceAction";
+import { deleteParent } from "@/lib/actions";
+import { deleteExam } from "@/lib/examAction";
+import { deleteAdmission } from "@/lib/admissionAction";
+import { deleteResult } from "@/lib/resultAction";
 
 
 const deleteActionMap = {

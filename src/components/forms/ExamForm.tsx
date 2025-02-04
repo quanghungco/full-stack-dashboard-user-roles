@@ -6,14 +6,14 @@ import InputField from "../InputField";
 import {
   examSchema,
   ExamSchema,
-  classSchema,
-  ClassSchema,
 } from "@/lib/formValidationSchemas";
-import { createExam, updateExam } from "@/lib/actions";
+// import { createExam, updateExam } from "@/lib/actions";
+import { createExam, updateExam } from "@/lib/examAction";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+
 
 const ExamForm = ({
   type,

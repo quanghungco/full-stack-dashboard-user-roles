@@ -7,8 +7,10 @@ import { resultSchema, ResultSchema } from "@/lib/formValidationSchemas";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "react-toastify";
-import { createResult } from "@/lib/actions"; // Updated function for batch insert
+// import { createResult } from "@/lib/actions";
+import { createResult } from "@/lib/resultAction";
 import { useRouter } from "next/navigation";
+
 
 const ResultForm = ({
   type,
