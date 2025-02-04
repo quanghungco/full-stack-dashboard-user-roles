@@ -31,11 +31,6 @@ const columns = [
     className: "hidden md:table-cell",
   },
   {
-    header: "Grade",
-    accessor: "grade",
-    className: "hidden md:table-cell",
-  },
-  {
     header: "Supervisor",
     accessor: "supervisor",
     className: "hidden md:table-cell",
@@ -57,7 +52,6 @@ const renderRow = (item: ClassList) => (
   >
     <td className="flex items-center gap-4 p-4 justify-center">{item.name}</td>
     <td className="hidden md:table-cell text-center">{item.capacity}</td>
-    <td className="hidden md:table-cell text-center">{item.name[0]}</td>
     <td className="hidden md:table-cell text-center">
       {item.supervisor.name + " " + item.supervisor.surname}
 

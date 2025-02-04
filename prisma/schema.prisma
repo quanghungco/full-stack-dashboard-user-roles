@@ -107,7 +107,6 @@ model Grade {
   level Int @unique
 
   students Student[]
-  classess Class[]
 }
 
 model Class {
@@ -119,8 +118,6 @@ model Class {
   supervisor   Teacher?  @relation(fields: [supervisorId], references: [id])
   lessons      Lesson[]
   students     Student[]
-  gradeId      Int
-  grade        Grade     @relation(fields: [gradeId], references: [id])
   events       Event[]
   exams        Exam[]
 }

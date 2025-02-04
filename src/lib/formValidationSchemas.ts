@@ -16,8 +16,6 @@ export const classSchema = z.object({
 
   capacity: z.coerce.number().min(1, { message: "Capacity is required!" }),
 
-  gradeId: z.coerce.number().min(1, { message: "Grade ID is required!" }),
-
   supervisorId: z.coerce.string().optional(),
 });
 
