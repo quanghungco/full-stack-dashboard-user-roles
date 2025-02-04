@@ -4,12 +4,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { teacherSchema, TeacherSchema } from "@/lib/formValidationSchemas";
 import { useFormState } from "react-dom";
 import { createTeacher, updateTeacher } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import ImageUpload from "./ImageUpload";
+
+const bloodTypes = [
+  "A(+ve)",
+  "A(-ve)",
+  "B(+ve)",
+  "B(-ve)",
+  "O(+ve)",
+  "O(-ve)",
+  "AB(+ve)",
+  "AB(-ve)",
+];
 
 const TeacherForm = ({
   type,
@@ -29,6 +41,9 @@ const TeacherForm = ({
   } = useForm<TeacherSchema>({
     resolver: zodResolver(teacherSchema),
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState(data?.image || "");
+  const [loading, setLoading] = useState(false);
 
   const [state, formAction] = useFormState(
     type === "create" ? createTeacher : updateTeacher,
@@ -38,9 +53,42 @@ const TeacherForm = ({
     }
   );
 
-  const onSubmit = handleSubmit((data) => {
-    formAction(data); // Submit data to the database
-    console.log(data);
+  const uploadImage = async () => {
+    if (!selectedFile) return imageUrl; // If no new file, use existing URL
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        return data.data.url; // Return the uploaded image URL
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch (error) {
+      console.error(error);
+      return ""; // Return empty string if upload fails
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = handleSubmit(async (formData) => {
+    const uploadedImageUrl = await uploadImage(); // Upload image before form submission
+    const payload = { ...formData, img: uploadedImageUrl }; // Include image URL in payload
+
+    formAction(payload);
   });
 
   const router = useRouter();
@@ -60,9 +108,6 @@ const TeacherForm = ({
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create a new teacher" : "Update the teacher"}
       </h1>
-      <span className="text-xs text-gray-400 font-medium">
-        Authentication Information
-      </span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="Username"
@@ -72,7 +117,6 @@ const TeacherForm = ({
           error={errors?.username}
         />
         <InputField
-          
           label="Email"
           name="email"
           defaultValue={data?.email}
@@ -88,9 +132,6 @@ const TeacherForm = ({
           error={errors?.password}
         />
       </div>
-      <span className="text-xs text-gray-400 font-medium">
-        Personal Information
-      </span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
           label="First Name"
@@ -127,15 +168,11 @@ const TeacherForm = ({
             {...register("bloodType")}
             defaultValue={data?.bloodType}
           >
-            
-            <option value="A_positive">A[+] positive</option>
-            <option value="A_negative">A[-] negative</option>
-            <option value="B_positive">B[+] positive</option>
-            <option value="B_negative">B[-] negative</option>
-            <option value="O_positive">O[+] positive</option>
-            <option value="O_negative">O[-] negative</option>
-            <option value="AB_positive">AB[+] positive</option>
-            <option value="AB_negative">AB[-] negative</option>
+            {bloodTypes.map((bloodType) => (
+              <option value={bloodType} key={bloodType}>
+                {bloodType}
+              </option>
+            ))}
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">
@@ -143,12 +180,13 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+        {/* Joining Date */}
         <InputField
-          label="Birthday"
-          name="birthday"
-          defaultValue={data?.birthday?.toISOString().split("T")[0]}
+          label="Joining Date"
+          name="joiningDate"
+          defaultValue={data?.joiningDate?.toISOString().split("T")[0]}
           register={register}
-          error={errors.birthday}
+          error={errors.joiningDate}
           type="date"
         />
         {data && (
@@ -177,16 +215,16 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+
         <div className="flex flex-col gap-2 w-full md:w-1/4">
           <label className="text-xs text-gray-500">Subjects</label>
           <select
-            multiple
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("subjects")}
             defaultValue={data?.subjects}
           >
             {subjects?.map((subject: { id: number; name: string }) => (
-              <option value={subject.id} key={subject.id}>
+              <option value={subject.id} key={subject.id} selected={data && subject.id === data.subjects}>
                 {subject.name}
               </option>
             ))}
@@ -197,12 +235,20 @@ const TeacherForm = ({
             </p>
           )}
         </div>
+        {/* Add Image Upload Field */}
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-gray-700 font-medium">Upload Image</label>
+          <ImageUpload
+            defaultImage={data?.img}
+            onFileSelect={setSelectedFile}
+          />
+        </div>
       </div>
       {state.error && (
         <span className="text-red-500">Something went wrong!</span>
       )}
-      <button className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
+     <button type="submit" disabled={loading} className={`bg-blue-400 text-white p-2 rounded-md ${loading ? "opacity-50" : ""}`}>
+        {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );

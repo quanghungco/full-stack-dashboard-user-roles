@@ -30,7 +30,7 @@ const CountChartContainer = async () => {
           </h2>
         </div>
         <div className="flex flex-col gap-1">
-          <div className="w-5 h-5 bg-yollow-400 rounded-full" />
+          <div className="w-5 h-5 bg-yellow-400 rounded-full" />
           <h1 className="font-bold">{girls}</h1>
           <h2 className="text-xs text-gray-400">
             Girls ({Math.round((girls / (boys + girls)) * 100)}%)

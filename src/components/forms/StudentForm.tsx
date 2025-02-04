@@ -4,12 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { studentSchema, StudentSchema } from "@/lib/formValidationSchemas";
 import { useFormState } from "react-dom";
 import { createStudent, updateStudent } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import ImageUpload from "./ImageUpload";
 
 const StudentForm = ({
   type,
@@ -22,6 +23,7 @@ const StudentForm = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   relatedData?: any;
 }) => {
+  const bloodGroups = ["A(-ve)", "B(+ve)", "B(-ve)", "O(+ve)", "O(-ve)", "AB(+ve)", "AB(-ve)"];
   const {
     register,
     handleSubmit,
@@ -37,9 +39,45 @@ const StudentForm = ({
       error: false,
     }
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState(data?.image || "");
+  const [loading, setLoading] = useState(false);
+  const uploadImage = async () => {
+    if (!selectedFile) return imageUrl; // If no new file, use existing URL
 
-  const onSubmit = handleSubmit((data) => {
-    formAction(data); // Submit data to the database
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    const IMAGEBB_API_KEY = process.env.NEXT_PUBLIC_IMAGEBB_API_KEY;
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${IMAGEBB_API_KEY}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        return data.data.url; // Return the uploaded image URL
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch (error) {
+      console.error(error);
+      return ""; // Return empty string if upload fails
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = handleSubmit(async (formData) => {
+    const uploadedImageUrl = await uploadImage(); // Upload image before form submission
+    const payload = { ...formData, img: uploadedImageUrl }; // Include image URL in payload
+
+    formAction(payload);
   });
 
   const router = useRouter();
@@ -56,6 +94,7 @@ const StudentForm = ({
 
   const { grades, classes } = relatedData || {};
 
+
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">
@@ -64,21 +103,21 @@ const StudentForm = ({
       <span className="text-xs text-gray-400 font-medium">Authentication Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="Username"
+          label="Username*"
           name="username"
           defaultValue={data?.username}
           register={register}
           error={errors?.username}
         />
         <InputField
-          label="Email"
+          label="Email*"
           name="email"
           defaultValue={data?.email}
           register={register}
           error={errors?.email}
         />
         <InputField
-          label="Password"
+          label="Password*"
           name="password"
           type="password"
           defaultValue={data?.password}
@@ -89,28 +128,28 @@ const StudentForm = ({
       <span className="text-xs text-gray-400 font-medium">Personal Information</span>
       <div className="flex justify-between flex-wrap gap-4">
         <InputField
-          label="First Name"
+          label="First Name*"
           name="name"
           defaultValue={data?.name}
           register={register}
           error={errors.name}
         />
         <InputField
-          label="Last Name"
+          label="Last Name*"
           name="surname"
           defaultValue={data?.surname}
           register={register}
           error={errors.surname}
         />
         <InputField
-          label="Phone"
+          label="Phone*"
           name="phone"
           defaultValue={data?.phone}
           register={register}
           error={errors.phone}
         />
         <InputField
-          label="Address"
+          label="Address*"
           name="address"
           defaultValue={data?.address}
           register={register}
@@ -123,46 +162,49 @@ const StudentForm = ({
             {...register("bloodType")}
             defaultValue={data?.bloodType}
           >
-            <option value="A_positive">A[+] positive</option>
-            <option value="A_negative">A[-] negative</option>
-            <option value="B_positive">B[+] positive</option>
-            <option value="B_negative">B[-] negative</option>
-            <option value="O_positive">O[+] positive</option>
-            <option value="O_negative">O[-] negative</option>
-            <option value="AB_positive">AB[+] positive</option>
-            <option value="AB_negative">AB[-] negative</option>
+            {bloodGroups.map((group) => (
+              <option value={group} key={group}>
+                {group}
+              </option>
+            ))}
           </select>
           {errors.bloodType?.message && (
             <p className="text-xs text-red-400">{errors.bloodType.message.toString()}</p>
           )}
         </div>
         <InputField
-          label="Birthday"
+          label="Birthday*"
           name="birthday"
           defaultValue={data?.birthday?.toISOString().split("T")[0]}
           register={register}
           error={errors.birthday}
           type="date"
         />
-        <InputField
-          label="Parent Id"
-          name="parentId"
-          defaultValue={data?.parentId}
-          register={register}
-          error={errors.parentId}
-        />
-        {data && (
           <InputField
-            label="Id"
+          label="Parent Name*"
+          name="parentName"
+          defaultValue={data?.surname}
+          register={register}
+          error={errors.surname}
+        />
+        <InputField
+          label="Parent NID*"
+          name="parentNId"
+          defaultValue={data?.parentNId ? String(data.parentNId) : undefined}
+          register={register}
+          error={errors.parentNId}
+          type="number"
+        />
+        
+          <InputField
+            label="Student Id*"
             name="id"
             defaultValue={data?.id}
             register={register}
-            error={errors?.id}
-            hidden
+            error={errors.id}
           />
-        )}
         <div className="flex flex-col gap-2 w-full md:w-1/4">
-          <label className="text-xs text-gray-500">Sex</label>
+          <label className="text-xs text-gray-500">Sex*</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
             {...register("sex")}
@@ -216,10 +258,21 @@ const StudentForm = ({
             <p className="text-xs text-red-400">{errors.classId.message.toString()}</p>
           )}
         </div>
+              {/* Add Image Upload Field */}
+      <div className="flex flex-col w-full md:w-1/4 gap-2">
+        <label className="text-gray-700 font-medium">Upload Image</label>
+        <ImageUpload
+            defaultImage={data?.img}
+            onFileSelect={setSelectedFile}
+          />
+        {errors?.img && (
+          <span className="text-red-500">Image upload is required.</span>
+        )}
+      </div>
       </div>
       {state.error && <span className="text-red-500">Something went wrong!</span>}
-      <button type="submit" className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
+      <button type="submit" disabled={loading} className={`bg-blue-400 text-white p-2 rounded-md ${loading ? "opacity-50" : ""}`}>
+        {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );

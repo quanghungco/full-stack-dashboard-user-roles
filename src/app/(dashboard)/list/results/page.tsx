@@ -11,14 +11,12 @@ import { auth } from "@clerk/nextjs/server";
 
 type ResultList = {
   id: number;
-  title: string;
+  studentId: string;
   studentName: string;
   studentSurname: string;
-  teacherName: string;
-  teacherSurname: string;
-  score: number;
-  className: string;
-  startTime: Date;
+  subjectId: string;
+  subjectName: string;
+  marks: number;
 };
 
 
@@ -35,33 +33,26 @@ const currentUserId = userId;
 
 const columns = [
   {
-    header: "Title",
-    accessor: "title",
+    header: "Student ID",
+    accessor: "studentId",
   },
   {
-    header: "Student",
-    accessor: "student",
+    header: "Student Name",
+    accessor: "studentName",
   },
   {
-    header: "Score",
-    accessor: "score",
-    className: "hidden md:table-cell",
+    header: "Subject ID",
+    accessor: "subjectId",
   },
   {
-    header: "Teacher",
-    accessor: "teacher",
-    className: "hidden md:table-cell",
+    header: "Subject",
+    accessor: "subjectName",
   },
   {
-    header: "Class",
-    accessor: "class",
-    className: "hidden md:table-cell",
+    header: "Marks",
+    accessor: "marks",
   },
-  {
-    header: "Date",
-    accessor: "date",
-    className: "hidden md:table-cell",
-  },
+
   ...(role === "admin" || role === "teacher"
     ? [
         {
@@ -77,16 +68,12 @@ const renderRow = (item: ResultList) => (
     key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
-    <td className="flex items-center gap-4 p-4">{item.title}</td>
-    <td>{item.studentName + " " + item.studentName}</td>
-    <td className="hidden md:table-cell">{item.score}</td>
-    <td className="hidden md:table-cell">
-      {item.teacherName + " " + item.teacherSurname}
-    </td>
-    <td className="hidden md:table-cell">{item.className}</td>
-    <td className="hidden md:table-cell">
-      {new Intl.DateTimeFormat("en-US").format(item.startTime)}
-    </td>
+    <td>{item.studentId}</td>
+    <td>{item.studentName + " " + item.studentSurname}</td>
+    <td>{item.subjectId}</td>
+    <td>{item.subjectName}</td>
+    <td className="">{item.marks}</td>
+ 
     <td>
       <div className="flex items-center gap-2">
         {(role === "admin" || role === "teacher") && (
@@ -117,8 +104,7 @@ const renderRow = (item: ResultList) => (
             break;
           case "search":
             query.OR = [
-              { exam: { title: { contains: value, mode: "insensitive" } } },
-              { student: { name: { contains: value, mode: "insensitive" } } },
+              { student: { id: { contains: value, mode: "insensitive" } } },
             ];
             break;
           default:
@@ -130,54 +116,35 @@ const renderRow = (item: ResultList) => (
 
   // ROLE CONDITIONS
 
-  switch (role) {
-    case "admin":
-      break;
-    case "teacher":
-      query.OR = [
-        { exam: { lesson: { teacherId: currentUserId! } } },
-        { assignment: { lesson: { teacherId: currentUserId! } } },
-      ];
-      break;
+  // switch (role) {
+  //   case "admin":
+  //     break;
+  //   case "teacher":
+  //     query.OR = [
+  //       { exam: { lesson: { teacherId: currentUserId! } } },
+  //       { assignment: { lesson: { teacherId: currentUserId! } } },
+  //     ];
+  //     break;
 
-    case "student":
-      query.studentId = currentUserId!;
-      break;
+  //   case "student":
+  //     query.studentId = currentUserId!;
+  //     break;
 
-    case "parent":
-      query.student = {
-        parentId: currentUserId!,
-      };
-      break;
-    default:
-      break;
-  }
+  //   // case "parent":
+  //   //   query.student = {
+  //   //     parentId: currentUserId!,
+  //   //   };
+  //   //   break;
+  //   default:
+  //     break;
+  // }
 
   const [dataRes, count] = await prisma.$transaction([
     prisma.result.findMany({
       where: query,
       include: {
-        student: { select: { name: true, surname: true } },
-        exam: {
-          include: {
-            lesson: {
-              select: {
-                class: { select: { name: true } },
-                teacher: { select: { name: true, surname: true } },
-              },
-            },
-          },
-        },
-        assignment: {
-          include: {
-            lesson: {
-              select: {
-                class: { select: { name: true } },
-                teacher: { select: { name: true, surname: true } },
-              },
-            },
-          },
-        },
+        student: { select: { id: true, name: true, surname: true } },
+        subject: { select: { id: true, name: true } },
       },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
@@ -185,25 +152,17 @@ const renderRow = (item: ResultList) => (
     prisma.result.count({ where: query }),
   ]);
 
-  const data = dataRes.map((item) => {
-    const assessment = item.exam || item.assignment;
+  const data = dataRes.map((item) => ({
+    id: item.id,
+    studentId: item.student?.id,
+    studentName: item.student?.name,
+    studentSurname: item.student?.surname,
+    subjectId: item.subject?.id,
+    subjectName: item.subject?.name,
+    marks: item.marks, // Correct key
+  }));
+  
 
-    if (!assessment) return null;
-
-    const isExam = "startTime" in assessment;
-
-    return {
-      id: item.id,
-      title: assessment.title,
-      studentName: item.student.name,
-      studentSurname: item.student.surname,
-      teacherName: assessment.lesson.teacher.name,
-      teacherSurname: assessment.lesson.teacher.surname,
-      score: item.score,
-      className: assessment.lesson.class.name,
-      startTime: isExam ? assessment.startTime : assessment.startDate,
-    };
-  });
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">

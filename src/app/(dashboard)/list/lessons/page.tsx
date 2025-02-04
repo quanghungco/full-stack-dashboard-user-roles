@@ -52,13 +52,14 @@ const renderRow = (item: LessonList) => (
     key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
-    <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
-    <td>{item.class.name}</td>
-    <td className="hidden md:table-cell">
+    <td className="flex items-center justify-center gap-4 p-4">{item.subject.name}</td>
+    <td className="text-center">{item.class.name}</td>
+    <td className="hidden md:table-cell text-center">
       {item.teacher.name + " " + item.teacher.surname}
+
     </td>
     <td>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 justify-center">
         {role === "teacher" && (
           <>
             <FormContainer table="lesson" type="update" data={item} />

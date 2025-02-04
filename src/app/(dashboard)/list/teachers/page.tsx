@@ -63,7 +63,7 @@ const TeacherListPage = async ({
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center gap-4 p-4">
+      <td className="flex items-center gap-4 p-4 justify-center">
         <Image
           src={item.img || "/noAvatar.png"}
           alt=""
@@ -76,17 +76,19 @@ const TeacherListPage = async ({
           <p className="text-xs text-gray-500">{item?.email}</p>
         </div>
       </td>
-      <td className="hidden md:table-cell">{item.username}</td>
-      <td className="hidden md:table-cell">
+      <td className="hidden md:table-cell text-center">{item.username}</td>
+      <td className="hidden md:table-cell text-center">
         {item.subjects.map((subject) => subject.name).join(",")}
+
       </td>
-      <td className="hidden md:table-cell">
+      <td className="hidden md:table-cell text-center">
         {item.classes.map((classItem) => classItem.name).join(",")}
       </td>
-      <td className="hidden md:table-cell">{item.phone}</td>
-      <td className="hidden md:table-cell">{item.address}</td>
+      <td className="hidden md:table-cell text-center">{item.phone}</td>
+      <td className="hidden md:table-cell text-center">{item.address}</td>
       <td>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center">
+
           <Link href={`/list/teachers/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
               <Image src="/view.png" alt="" width={16} height={16} />

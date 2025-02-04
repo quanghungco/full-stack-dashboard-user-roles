@@ -8,7 +8,6 @@ const AttendanceChartContainer = async () => {
   const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
   const lastMonday = new Date(today);
-
   lastMonday.setDate(today.getDate() - daysSinceMonday);
 
   const resData = await prisma.attendance.findMany({
@@ -25,24 +24,27 @@ const AttendanceChartContainer = async () => {
 
   // console.log(data)
 
-  const daysOfWeek = ["Sun","Mon", "Tue", "Wed", "Thu"];
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu"];
 
   const attendanceMap: { [key: string]: { present: number; absent: number } } =
     {
-      Sun: { present: 0, absent: 0 },
-      Mon: { present: 0, absent: 0 },
-      Tue: { present: 0, absent: 0 },
-      Wed: { present: 0, absent: 0 },
-      Thu: { present: 0, absent: 0 },
+      Sun: { present: 30, absent: 20 },
+      Mon: { present: 40, absent: 10 },
+      Tue: { present: 30, absent: 20 },
+      Wed: { present: 40, absent: 10 },
+      Thu: { present: 30, absent: 20 },
     };
 
   resData.forEach((item) => {
     const itemDate = new Date(item.date);
-    const dayOfWeek = itemDate.getDay();
-    
-    if (dayOfWeek >= 1 && dayOfWeek <= 7) {
-      const dayName = daysOfWeek[dayOfWeek - 1];
+    const dayOfWeek = itemDate.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
 
+    // Adjust the index to match the daysOfWeek array
+    const dayIndex = (dayOfWeek + 6) % 7; // This will map Sunday to 0, Monday to 1, ..., Saturday to 6
+    const dayName = daysOfWeek[dayIndex];
+
+    // Check if dayName exists in attendanceMap
+    if (attendanceMap[dayName]) {
       if (item.present) {
         attendanceMap[dayName].present += 1;
       } else {
