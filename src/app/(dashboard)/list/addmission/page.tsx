@@ -63,24 +63,25 @@ const AdmissionListPage = async ({
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center p-4">{item.studentName}</td>
+      <td className="flex items-center p-4 justify-center">{item.studentName}</td>
       
-      <td className="hidden md:table-cell gap-4 ">{item.fatherName}</td>
-      <td className="hidden md:table-cell gap-4 ">{item.motherName}</td>
-      <td className="hidden md:table-cell gap-4">
+      <td className="hidden md:table-cell gap-4 text-center">{item.fatherName}</td>
+      <td className="hidden md:table-cell gap-4 text-center">{item.motherName}</td>
+      <td className="hidden md:table-cell gap-4 text-center">
+
         {item.contactNumber.length > 11 
           ? item.contactNumber.split(' ').slice(0, 11).join(' ') + '...'
           : item.contactNumber}
       </td>
-      <td className="hidden md:table-cell gap-4 ">
+      <td className="hidden md:table-cell gap-4 text-center">
         {new Intl.DateTimeFormat("en-US").format(item.dateOfBirth)}
       </td>
-      <td className="hidden md:table-cell gap-4 ">
+      <td className="hidden md:table-cell gap-4 text-center">
         {new Intl.DateTimeFormat("en-US").format(item.createdAt)}
       </td>
 
       <td>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center">
           {role === "admin" && (
             <>
               <FormContainer table="admission" type="update" data={item} />

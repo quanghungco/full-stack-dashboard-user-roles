@@ -54,21 +54,23 @@ const AnnouncementListPage = async ({
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center p-4">{item.title}</td>
-      <td className="hidden md:table-cell w-1/4 gap-4">
+      <td className="flex items-center p-4 justify-center">{item.title}</td>
+      <td className="hidden md:table-cell w-1/4 gap-4 text-center">
         {item.description.length > 10 
           ? item.description.split(' ').slice(0, 10).join(' ') + '...'
           : item.description}
       </td>
-      <td className="hidden md:table-cell gap-4 ">
+      <td className="hidden md:table-cell gap-4 text-center">
         {new Intl.DateTimeFormat("en-US").format(item.startDate)}
       </td>
-      <td className="hidden md:table-cell gap-4 ">
+      <td className="hidden md:table-cell gap-4 text-center">
+
         {new Intl.DateTimeFormat("en-US").format(item.endDate)}
       </td>
 
       <td>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-center">
+
           {role === "admin" && (
             <>
               <FormContainer table="announcement" type="update" data={item} />

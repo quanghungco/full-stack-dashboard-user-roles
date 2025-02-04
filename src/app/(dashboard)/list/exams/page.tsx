@@ -37,10 +37,10 @@ const columns = [
     accessor: "name",
   },
 
-  // {
-  //   header: "Class",
-  //   accessor: "class",
-  // },
+  {
+    header: "Class",
+    accessor: "class",
+  },
 
   {
     header: "Start Date",
@@ -52,7 +52,7 @@ const columns = [
     accessor: "endDate",
     className: "hidden md:table-cell",
   },
-  ...(role === "admin" || role === "teacher"
+  ...(role === "admin"
     ? [
         {
           header: "Actions",
@@ -68,20 +68,21 @@ const renderRow = (item: ExamList) => (
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
 
-    <td className="flex items-center gap-4 p-4">{item.title}</td>
-    <td className="">{item.lesson.subject.name}</td>
-    {/* <td className="">{item.lesson.class.name}</td> */}
+    <td className="flex items-center gap-4 p-4 justify-center">{item.title}</td>
+    <td className="text-center">{item.lesson.subject.name}</td>
+    <td className="text-center">{item.lesson.class.name}</td>
    
-    <td className="hidden md:table-cell">
+    <td className="hidden md:table-cell text-center">
       {new Intl.DateTimeFormat("en-US").format(item.startTime)}
     </td>
-    <td className="hidden md:table-cell">
+    <td className="hidden md:table-cell text-center">
+
       {new Intl.DateTimeFormat("en-US").format(item.endTime)}
     </td>
 
     <td>
-      <div className="flex items-center gap-2">
-        {(role === "admin" || role === "teacher") && (
+      <div className="flex items-center gap-2 justify-center">
+        {(role === "admin" ) && (
           <>
             <FormContainer table="exam" type="update" data={item} />
             <FormContainer table="exam" type="delete" id={item.id} />

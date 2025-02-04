@@ -2,7 +2,7 @@ import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import FormContainer from "@/components/FormContainer";
 import Performance from "@/components/Performance";
-import StudentAttendanceCard from "@/components/StudentAttendanceCard";
+// import StudentAttendanceCard from "@/components/StudentAttendanceCard";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { Class, Student } from "@prisma/client";
@@ -43,7 +43,7 @@ const SingleStudentPage = async ({
       {/* LEFT */}
       <div className="w-full xl:w-2/3">
         {/* TOP */}
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 md:gap-4 ">
           {/* USER INFO CARD */}
           {/* <div className="bg-lamaSky py-6 px-4 rounded-md flex-1 flex gap-4">
             <div className="w-1/3">
@@ -90,10 +90,11 @@ const SingleStudentPage = async ({
             </div>
           </div> */}
 
-          <div className="bg-lamaSky py-6 px-4 rounded-md lg:max-w-[350px] w-full">
+          <div className="bg-lamaSky py-6 px-4 rounded-md  w-full col-span-2">
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
                 <Image
+
                   src={student.img || "/noAvatar.png"}
                   alt=""
                   width={100}
@@ -145,9 +146,12 @@ const SingleStudentPage = async ({
             </div>
           </div>
           {/* SMALL CARDS */}
-          <div className="flex-1 flex gap-4 justify-between flex-wrap">
+          <div className="flex flex-col gap-y-2 w-full md:col-span-1 mt-4 md:mt-0">
             {/* CARD */}
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
+
+
+
+            {/* <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
               <Image
                 src="/singleAttendance.png"
                 alt=""
@@ -159,9 +163,9 @@ const SingleStudentPage = async ({
               <Suspense fallback="loading...">
                 <StudentAttendanceCard id={student.id} />
               </Suspense>
-            </div>
+            </div> */}
             {/* CARD */}
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full ">
               <Image
                 src="/singleBranch.png"
                 alt=""
@@ -178,7 +182,7 @@ const SingleStudentPage = async ({
               </div>
             </div>
             {/* CARD */}
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full ">
               <Image
                 src="/singleLesson.png"
                 alt=""
@@ -195,7 +199,7 @@ const SingleStudentPage = async ({
               </div>
             </div>
             {/* CARD */}
-            <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
+            <div className="bg-white p-4 rounded-md flex gap-4 w-full ">
               <Image
                 src="/singleClass.png"
                 alt=""

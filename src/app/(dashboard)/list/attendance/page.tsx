@@ -38,7 +38,7 @@ const AttendanceListPage = async ({
       header: "Total Students",
       accessor: "total",
     },
-    ...(role === "admin"
+    ...(role === "admin" || role === "teacher"
       ? [
           {
             header: "Actions",
@@ -53,14 +53,16 @@ const AttendanceListPage = async ({
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center gap-4 p-4">{item.className}</td>
-      <td>{item.date.toISOString().split('T')[0]}</td>
-      <td>{item.day}</td>
-      <td>{item.present}</td>
-      <td>{item.total}</td>
+      <td className="flex items-center justify-center gap-4 p-4">{item.className}</td>
+      <td className="text-center">{item.date.toISOString().split('T')[0]}</td>
+      <td className="text-center">{item.day}</td>
+      <td className="text-center">{item.present}</td>
+      <td className="text-center">{item.total}</td>
       <td>
-        <div className="flex items-center gap-2">
-          {role === "admin" && (
+        <div className="flex items-center justify-center gap-2">
+
+
+          {role === "admin" || role === "teacher" && (
             <>
               <FormContainer table="attendance" type="update" data={item} />
               <FormContainer table="attendance" type="delete" id={item.id} />
