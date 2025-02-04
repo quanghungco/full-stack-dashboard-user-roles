@@ -122,6 +122,7 @@ model Class {
   gradeId      Int
   grade        Grade     @relation(fields: [gradeId], references: [id])
   events       Event[]
+  exams        Exam[]
 }
 
 model Subject {
@@ -145,7 +146,7 @@ model Lesson {
   class       Class        @relation(fields: [classId], references: [id])
   teacherId   String
   teacher     Teacher      @relation(fields: [teacherId], references: [id])
-  exams       Exam[]
+ 
   assignments Assignment[]
 }
 
@@ -154,10 +155,11 @@ model Exam {
   title     String
   startTime DateTime
   endTime   DateTime
-  lessonId Int
-  lesson   Lesson   @relation(fields: [lessonId], references: [id])
+  classId   Int
+  classes   Class    @relation(fields: [classId], references: [id])
   
 }
+
 
 model Assignment {
   id        Int      @id @default(autoincrement())

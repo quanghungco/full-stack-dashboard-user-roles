@@ -206,7 +206,7 @@ export const examSchema = z.object({
 
   endTime: z.coerce.date({ message: "End time is required!" }),
 
-  lessonId: z.coerce.number({ message: "Lesson is required!" }),
+  classId: z.coerce.number({ message: "Class is required!" }),
 });
 
 export type ExamSchema = z.infer<typeof examSchema>;

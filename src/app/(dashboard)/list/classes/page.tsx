@@ -55,14 +55,15 @@ const renderRow = (item: ClassList) => (
     key={item.id}
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
-    <td className="flex items-center gap-4 p-4">{item.name}</td>
-    <td className="hidden md:table-cell">{item.capacity}</td>
-    <td className="hidden md:table-cell">{item.name[0]}</td>
-    <td className="hidden md:table-cell">
+    <td className="flex items-center gap-4 p-4 justify-center">{item.name}</td>
+    <td className="hidden md:table-cell text-center">{item.capacity}</td>
+    <td className="hidden md:table-cell text-center">{item.name[0]}</td>
+    <td className="hidden md:table-cell text-center">
       {item.supervisor.name + " " + item.supervisor.surname}
+
     </td>
     <td>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 justify-center">
         {role === "admin" && (
           <>
             <FormContainer table="class" type="update" data={item} />

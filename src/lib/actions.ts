@@ -562,9 +562,14 @@ export const createExam = async (
         title: data.title,
         startTime: data.startTime,
         endTime: data.endTime,
-        lessonId: data.lessonId,
+        classId: data.classId,
+      },
+      include: {
+        classes: true,
       },
     });
+
+
 
     // revalidatePath("/list/subjects");
     return { success: true, error: false };
@@ -603,9 +608,10 @@ export const updateExam = async (
         title: data.title,
         startTime: data.startTime,
         endTime: data.endTime,
-        lessonId: data.lessonId,
+        classId: data.classId,
       },
     });
+
 
     // revalidatePath("/list/subjects");
     return { success: true, error: false };
