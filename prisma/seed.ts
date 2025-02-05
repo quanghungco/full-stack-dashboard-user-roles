@@ -151,15 +151,20 @@ async function main() {
         title: `Assignment ${i}`, 
         startDate: new Date(new Date().setHours(new Date().getHours() + 1)), 
         dueDate: new Date(new Date().setDate(new Date().getDate() + 1)), 
-        lessonId: (i % 30) + 1, 
+        subject: { connect: [{ id: (i % 10) + 1 }] }, // Changed 'subjects' to 'subject'
+        class: { connect: [{ id: (i % 6) + 1 }] },
+        teacher: { connect: [{ id: `teacher${(i % 15) + 1}` }] },
+
       },
     });
   }
+
 
   // RESULT
   for (let i = 1; i <= 10; i++) {
     await prisma.result.create({
       data: {
+
         id: i.toString(),
         marks: 90,
         grade: "A+",

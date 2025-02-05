@@ -2,6 +2,7 @@ import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 const Navbar = async () => {
   const user = await currentUser();
@@ -29,6 +30,7 @@ const Navbar = async () => {
         {/* <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer">
           <Image src="/message.png" alt="" width={20} height={20} />
         </div> */}
+        <ThemeSwitcher />
         <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center cursor-pointer relative">
           <Link href={"/announcements"}>
             <Image

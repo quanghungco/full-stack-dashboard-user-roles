@@ -4,7 +4,6 @@ export const subjectSchema = z.object({
   id: z.coerce.number().min(1, { message: "Subject ID is required!" }),
 
   name: z.string().min(1, { message: "Subject name is required!" }),
-
 });
 
 export type SubjectSchema = z.infer<typeof subjectSchema>;
@@ -38,8 +37,6 @@ export const teacherSchema = z.object({
 
     .min(8, { message: "Password must be at least 8 characters long!" })
 
-    .optional()
-
     .or(z.literal("")),
 
   name: z.string().min(1, { message: "First name is required!" }),
@@ -52,13 +49,11 @@ export const teacherSchema = z.object({
 
     .email({ message: "Invalid email address!" })
 
-    .optional()
-
     .or(z.literal("")),
 
-  phone: z.string().optional(),
+  phone: z.string().min(1, { message: "Phone number is required!" }),
 
-  address: z.string(),
+  address: z.string().min(1, { message: "Address is required!" }),
 
   img: z.string().optional(),
 
@@ -95,32 +90,52 @@ export const admissionSchema = z.object({
   bloodGroup: z.string().min(1, { message: "Blood group is required" }),
   email: z.string().email({ message: "Invalid email address" }),
   nationality: z.string().min(1, { message: "Nationality is required" }),
-  gender: z.enum(["Male", "Female", "Others"], { message: "Gender is required" }),
+  gender: z.enum(["Male", "Female", "Others"], {
+    message: "Gender is required",
+  }),
   image: z.string().optional(),
-  birthCertificate: z.string().min(1, { message: "Birth certificate/NID is required" }),
+  birthCertificate: z
+    .string()
+    .min(1, { message: "Birth certificate/NID is required" }),
   religion: z.string().min(1, { message: "Religion is required" }),
   dateOfBirth: z.coerce.date({ message: "Date of birth is required" }),
   presentAddress: z.string().min(1, { message: "Present address is required" }),
   fatherName: z.string().min(1, { message: "Father's name is required" }),
-  fatherPhone: z.string().min(1, { message: "Father's phone number is required" }),
-  fatherOccupation: z.string().min(1, { message: "Father's occupation is required" }),
+  fatherPhone: z
+    .string()
+    .min(1, { message: "Father's phone number is required" }),
+  fatherOccupation: z
+    .string()
+    .min(1, { message: "Father's occupation is required" }),
   motherName: z.string().min(1, { message: "Mother's name is required" }),
-  motherPhone: z.string().min(1, { message: "Mother's phone number is required" }),
-  motherOccupation: z.string().min(1, { message: "Mother's occupation is required" }),
+  motherPhone: z
+    .string()
+    .min(1, { message: "Mother's phone number is required" }),
+  motherOccupation: z
+    .string()
+    .min(1, { message: "Mother's occupation is required" }),
   sscEquivalent: z.string().min(1, { message: "SSC/Equivalent is required" }),
   sscGroup: z.string().min(1, { message: "SSC group is required" }),
   sscBoard: z.string().min(1, { message: "SSC board is required" }),
   sscBoardRoll: z.string().min(1, { message: "SSC board roll is required" }),
   sscGPA: z.string().min(1, { message: "SSC GPA is required" }),
-  sscPassingYear: z.string().min(1, { message: "SSC passing year is required" }),
-  sscInstituteName: z.string().min(1, { message: "SSC institute name is required" }),
+  sscPassingYear: z
+    .string()
+    .min(1, { message: "SSC passing year is required" }),
+  sscInstituteName: z
+    .string()
+    .min(1, { message: "SSC institute name is required" }),
   hscEquivalent: z.string().min(1, { message: "HSC/Equivalent is required" }),
   hscGroup: z.string().min(1, { message: "HSC group is required" }),
   hscBoard: z.string().min(1, { message: "HSC board is required" }),
   hscBoardRoll: z.string().min(1, { message: "HSC board roll is required" }),
   hscGPA: z.string().min(1, { message: "HSC GPA is required" }),
-  hscPassingYear: z.string().min(1, { message: "HSC passing year is required" }),
-  hscInstituteName: z.string().min(1, { message: "HSC institute name is required" }),
+  hscPassingYear: z
+    .string()
+    .min(1, { message: "HSC passing year is required" }),
+  hscInstituteName: z
+    .string()
+    .min(1, { message: "HSC institute name is required" }),
 });
 
 export type AdmissionSchema = z.infer<typeof admissionSchema>;
@@ -234,11 +249,15 @@ export type ParentSchema = z.infer<typeof parentSchema>;
 export const resultSchema = z.object({
   id: z.number().optional(),
   score: z.number().optional(),
-  subjects: z.array(z.object({
-    subjectId: z.number().min(1, "Subject ID is required"),
-    subjectName: z.string().min(1, "Subject Name is required"),
-    marks: z.number().min(0, "Marks must be a non-negative number"), // Marks should be a number
-  })).min(1, "At least one subject is required"), // Ensure at least one subject is provided
+  subjects: z
+    .array(
+      z.object({
+        subjectId: z.number().min(1, "Subject ID is required"),
+        subjectName: z.string().min(1, "Subject Name is required"),
+        marks: z.number().min(0, "Marks must be a non-negative number"), // Marks should be a number
+      })
+    )
+    .min(1, "At least one subject is required"), // Ensure at least one subject is provided
   studentId: z.string().min(1, "Student ID is required"),
   examId: z.number().optional(),
 });
@@ -250,10 +269,33 @@ export const attendanceSchema = z.object({
   present: z.number().min(0, "Present is required"),
   total: z.number().min(0, "Total is required"),
   date: z.coerce.date({ message: "Date is required" }),
-  day: z.enum(["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"], { message: "Day is required" }),
+  day: z.enum(
+    [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY",
+      "SUNDAY",
+    ],
+    { message: "Day is required" }
+  ),
   className: z.string().min(1, "Class name is required"),
 });
 
 export type AttendanceSchema = z.infer<typeof attendanceSchema>;
 
+export const assignmentSchema = z.object({
+  id: z.number().optional(),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  dueDate: z.coerce.date({ message: "Due date is required" }),
+  subject: z.string().optional(),
+  class: z.string().optional(),
+  teacher: z.string().optional(),
 
+
+});
+
+export type AssignmentSchema = z.infer<typeof assignmentSchema>;

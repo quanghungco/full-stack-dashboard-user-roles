@@ -73,7 +73,7 @@ const AdmissionForm: React.FC<FormProps> = ({
     "BTEB",
   ];
   return (
-    <div className="w-full mx-auto p-4 bg-white shadow-md rounded-md ">
+    <div className="w-full mx-auto p-4 bg-white dark:bg-[#18181b] shadow-md rounded-md ">
       <h1 className="text-2xl font-bold mb-4 text-center">
         Application Form for Admission
       </h1>

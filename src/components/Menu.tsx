@@ -6,7 +6,6 @@ import { UserButton } from "@clerk/nextjs";
 import {
   Sidebar,
   SidebarContent,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"; // Import Shadcn Sidebar components
 
 // Define the structure of the menu items
@@ -67,12 +66,12 @@ const menuItems: MenuItem[] = [
     href: "/list/classes",
     visible: ["admin", "teacher"],
   },
-  {
-    icon: "/lesson.png",
-    label: "Lessons",
-    href: "/list/lessons",
-    visible: ["teacher","admin"],
-  },
+  // {
+  //   icon: "/lesson.png",
+  //   label: "Lessons",
+  //   href: "/list/lessons",
+  //   visible: ["teacher","admin"],
+  // },
 
   {
     icon: "/exam.png",

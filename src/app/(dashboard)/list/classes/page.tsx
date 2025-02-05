@@ -48,7 +48,7 @@ const columns = [
 const renderRow = (item: ClassList) => (
   <tr
     key={item.id}
-    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
+    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
   >
     <td className="flex items-center gap-4 p-4 justify-center">{item.name}</td>
     <td className="hidden md:table-cell text-center">{item.capacity}</td>
@@ -107,7 +107,7 @@ const renderRow = (item: ClassList) => (
   ]);
 
   return (
-    <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
+    <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">All Classes</h1>

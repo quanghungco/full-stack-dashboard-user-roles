@@ -3,7 +3,7 @@ import React from 'react';
 
 const componentName = () => {
     return (
-        <div className='w-full px-4'>
+        <div className='w-full px-4 '>
             <Announcements/>
         </div>
     );

@@ -21,20 +21,20 @@ const Announcements = async () => {
   });
 
   return (
-    <div className="bg-white p-4 rounded-md select-none">
+    <div className="bg-white dark:bg-[#18181b] p-4 rounded-md select-none">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Announcements</h1>
         <span className="text-xs text-gray-400 cursor-pointer">View All</span>
       </div>
       <div className="flex flex-col gap-4 mt-4">
         {data.map((announcement) => (
-          <div key={announcement.id} className="bg-lamaSkyLight rounded-md p-4">
+          <div key={announcement.id} className="bg-lamaSkyLight dark:bg-gray-600 rounded-md p-4">
             <div className="flex items-center justify-between">
               <h2 className="font-medium select-none">{announcement.title}</h2>
-              <span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
+              <span className="text-xs text-gray-400 bg-white dark:bg-[#18181b] rounded-md px-1 py-1">
                 Start Date: {new Intl.DateTimeFormat("en-GB").format(announcement.startDate)}
               </span>
-              <span className="text-xs text-gray-400 bg-white rounded-md px-1 py-1">
+              <span className="text-xs text-gray-400 bg-white dark:bg-[#18181b] rounded-md px-1 py-1">
                 End Date: {new Intl.DateTimeFormat("en-GB").format(announcement.endDate)}
               </span>
      
