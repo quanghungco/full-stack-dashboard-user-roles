@@ -88,16 +88,24 @@ const menuItems: MenuItem[] = [
   },
   {
     icon: "/result.png",
-    label: "Results",
+    label: "All Results",
     href: "/list/results",
-    visible: ["admin", "teacher", "student",],
+    visible: ["admin", "teacher", ],
+  },
+  {
+    icon: "/result.png",
+    label: "Your Results",
+    href: "/list/student-result",
+    visible: ["student",],
+
   },
   {
     icon: "/attendance.png",
     label: "Attendance",
     href: "/list/attendance",
-    visible: ["admin", "teacher", "student", ],
+    visible: ["admin", "teacher" ],
   },
+
   // {
   //   icon: "/calendar.png",
   //   label: "Events",

@@ -106,46 +106,24 @@ const renderRow = (item: ResultList) => (
             break;
           case "search":
             query.OR = [
-              { student: { id: { contains: value, mode: "insensitive" } } },
+              { student: { username: { contains: value, mode: "insensitive" } } },
             ];
             break;
           default:
+
             break;
         }
       }
     }
   }
 
-  // ROLE CONDITIONS
 
-  // switch (role) {
-  //   case "admin":
-  //     break;
-  //   case "teacher":
-  //     query.OR = [
-  //       { exam: { lesson: { teacherId: currentUserId! } } },
-  //       { assignment: { lesson: { teacherId: currentUserId! } } },
-  //     ];
-  //     break;
-
-  //   case "student":
-  //     query.studentId = currentUserId!;
-  //     break;
-
-  //   // case "parent":
-  //   //   query.student = {
-  //   //     parentId: currentUserId!,
-  //   //   };
-  //   //   break;
-  //   default:
-  //     break;
-  // }
 
   const [dataRes, count] = await prisma.$transaction([
     prisma.result.findMany({
       where: query,
       include: {
-        student: { select: { id: true, name: true, surname: true } },
+        student: { select: { id: true, name: true, surname: true , username: true} },
         subject: { select: { id: true, name: true } },
       },
       take: ITEM_PER_PAGE,
@@ -156,7 +134,7 @@ const renderRow = (item: ResultList) => (
 
   const data = dataRes.map((item) => ({
     id: item.id,
-    studentId: item.student?.id,
+    studentId: item.student?.username,
     studentName: item.student?.name,
     studentSurname: item.student?.surname,
     subjectId: item.subject?.id,

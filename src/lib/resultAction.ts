@@ -18,7 +18,7 @@ type ResultActionResponse = {
 export const createResult = async (
     data: { studentId: string; subjectId: number; marks: number; grade: string }[]
   ) => {
-    console.log("Function createResult called with data:", data);
+    // console.log("Function createResult called with data:", data);
   
     try {
       if (!data || data.length === 0) {
@@ -27,9 +27,10 @@ export const createResult = async (
   
       // Validate if student exists
       const studentExists = await prisma.student.findUnique({
-        where: { id: data[0].studentId },
+        where: { username: data[0].studentId },
       });
   
+
       if (!studentExists) {
         throw new Error(`Student with ID '${data[0].studentId}' not found.`);
       }
@@ -46,7 +47,7 @@ export const createResult = async (
         throw new Error("One or more subject IDs are invalid.");
       }
   
-      console.log("Subject validation passed.");
+      // console.log("Subject validation passed.");
   
       // Insert data using Prisma transaction
       const results = await prisma.$transaction(
