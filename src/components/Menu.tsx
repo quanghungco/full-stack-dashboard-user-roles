@@ -105,11 +105,19 @@ const menuItems: MenuItem[] = [
     visible: ["admin", "teacher" ],
   },
 
+  {
+    icon: "/finance.png",
+    label: "Finance",
+    href: "/list/finance",
+    visible: ["admin"],
+  },
+
   // {
   //   icon: "/calendar.png",
   //   label: "Events",
   //   href: "/list/events",
   //   visible: ["admin", "teacher", "student", "parent"],
+
   // },
   // {
   //   icon: "/message.png",

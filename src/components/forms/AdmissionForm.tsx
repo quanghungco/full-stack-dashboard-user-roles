@@ -140,7 +140,7 @@ const AdmissionForm: React.FC<FormProps> = ({
               value="Bangladeshi"
               {...register("nationality")}
               readOnly
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100"
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100 dark:bg-gray-800"
             />
             {errors.nationality && <p className="text-red-500">{errors.nationality.message}</p>}
           </div>

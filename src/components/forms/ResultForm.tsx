@@ -90,7 +90,7 @@ const ResultForm = ({
   });
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 p-4 border rounded-lg">
+    <form onSubmit={onSubmit} className="space-y-4 p-4 border rounded-lg bg-white dark:bg-[#18181b]">
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create New Results" : "Update Results"}
       </h1>

@@ -299,3 +299,13 @@ export const assignmentSchema = z.object({
 });
 
 export type AssignmentSchema = z.infer<typeof assignmentSchema>;
+
+export const financeSchema = z.object({
+  id: z.number().optional(),
+  type: z.enum(["income", "expense"], { message: "Type is required!" }),
+  amount: z.number().min(0, { message: "Amount must be a positive number!" }),
+  description: z.string().min(1, { message: "Description is required!" }),
+  date: z.coerce.date({ message: "Date is required!" }),
+});
+
+export type FinanceSchema = z.infer<typeof financeSchema>;

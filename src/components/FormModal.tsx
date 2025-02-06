@@ -18,6 +18,7 @@ import { deleteExam } from "@/lib/examAction";
 import { deleteAdmission } from "@/lib/admissionAction";
 import { deleteResult } from "@/lib/resultAction";
 import { deleteAssignment } from "@/lib/assignmentAction";
+import { deleteFinance } from "@/lib/financeAction";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -33,7 +34,7 @@ const deleteActionMap = {
   attendance: deleteAttendance,
   event: deleteSubject,
   announcement: deleteAnnouncement,
-
+  finance: deleteFinance,
 };
 
 // USE LAZY LOADING
@@ -77,9 +78,10 @@ const ResultForm = dynamic(() => import("./forms/Resultform"), {
 const AssignmentForm = dynamic(() => import("./forms/AssignmentForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const FinanceForm = dynamic(() => import("./forms/FinanceForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 // TODO: OTHER FORMS
-
-
 
 
 const forms: {
@@ -99,11 +101,7 @@ const forms: {
     />
   ),
   attendance: (setOpen, type, data) => (
-    <AttendanceForm
-      type={type}
-      data={data}
-      setOpen={setOpen}
-    />
+    <AttendanceForm type={type} data={data} setOpen={setOpen} />
   ),
   assignment: (setOpen, type, data, relatedData) => (
     <AssignmentForm
@@ -119,12 +117,15 @@ const forms: {
       data={data}
       setOpen={setOpen}
       relatedData={relatedData}
-
     />
   ),
-  
+  finance: (setOpen, type, data, relatedData) => (
+    <FinanceForm type={type} data={data} setOpen={setOpen} />
+  ),
+
   teacher: (setOpen, type, data, relatedData) => {
     // No need for Cloudinary configuration
+
     return (
       <TeacherForm
         type={type}
@@ -156,7 +157,7 @@ const forms: {
       />
     );
   },
-  
+
   student: (setOpen, type, data, relatedData) => {
     // No need for Cloudinary configuration
     return (
@@ -196,7 +197,7 @@ const forms: {
   ),
   result: (setOpen, type, data, relatedData) => (
     // <ResultForm type={type} data={data} setOpen={setOpen} />
-    <ResultForm type={type} data={data} setOpen={setOpen}  />
+    <ResultForm type={type} data={data} setOpen={setOpen} />
   ),
 };
 type TableType = keyof typeof forms;
@@ -261,8 +262,9 @@ const FormModal = ({
       </button>
       {open && (
         <div className="w-screen h-full absolute left-0 top-0 bg-black bg-opacity-40 z-50 flex items-center justify-center ">
-          <div className="bg-white p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[80%] xl:w-[80%] 2xl:w-[60%]  overflow-y-auto max-h-[90vh]">
+          <div className="bg-white dark:bg-black p-4 rounded-md relative w-[90%] md:w-[70%] lg:w-[80%] xl:w-[80%] 2xl:w-[60%]  overflow-y-auto max-h-[90vh]">
             <Form />
+
             <div
               className="absolute top-4 right-4 cursor-pointer"
               onClick={() => setOpen(false)}
