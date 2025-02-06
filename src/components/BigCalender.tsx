@@ -20,6 +20,7 @@ const BigCalendar = ({
 
   return (
     <Calendar
+      className="bg-white dark:bg-[#18181b] p-4 rounded-md"
       localizer={localizer}
       events={data}
       startAccessor="start"

@@ -21,11 +21,11 @@ const LoginPage = () => {
   }, [user, router]);
 
   return (
-    <div className="h-screen flex items-center justify-center bg-lamaSkyLight">
+    <div className="h-screen flex items-center justify-center bg-lamaSkyLight dark:bg-gray-600">
       <SignIn.Root>
         <SignIn.Step
           name="start"
-          className="bg-white p-12 rounded-md shadow-2xl flex flex-col gap-2"
+          className="bg-white dark:bg-[#18181b] p-12 rounded-md shadow-2xl flex flex-col gap-2"
         >
           <h1 className="text-xl font-bold flex items-center gap-2">
             <Image src="/logo.png" alt="" width={24} height={24} />

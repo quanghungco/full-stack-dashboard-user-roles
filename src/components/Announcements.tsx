@@ -31,10 +31,10 @@ const Announcements = async () => {
           <div key={announcement.id} className="bg-lamaSkyLight dark:bg-gray-600 rounded-md p-4">
             <div className="flex items-center justify-between">
               <h2 className="font-medium select-none">{announcement.title}</h2>
-              <span className="text-xs text-gray-400 bg-white dark:bg-[#18181b] rounded-md px-1 py-1">
+              <span className="text-xs text-gray-400  rounded-md px-1 ">
                 Start Date: {new Intl.DateTimeFormat("en-GB").format(announcement.startDate)}
               </span>
-              <span className="text-xs text-gray-400 bg-white dark:bg-[#18181b] rounded-md px-1 py-1">
+              <span className="text-xs text-gray-400  rounded-md px-1">
                 End Date: {new Intl.DateTimeFormat("en-GB").format(announcement.endDate)}
               </span>
      

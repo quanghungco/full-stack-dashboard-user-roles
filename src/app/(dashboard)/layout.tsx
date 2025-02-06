@@ -18,7 +18,7 @@ export default function DashboardLayout({
       </div>
       <Menu />
 
-      <div className="w-full bg-[#F7F8FA] dark:bg-black overflow-scroll flex h-screen pt-20">
+      <div className="w-full bg-[#F7F8FA] dark:bg-black flex h-full  pt-20">
         <SidebarTrigger />
         {children}
       </div>

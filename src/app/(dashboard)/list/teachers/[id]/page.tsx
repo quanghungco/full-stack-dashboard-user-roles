@@ -75,7 +75,7 @@ const SingleTeacherPage = async ({
                       />
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-300 mt-2">
                     Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                   </p>
                 </div>
