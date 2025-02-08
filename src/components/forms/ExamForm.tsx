@@ -61,8 +61,8 @@ const ExamForm = ({
 
   // const { classes } = relatedData;
   const { classes = [] } = relatedData || {};
-  console.log("ExamForm received relatedData:", relatedData);
-console.log("Classes array:", classes);
+//   console.log("ExamForm received relatedData:", relatedData);
+// console.log("Classes array:", classes);
 
   return (
     <form className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md" onSubmit={onSubmit}>

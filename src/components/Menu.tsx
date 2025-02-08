@@ -111,6 +111,13 @@ const menuItems: MenuItem[] = [
     href: "/list/finance",
     visible: ["admin"],
   },
+  {
+    icon: "/wallet2.png",
+    label: "Payments",
+    href: "/list/payment",
+    visible: ["admin"],
+  },
+
 
   // {
   //   icon: "/calendar.png",

@@ -70,6 +70,7 @@ model Student {
   grade       Grade        @relation(fields: [gradeId], references: [id])
   results     Result[]
   birthday    DateTime
+  payments    Payment[]
 
 }
 
@@ -221,11 +222,30 @@ model Finance {
   updatedAt   DateTime @updatedAt
 }
 
+model Payment {
+  id         String  @id @default(cuid())
+  amount     Float
+  status     PaymentStatus
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [username], onDelete: Cascade)
+
+}
+
+enum PaymentStatus {
+  NotPaid
+  Paid
+}
+
+
+
 
 enum UserSex {
   MALE
   FEMALE
 }
+
 
 enum Day {
   SUNDAY

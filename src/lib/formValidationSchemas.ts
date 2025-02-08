@@ -309,3 +309,12 @@ export const financeSchema = z.object({
 });
 
 export type FinanceSchema = z.infer<typeof financeSchema>;
+
+export const paymentSchema = z.object({
+  id: z.string().optional(),
+  amount: z.preprocess((val) => Number(val), z.number()),
+  status: z.enum(["NotPaid", "Paid"], { message: "Status is required!" }),
+  studentId: z.string().min(1, { message: "Student ID is required!" }),
+});
+
+export type PaymentSchema = z.infer<typeof paymentSchema>;

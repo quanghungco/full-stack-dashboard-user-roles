@@ -19,6 +19,7 @@ import { deleteAdmission } from "@/lib/admissionAction";
 import { deleteResult } from "@/lib/resultAction";
 import { deleteAssignment } from "@/lib/assignmentAction";
 import { deleteFinance } from "@/lib/financeAction";
+import { deletePayment } from "@/lib/paymentAction";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -35,6 +36,7 @@ const deleteActionMap = {
   event: deleteSubject,
   announcement: deleteAnnouncement,
   finance: deleteFinance,
+  payment: deleteFinance,
 };
 
 // USE LAZY LOADING
@@ -81,7 +83,11 @@ const AssignmentForm = dynamic(() => import("./forms/AssignmentForm"), {
 const FinanceForm = dynamic(() => import("./forms/FinanceForm"), {
   loading: () => <h1>Loading...</h1>,
 });
+const PaymentForm = dynamic(() => import("./forms/PaymentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 // TODO: OTHER FORMS
+
 
 
 const forms: {
@@ -121,6 +127,9 @@ const forms: {
   ),
   finance: (setOpen, type, data, relatedData) => (
     <FinanceForm type={type} data={data} setOpen={setOpen} />
+  ),
+  payment: (setOpen, type, data, relatedData) => (
+    <PaymentForm type={type} data={data} setOpen={setOpen} />
   ),
 
   teacher: (setOpen, type, data, relatedData) => {
