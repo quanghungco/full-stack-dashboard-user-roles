@@ -31,9 +31,10 @@ const menuItems: MenuItem[] = [
   },
   {
     icon: "/student.png",
-    label: "Addmission",
-    href: "/list/addmission",
+    label: "Admission",
+    href: "/list/admission",
     visible: ["admin",],
+
   },
   {
     icon: "/teacher.png",
@@ -112,7 +113,7 @@ const menuItems: MenuItem[] = [
     visible: ["admin"],
   },
   {
-    icon: "/wallet2.png",
+    icon: "/wallet3.png",
     label: "Payments",
     href: "/list/payment",
     visible: ["admin"],

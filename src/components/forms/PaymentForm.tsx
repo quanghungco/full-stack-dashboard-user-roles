@@ -8,6 +8,7 @@ import { createPayment, updatePayment } from "@/lib/paymentAction";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 
 const PaymentForm = ({
   type,
@@ -55,57 +56,59 @@ const PaymentForm = ({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col gap-6 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md"
+      className="relative flex flex-col gap-6 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md"
     >
+      {/* Close Button */}
+      <button
+        type="button"
+        onClick={() => setOpen(false)}
+        className="absolute top-4 right-4 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+      >
+        <X size={20} />
+      </button>
+
       <h1 className="text-xl font-semibold">
         {type === "create" ? "Create Payment Record" : "Update Payment Record"}
       </h1>
+
       <div className="flex justify-between flex-wrap gap-4">
+        <InputField
+          label="Student ID"
+          name="studentId"
+          register={register}
+          error={errors.studentId}
+          type="text"
+        />
+        <InputField
+          label="Amount"
+          name="amount"
+          register={register}
+          error={errors.amount}
+          type="number"
+        />
 
-      <InputField
-        label="Amount"
-        name="amount"
-        register={register}
-        error={errors.amount}
-        type="number"
-      />
-      
-      <InputField
-        label="Student ID"
-        name="studentId"
-        register={register}
-        error={errors.studentId}
-        type="text"
-      />
-
-      {/* Payment Status Dropdown */}
-      <div className="flex flex-col w-full md:w-1/4">
-        <label className="text-sm font-medium">Payment Status</label>
-        <select
-          {...register("status")}
-          className="border border-gray-300 dark:border-gray-700 rounded-md p-2 mt-1 bg-white dark:bg-gray-900"
-        >
-          <option value="NotPaid">Not Paid</option>
-          <option value="Paid">Paid</option>
-        </select>
-        {errors.status && (
-          <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
-        )}
+        {/* Payment Status Dropdown */}
+        <div className="flex flex-col w-full md:w-1/4">
+          <label className="text-sm font-medium">Payment Status</label>
+          <select
+            {...register("status")}
+            className="border border-gray-300 dark:border-gray-700 rounded-md p-2 mt-1 bg-white dark:bg-gray-900"
+          >
+            <option value="NotPaid">Not Paid</option>
+            <option value="Paid">Paid</option>
+          </select>
+          {errors.status && (
+            <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
+          )}
+        </div>
       </div>
-      </div>
-      
-      
 
       <button
         type="submit"
         className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50"
         disabled={isSubmitting}
       >
-        {isSubmitting
-          ? "Processing..."
-          : type === "create"
-          ? "Create"
-          : "Update"}
+        {isSubmitting ? "Processing..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );

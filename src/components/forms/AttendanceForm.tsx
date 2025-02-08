@@ -22,7 +22,7 @@ const AttendanceForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AttendanceSchema>({
     resolver: zodResolver(attendanceSchema),
     defaultValues: data
@@ -115,8 +115,12 @@ const AttendanceForm = ({
         </div>
       </div>
 
-      <button type="submit" className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
+      <button
+        type="submit"
+        className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Processing..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );

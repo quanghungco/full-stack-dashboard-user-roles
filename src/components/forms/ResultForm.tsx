@@ -25,7 +25,7 @@ const ResultForm = ({
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ResultSchema>({
     resolver: zodResolver(resultSchema),
     defaultValues: data || { studentId: "", subjects: [] }, // Ensure studentId is initialized
@@ -154,12 +154,13 @@ const ResultForm = ({
         </Button>
       </div>
 
-      <Button
+      <button
         type="submit"
-        className="bg-blue-400 text-white p-2 rounded-md mx-auto block w-1/3"
+        className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50"
+        disabled={isSubmitting}
       >
-        {type === "create" ? "Create" : "Update"}
-      </Button>
+        {isSubmitting ? "Processing..." : type === "create" ? "Create" : "Update"}
+      </button>
     </form>
   );
 };

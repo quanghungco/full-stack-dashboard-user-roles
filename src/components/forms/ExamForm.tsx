@@ -29,7 +29,7 @@ const ExamForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ExamSchema>({
     resolver: zodResolver(examSchema),
   });
@@ -134,8 +134,12 @@ const ExamForm = ({
       {state.error && (
         <span className="text-red-500">Something went wrong!</span>
       )}
-      <button className="bg-blue-400 text-white p-2 rounded-md">
-        {type === "create" ? "Create" : "Update"}
+      <button
+        type="submit"
+        className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Processing..." : type === "create" ? "Create" : "Update"}
       </button>
     </form>
   );
