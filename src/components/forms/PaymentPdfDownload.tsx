@@ -1,41 +1,35 @@
-"use client"
-import React from 'react';
+"use client";
+import React from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { FaDownload } from 'react-icons/fa';
+import { FaDownload } from "react-icons/fa";
+import { PaymentHistory } from "@/app/(dashboard)/list/payment/payment-history/page";
 
-interface PaymentHistory {
-  id: string;
-//   studentName: string;
-  studentId: string;
-//   class: string;
-  amount: number;
-  status: string;
-  createdAt: Date;
 
-}
-
-const DownloadPaymentPDF: React.FC<PaymentHistory> = (data) => {
+const DownloadPaymentPDF: React.FC<PaymentHistory & { student: { name: string; surname: string }}> = (data) => {
   const downloadPDF = () => {
     const doc = new jsPDF();
-    doc.text("Payment History Data", 20, 10);
+    doc.text("Money Receipt", 20, 10);
     doc.autoTable({
       head: [["Label", "Value"]],
       body: [
-        // ["Student's Name", data.studentName],
-        ["Student's ID", data.studentId],
-        // ["Class", data.class],
+        ["Student Name", `${data.student.name} ${data.student.surname}`], 
+        ["Student ID", data.studentId],
         ["Amount", `${data.amount}/=`],
-        ["Payment Date", data.createdAt.toISOString().split('T')[0]],
+        ["Payment Date", data.createdAt.toISOString().split("T")[0]],
         ["Status", data.status],
       ],
+
     });
     doc.save(`payment_${data.id}.pdf`);
   };
 
   return (
-    <button onClick={downloadPDF} className="bg-blue-300 text-white p-1 rounded-md flex items-center gap-2 px-2">
-      <FaDownload className='w-3 h-3' /> PDF
+    <button
+      onClick={downloadPDF}
+      className="bg-blue-300 text-white p-1 rounded-md flex items-center gap-2 px-2"
+    >
+      <FaDownload className="w-3 h-3" /> Invoice
     </button>
   );
 };

@@ -54,18 +54,13 @@ const PaymentHistoryPage = async ({
   ];
 
   // Define renderRow function to render each payment row
-  const renderRow = (item: PaymentHistory) => (
-    <tr
-      key={item.id}
-      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
-    >
-      <td className="flex items-center p-4 justify-center">{item.studentId}</td>
-      <td className="hidden md:table-cell gap-4 text-center">{item.amount.toFixed(2)}</td>
-      <td className="hidden md:table-cell gap-4 text-center">
-        {new Intl.DateTimeFormat("en-CA").format(new Date(item.createdAt))}
-      </td>
+  const renderRow = (item: PaymentHistory & { student: { name: string; surname: string; }; className: string }) => (
+    <tr key={item.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600">
+      <td className="flex items-center p-4 justify-center">{item.student.name} {item.student.surname}</td>
+      <td className="text-center">{item.studentId}</td>
+      <td className="hidden md:table-cell gap-4 text-center">TK {item.amount}</td>
+      <td className="hidden md:table-cell gap-4 text-center">{new Intl.DateTimeFormat("en-CA").format(new Date(item.createdAt))}</td>
       <td className="hidden md:table-cell gap-4 text-center">{item.status}</td>
-
       <td>
         <div className="flex items-center gap-2 justify-center">
           {role === "admin" && (
@@ -74,11 +69,16 @@ const PaymentHistoryPage = async ({
               <FormModal table="payment" type="delete" id={item.id} />
             </>
           )}
-          <DownloadPaymentPDF {...item} /> {/* Pass payment data to the DownloadPaymentPDF component */}
+          {/* Pass student name and class name */}
+         
+          
+          <DownloadPaymentPDF   {...item}  />
         </div>
       </td>
     </tr>
   );
+  
+  
 
   // Handle pagination and search parameters
   const { page, perPage, ...queryParams } = searchParams;

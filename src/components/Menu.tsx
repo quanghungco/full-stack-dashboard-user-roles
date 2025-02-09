@@ -7,8 +7,22 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar"; // Import Shadcn Sidebar components
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
+import { CiWallet } from "react-icons/ci";
+import { MdOutlinePayments } from "react-icons/md";
+import { RiFileList3Line } from "react-icons/ri";
+import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 
 // Define the structure of the menu items
 interface MenuItem {
@@ -112,12 +126,12 @@ const menuItems: MenuItem[] = [
     href: "/list/finance",
     visible: ["admin"],
   },
-  {
-    icon: "/wallet3.png",
-    label: "Payments",
-    href: "/list/payment",
-    visible: ["admin"],
-  },
+  // {
+  //   icon: "/wallet3.png",
+  //   label: "Payments",
+  //   href: "/list/payment",
+  //   visible: ["admin"],
+  // },
 
   // {
   //   icon: "/calendar.png",
@@ -141,7 +155,7 @@ const Menu = async () => {
   return (
     <Sidebar className="pt-16 ">
       <SidebarContent>
-        <div className="flex flex-col gap-2 pt-2 pl-5 pb-5">
+        <div className="flex flex-col gap-2 pt-2 pl-5 ">
           {menuItems.map((item) => {
             if (item.visible.includes(role)) {
               return (
@@ -158,7 +172,50 @@ const Menu = async () => {
             return null; // Return null if the item is not visible
           })}
         </div>
+        {role === "admin" && (
+          <SidebarMenu className="pb-5 pl-3">
+            <Collapsible>
+              <CollapsibleTrigger
+                asChild
+                className="hover:bg-lamaSkyLight text-gray-500 py-2 px-4"
+              >
+                <SidebarMenuButton className="flex items-center justify-between gap-2 rounded-md">
+                  <span className="flex items-center gap-2">
+                    <CiWallet className="text-xl font-bold" />
+                    Payments
+                  </span>
+
+                  {/* Toggle icons based on `data-state` */}
+                  <IoIosArrowDown className="arrow-down transition-transform duration-300" />
+                  <IoIosArrowForward className="arrow-forward transition-transform duration-300" />
+                </SidebarMenuButton>
+              </CollapsibleTrigger>
+
+              <CollapsibleContent className="transition-all duration-700 ease-in-out">
+                <SidebarMenuSub className="px-0">
+                  <Link
+                    href="/list/payment"
+                    className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md hover:shadow-md"
+                  >
+                    <MdOutlinePayments /> Payment
+                  </Link>
+
+                </SidebarMenuSub>
+                <SidebarMenuSub className="px-0">
+                  <Link
+                    href="/list/payment/payment-history"
+                    className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md hover:shadow-md"
+                  >
+                    <RiFileList3Line /> Payment History
+                  </Link>
+
+                </SidebarMenuSub>
+              </CollapsibleContent>
+            </Collapsible>
+          </SidebarMenu>
+        )}
       </SidebarContent>
+
       <SidebarSeparator />
 
       <SidebarFooter>
