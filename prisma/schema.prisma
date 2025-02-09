@@ -114,6 +114,7 @@ model Grade {
 model Class {
   id       Int    @id @default(autoincrement())
   name     String @unique
+  fees     Int          
   capacity Int
   assignments Assignment[]
   supervisorId String?
@@ -236,6 +237,7 @@ model Payment {
 enum PaymentStatus {
   NotPaid
   Paid
+  Due
 }
 
 

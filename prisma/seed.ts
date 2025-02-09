@@ -33,6 +33,7 @@ async function main() {
       data: {
         name: `${i}A`,
         capacity: Math.floor(Math.random() * (20 - 15 + 1)) + 15,
+        fees: Math.floor(Math.random() * (1000 - 500 + 1)) + 500,
       },
     });
   }

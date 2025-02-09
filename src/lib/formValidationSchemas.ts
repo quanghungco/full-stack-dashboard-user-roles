@@ -12,6 +12,7 @@ export const classSchema = z.object({
   id: z.coerce.number().optional(),
 
   name: z.string().min(1, { message: "Class name is required!" }),
+  fees: z.coerce.number().min(1, { message: "Fees is required!" }),
 
   capacity: z.coerce.number().min(1, { message: "Capacity is required!" }),
 
@@ -34,7 +35,6 @@ export const teacherSchema = z.object({
   password: z
 
     .string()
-
     .min(8, { message: "Password must be at least 8 characters long!" })
 
     .or(z.literal("")),
@@ -45,9 +45,10 @@ export const teacherSchema = z.object({
 
   email: z
 
-    .string()
+    .string().min(1, { message: "Email is required!" })
 
     .email({ message: "Invalid email address!" })
+
 
     .or(z.literal("")),
 
@@ -141,27 +142,26 @@ export const admissionSchema = z.object({
 export type AdmissionSchema = z.infer<typeof admissionSchema>;
 
 export const studentSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().min(3, { message: "Student ID is required! at least 3 characters" }),
   username: z
     .string()
     .min(3, { message: "Username must be at least 3 characters long!" })
     .max(20, { message: "Username must be at most 20 characters long!" }),
 
+
   password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long!" })
-    .optional()
+    .string().min(8, { message: "Password must be at least 8 characters long!" })
     .or(z.literal("")),
+
   name: z.string().min(1, { message: "First name is required!" }),
   surname: z.string().min(1, { message: "Last name is required!" }),
   email: z
-    .string()
-    .email({ message: "Invalid email address!" })
-    .optional()
-    .or(z.literal("")),
-  phone: z.string().optional(),
+    .string().min(1, { message: "Email is required!" })
+    .email({ message: "Invalid email address!" }),
+  phone: z.string().min(1, { message: "Phone number is required!" }),
 
-  address: z.string(),
+
+  address: z.string().min(1, { message: "Address is required!" }),
 
   img: z.string().optional(),
 
@@ -177,7 +177,7 @@ export const studentSchema = z.object({
   parentNId: z.coerce
     .number()
     .min(1, { message: "Parent NID must be a positive number" }),
-  parentName: z.string(),
+  parentName: z.string().min(1, { message: "Parent name is required!" }),
 });
 
 export type StudentSchema = z.infer<typeof studentSchema>;
@@ -294,8 +294,6 @@ export const assignmentSchema = z.object({
   subject: z.string().optional(),
   class: z.string().optional(),
   teacher: z.string().optional(),
-
-
 });
 
 export type AssignmentSchema = z.infer<typeof assignmentSchema>;
@@ -313,7 +311,7 @@ export type FinanceSchema = z.infer<typeof financeSchema>;
 export const paymentSchema = z.object({
   id: z.string().optional(),
   amount: z.preprocess((val) => Number(val), z.number()),
-  status: z.enum(["NotPaid", "Paid"], { message: "Status is required!" }),
+  status: z.enum(["NotPaid", "Paid", "Due"], { message: "Status is required!" }),
   studentId: z.string().min(1, { message: "Student ID is required!" }),
 });
 

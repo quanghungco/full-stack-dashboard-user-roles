@@ -3,16 +3,24 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";
 import ClientPaymentList from "@/components/ClientPaymentList";
 
-const PaymentList = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+const Payments = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
   const { sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
   const { page } = searchParams;
   const p = page ? parseInt(page) : 1;
+  const perPage = searchParams.perPage
+    ? parseInt(searchParams.perPage)
+    : ITEM_PER_PAGE;
 
   const [students, count] = await prisma.$transaction([
     prisma.student.findMany({
       include: {
+        class: { select: { fees: true } },
         payments: {
           select: {
             id: true,
@@ -25,13 +33,32 @@ const PaymentList = async ({ searchParams }: { searchParams: { [key: string]: st
           take: 1,
         },
       },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: perPage,
+      skip: perPage * (p - 1),
     }),
     prisma.student.count(),
   ]);
+  const payments = await prisma.payment.findMany({
+    where: {
+      studentId: {
+        in: students.map(student => student.id),
+      },
+    },
+  });
+  console.log(payments);
 
-  return <ClientPaymentList students={students} total={count} role={role} page={p} />;
+  
+
+  return (
+    <ClientPaymentList
+      payments={payments}
+      students={students}
+      total={count}
+      role={role}
+      page={p}
+      perPage={perPage}
+    />
+  );
 };
 
-export default PaymentList;
+export default Payments;

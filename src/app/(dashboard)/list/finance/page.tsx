@@ -71,8 +71,10 @@ const FinanceListPage = async ({
     </tr>
   );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   const p = page ? parseInt(page) : 1;
+
 
   const query: Prisma.FinanceWhereInput = {};
 
@@ -91,10 +93,11 @@ const FinanceListPage = async ({
   const [data, count] = await prisma.$transaction([
     prisma.finance.findMany({
       where: query,
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.finance.count({ where: query }),
+
   ]);
 
   return (
@@ -112,7 +115,7 @@ const FinanceListPage = async ({
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };

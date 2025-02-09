@@ -6,6 +6,8 @@ import { UserButton } from "@clerk/nextjs";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
+  SidebarSeparator,
 } from "@/components/ui/sidebar"; // Import Shadcn Sidebar components
 
 // Define the structure of the menu items
@@ -33,8 +35,7 @@ const menuItems: MenuItem[] = [
     icon: "/student.png",
     label: "Admission",
     href: "/list/admission",
-    visible: ["admin",],
-
+    visible: ["admin"],
   },
   {
     icon: "/teacher.png",
@@ -42,7 +43,7 @@ const menuItems: MenuItem[] = [
     href: "/list/teachers",
     visible: ["admin", "teacher"],
   },
- 
+
   {
     icon: "/student.png",
     label: "Students",
@@ -78,32 +79,31 @@ const menuItems: MenuItem[] = [
     icon: "/exam.png",
     label: "Exams",
     href: "/list/exams",
-    visible: ["admin", "teacher", "student",],
+    visible: ["admin", "teacher", "student"],
   },
   {
     icon: "/assignment.png",
     label: "Assignments",
     href: "/list/assignments",
-    visible: [ "teacher", "student", ],
+    visible: ["teacher", "student"],
   },
   {
     icon: "/result.png",
     label: "All Results",
     href: "/list/results",
-    visible: ["admin", "teacher", ],
+    visible: ["admin", "teacher"],
   },
   {
     icon: "/result.png",
     label: "Your Results",
     href: "/list/student-result",
-    visible: ["student",],
-
+    visible: ["student"],
   },
   {
     icon: "/attendance.png",
     label: "Attendance",
     href: "/list/attendance",
-    visible: ["admin", "teacher" ],
+    visible: ["admin", "teacher"],
   },
 
   {
@@ -118,7 +118,6 @@ const menuItems: MenuItem[] = [
     href: "/list/payment",
     visible: ["admin"],
   },
-
 
   // {
   //   icon: "/calendar.png",
@@ -141,9 +140,8 @@ const Menu = async () => {
 
   return (
     <Sidebar className="pt-16 ">
-   
       <SidebarContent>
-        <div className="flex flex-col gap-2 pt-2 pl-5">
+        <div className="flex flex-col gap-2 pt-2 pl-5 pb-5">
           {menuItems.map((item) => {
             if (item.visible.includes(role)) {
               return (
@@ -159,14 +157,20 @@ const Menu = async () => {
             }
             return null; // Return null if the item is not visible
           })}
-          <div className="flex gap-4 py-10 pl-2 border-t-2 border-gray-200">
-            <UserButton />
-            <span className="text-lg text-gray-500">
-              {user?.firstName ? `${user.firstName}` : `${user?.publicMetadata?.role as string}`}
-            </span>
-          </div>
         </div>
       </SidebarContent>
+      <SidebarSeparator />
+
+      <SidebarFooter>
+        <div className="flex gap-4 py-5 pl-2 ">
+          <UserButton />
+          <span className="text-lg text-gray-500">
+            {user?.firstName
+              ? `${user.firstName}`
+              : `${user?.publicMetadata?.role as string}`}
+          </span>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 };

@@ -71,9 +71,11 @@ const renderRow = (item: LessonList) => (
   </tr>
 );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   const p = page ? parseInt(page) : 1;
+
 
   // URL PARAMS CONDITION
 
@@ -110,10 +112,11 @@ const renderRow = (item: LessonList) => (
         class: { select: { name: true } },
         teacher: { select: { name: true, surname: true } },
       },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.lesson.count({ where: query }),
+
   ]);
 
   return (
@@ -137,7 +140,7 @@ const renderRow = (item: LessonList) => (
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };

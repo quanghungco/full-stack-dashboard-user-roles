@@ -16,13 +16,22 @@ type ResultActionResponse = {
   error?: string; // Use string for error messages
 };
 
+// CREATE CLASS
 export const createClass = async (
     currentState: CurrentState,
     data: ClassSchema
   ) => {
+    console.log("Creating class",data);
     try {
       await prisma.class.create({
         data,
+        select: {
+          id: true,
+          name: true,
+          fees: true,
+          capacity: true,
+          supervisorId: true,
+        },
       });
   
       // revalidatePath("/list/class");

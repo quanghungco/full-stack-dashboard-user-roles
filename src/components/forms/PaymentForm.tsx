@@ -96,10 +96,12 @@ const PaymentForm = ({
           >
             <option value="NotPaid">Not Paid</option>
             <option value="Paid">Paid</option>
+            <option value="Due">Due</option>
           </select>
           {errors.status && (
             <p className="text-red-500 text-sm mt-1">{errors.status.message}</p>
           )}
+
         </div>
       </div>
 

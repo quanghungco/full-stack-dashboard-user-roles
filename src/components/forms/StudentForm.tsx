@@ -184,9 +184,9 @@ const StudentForm = ({
           <InputField
           label="Parent Name*"
           name="parentName"
-          defaultValue={data?.surname}
+          defaultValue={data?.parentName}
           register={register}
-          error={errors.surname}
+          error={errors.parentName}
         />
         <InputField
           label="Parent NID*"

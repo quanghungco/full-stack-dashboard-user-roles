@@ -55,9 +55,11 @@ const SubjectListPage = async ({
     </tr>
   );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   const p = page ? parseInt(page) : 1;
+
 
   // URL PARAMS CONDITION
 
@@ -83,10 +85,11 @@ const SubjectListPage = async ({
       include: {
         teachers: true,
       },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.subject.count({ where: query }),
+
   ]);
 
   return (
@@ -113,7 +116,7 @@ const SubjectListPage = async ({
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };

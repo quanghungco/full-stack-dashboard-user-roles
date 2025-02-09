@@ -73,47 +73,36 @@ const StudentListPage = async ({
       <td className="hidden md:table-cell text-center">{item.phone}</td>
       <td className="hidden md:table-cell text-center">{item.address}</td>
       <td>
-
         <div className="flex items-center gap-2 justify-center">
           <Link href={`/list/students/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
               <Image src="/view.png" alt="" width={16} height={16} />
             </button>
           </Link>
-          {role === "admin" && (
-            // <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaPurple">
-            //   <Image src="/delete.png" alt="" width={16} height={16} />
-            // </button>
-            <FormContainer table="student" type="delete" id={item.id} />
-          )}
+          {role === "admin" && <FormContainer table="student" type="delete" id={item.id} />}
         </div>
       </td>
     </tr>
   );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   // URL PARAMS CONDITION
-
   const query: Prisma.StudentWhereInput = {};
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case "teacherId":
-            query.class = {
-              lessons: {
-                some: {
-                  teacherId: value,
-                },
-              },
-            };
+          case "studentId":
+            query.username = { contains: value, mode: "insensitive" }; // Fix: Directly filter by studentId
             break;
           case "search":
             query.name = { contains: value, mode: "insensitive" };
+
             break;
           default:
             break;
@@ -121,15 +110,15 @@ const StudentListPage = async ({
       }
     }
   }
-
+  
   const [data, count] = await prisma.$transaction([
     prisma.student.findMany({
       where: query,
       include: {
         class: true,
       },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.student.count({ where: query }),
   ]);
@@ -148,19 +137,14 @@ const StudentListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && (
-              // <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              //   <Image src="/plus.png" alt="" width={14} height={14} />
-              // </button>
-              <FormContainer table="student" type="create" />
-            )}
+            {role === "admin" && <FormContainer table="student" type="create" />}
           </div>
         </div>
       </div>
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };

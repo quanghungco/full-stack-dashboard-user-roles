@@ -69,7 +69,9 @@ const renderRow = (item: ClassList) => (
   </tr>
 );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
+
 
   const p = page ? parseInt(page) : 1;
 
@@ -100,10 +102,11 @@ const renderRow = (item: ClassList) => (
       include: {
         supervisor: true,
       },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.class.count({ where: query }),
+
   ]);
 
   return (
@@ -127,9 +130,10 @@ const renderRow = (item: ClassList) => (
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };
+
 
 export default ClassListPage;

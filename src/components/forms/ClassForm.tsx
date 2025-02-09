@@ -49,7 +49,7 @@ const ClassForm = ({
   );
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    // console.log(data);
     formAction(data);
   });
 
@@ -63,7 +63,7 @@ const ClassForm = ({
     }
   }, [state, router, type, setOpen]);
 
-  const { teachers, grades } = relatedData;
+  const { teachers} = relatedData;
 
   return (
     <form className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md" onSubmit={onSubmit}>
@@ -85,6 +85,13 @@ const ClassForm = ({
           defaultValue={data?.capacity}
           register={register}
           error={errors?.capacity}
+        />
+        <InputField
+          label="Class Fees"
+          name="fees"
+          defaultValue={data?.fees}
+          register={register}
+          error={errors?.fees}
         />
         {data && (
           <InputField
@@ -124,7 +131,7 @@ const ClassForm = ({
         
       </div>
       {state.error && (
-        <span className="text-red-500">Something went wrong!</span>
+        <span className="text-red-500">Something went wrong!{state.error}</span>
       )}
       <button
         type="submit"

@@ -89,11 +89,13 @@ const renderRow = (item: ResultList) => (
   </tr>
 );
 
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   const p = page ? parseInt(page) : 1;
 
-  // URL PARAMS CONDITION
+
+  // URL PARAMS CONDITION 
 
   const query: Prisma.ResultWhereInput = {};
 
@@ -126,10 +128,11 @@ const renderRow = (item: ResultList) => (
         student: { select: { id: true, name: true, surname: true , username: true} },
         subject: { select: { id: true, name: true } },
       },
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.result.count({ where: query }),
+
   ]);
 
   const data = dataRes.map((item) => ({
@@ -167,7 +170,7 @@ const renderRow = (item: ResultList) => (
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };

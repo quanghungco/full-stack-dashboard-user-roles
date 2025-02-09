@@ -93,10 +93,10 @@ const AdmissionListPage = async ({
       </td>
     </tr>
   );
-  const { page, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = searchParams;
 
   const p = page ? parseInt(page) : 1;
-
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   // URL PARAMS CONDITION
 
   const query: Prisma.AdmissionWhereInput = {};
@@ -118,11 +118,12 @@ const AdmissionListPage = async ({
   const [data, count] = await prisma.$transaction([
     prisma.admission.findMany({
       where: query,
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.admission.count({ where: query }),
   ]);
+
 
   return (
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
@@ -149,8 +150,9 @@ const AdmissionListPage = async ({
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count} />
+      <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
+
   );
 };
 
