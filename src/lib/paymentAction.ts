@@ -52,17 +52,31 @@ export const updatePayment = async (
   }
 };
 
-export const deletePayment = async (
-  id: string,
-  currentState: CurrentState
-): Promise<PaymentActionResponse> => {
+// export const deletePayment = async (
+//   id: string,
+//   currentState: CurrentState
+// ): Promise<PaymentActionResponse> => {
+//   try {
+//     const payment = await prisma.payment.delete({
+//       where: { id },
+//     });
+//     return { success: true, payment };
+//   } catch (error) {
+//     console.error(error);
+//     return { success: false, error: "Failed to delete payment." };
+//   }
+// };
+
+  export const deletePayment = async (currentState: CurrentState, data: FormData) => {
+  const id = data.get("id") as string;
+
   try {
-    const payment = await prisma.payment.delete({
+    await prisma.payment.delete({
       where: { id },
     });
-    return { success: true, payment };
-  } catch (error) {
-    console.error(error);
-    return { success: false, error: "Failed to delete payment." };
+    return { success: true, error: false };
+  } catch (err) {
+    console.log(err);
+    return { success: false, error: true };
   }
 };

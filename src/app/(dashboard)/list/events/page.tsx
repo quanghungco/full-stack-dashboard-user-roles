@@ -13,7 +13,7 @@ type EventList = Event & { class: Class };
 const EventListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
 
   const { userId, sessionClaims } = auth();
@@ -91,7 +91,7 @@ const EventListPage = async ({
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   const p = page ? parseInt(page) : 1;

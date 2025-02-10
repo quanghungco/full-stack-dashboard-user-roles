@@ -96,7 +96,7 @@ const FinanceForm = ({
           label="Date"
           name="date"
           register={register}
-          defaultValue={data?.date?.toString() || ""}
+          defaultValue={data?.date ? data.date.toISOString().slice(0, 10) : undefined}
           error={errors.date}
           type="date"
         />

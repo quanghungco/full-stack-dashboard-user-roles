@@ -72,6 +72,7 @@ const AttendanceForm = ({
           label="Date"
           name="date"
           type="date"
+          defaultValue={data?.date ? data.date.toISOString().slice(0, 10) : undefined}
           register={register}
           error={errors?.date}
         />

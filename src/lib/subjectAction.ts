@@ -21,7 +21,7 @@ export const createSubject = async (
     data: SubjectSchema
   
   ) => {
-    console.log(data);
+    // console.log(data);
     try {
       await prisma.subject.create({
         data: {

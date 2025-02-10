@@ -82,7 +82,7 @@ const ExamForm = ({
         <InputField
           label="Start Date"
           name="startTime"
-          defaultValue={data?.startTime}
+          defaultValue={data?.startTime ? data.startTime.toISOString().slice(0, 16) : undefined}
           register={register}
           error={errors?.startTime}
           type="datetime-local"
@@ -90,7 +90,7 @@ const ExamForm = ({
         <InputField
           label="End Date"
           name="endTime"
-          defaultValue={data?.endTime}
+          defaultValue={data?.endTime ? data.endTime.toISOString().slice(0, 16) : undefined}
           register={register}
           error={errors?.endTime}
           type="datetime-local"

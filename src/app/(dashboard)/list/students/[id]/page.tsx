@@ -9,18 +9,18 @@ import { Class, Student } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { HiCalendarDateRange } from "react-icons/hi2";
 import { IoMail } from "react-icons/io5";
-import { MdBloodtype, MdOutlineBloodtype } from "react-icons/md";
+import { MdBloodtype } from "react-icons/md";
 
 const SingleStudentPage = async ({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) => {
-  const { sessionClaims } = auth();
+  const { sessionClaims } = await auth();
+  
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
   const student:
@@ -28,7 +28,7 @@ const SingleStudentPage = async ({
         class: Class & { _count: { lessons: number } };
       })
     | null = await prisma.student.findUnique({
-    where: { id },
+    where: { id: (await params).id },
     include: {
       class: { include: { _count: { select: { lessons: true } } } },
     },
@@ -94,7 +94,6 @@ const SingleStudentPage = async ({
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
                 <Image
-
                   src={student.img || "/noAvatar.png"}
                   alt=""
                   width={100}
@@ -216,7 +215,7 @@ const SingleStudentPage = async ({
           </div>
         </div>
         {/* BOTTOM */}
-        <div className="mt-4 bg-white dark:bg-[#18181b] rounded-md p-4 h-[800px]">
+        <div className="h-fit mt-4 bg-white dark:bg-[#18181b] rounded-md p-4">
           <h1>Student&apos;s Schedule</h1>
           <BigCalendarContainer type="classId" id={student.class.id} />
         </div>
@@ -259,7 +258,7 @@ const SingleStudentPage = async ({
           </div>
         </div>
         <Performance />
-        {/* <Announcements /> */}
+        <Announcements />
       </div>
     </div>
   );

@@ -107,7 +107,6 @@ model Parent {
 model Grade {
   id    Int @id @default(autoincrement())
   level Int @unique
-
   students Student[]
 }
 
@@ -123,7 +122,9 @@ model Class {
   students     Student[]
   events       Event[]
   exams        Exam[]
+  examRoutines   ExamRoutine[]
 }
+
 
 model Subject {
   id       Int       @id @default(autoincrement())
@@ -132,7 +133,9 @@ model Subject {
   lessons  Lesson[]
   results  Result[]
   assignments Assignment[]
+  examRoutines   ExamRoutine[]
 }
+
 
 model Lesson {
   id        Int      @id @default(autoincrement())
@@ -140,7 +143,6 @@ model Lesson {
   day       Day
   startTime DateTime
   endTime   DateTime
-
   subjectId   Int
   subject     Subject      @relation(fields: [subjectId], references: [id])
   classId     Int
@@ -160,6 +162,15 @@ model Exam {
   
 }
 
+model ExamRoutine {
+  id        Int      @id @default(autoincrement())
+  title     String
+  date      DateTime
+  subjectId Int
+  subjects  Subject    @relation(fields: [subjectId], references: [id])
+  classId   Int
+  classes   Class    @relation(fields: [classId], references: [id])
+}
 
 model Assignment {
   id        Int      @id @default(autoincrement())

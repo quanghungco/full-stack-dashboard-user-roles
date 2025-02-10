@@ -14,7 +14,7 @@ type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 const TeacherListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
   const { sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
@@ -104,7 +104,7 @@ const TeacherListPage = async ({
       </td>
     </tr>
   );
-  const { page, perPage, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = await searchParams;
 
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;

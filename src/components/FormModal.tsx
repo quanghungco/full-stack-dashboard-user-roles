@@ -3,8 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import { Dispatch, SetStateAction, useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FormContainerProps } from "./FormContainer";
 import { deleteAnnouncement } from "@/lib/announcementAction";
@@ -20,6 +19,7 @@ import { deleteResult } from "@/lib/resultAction";
 import { deleteAssignment } from "@/lib/assignmentAction";
 import { deleteFinance } from "@/lib/financeAction";
 import { deletePayment } from "@/lib/paymentAction";
+import ExamRoutineForm from "./forms/ExamRoutineForm";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -36,8 +36,10 @@ const deleteActionMap = {
   event: deleteSubject,
   announcement: deleteAnnouncement,
   finance: deleteFinance,
-  payment: deleteFinance,
+  payment: deletePayment,
+  examRoutine: deleteExam,
 };
+
 
 // USE LAZY LOADING
 
@@ -74,7 +76,7 @@ const ParentForm = dynamic(() => import("./forms/ParentForm"), {
 const AttendanceForm = dynamic(() => import("./forms/AttendanceForm"), {
   loading: () => <h1>Loading...</h1>,
 });
-const ResultForm = dynamic(() => import("./forms/Resultform"), {
+const ResultForm = dynamic(() => import("./forms/ResultForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const AssignmentForm = dynamic(() => import("./forms/AssignmentForm"), {
@@ -87,8 +89,6 @@ const PaymentForm = dynamic(() => import("./forms/PaymentForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 // TODO: OTHER FORMS
-
-
 
 const forms: {
   [key: string]: (
@@ -109,14 +109,20 @@ const forms: {
   attendance: (setOpen, type, data) => (
     <AttendanceForm type={type} data={data} setOpen={setOpen} />
   ),
-  assignment: (setOpen, type, data, relatedData) => (
-    <AssignmentForm
-      type={type}
-      data={data}
-      setOpen={setOpen}
-      relatedData={relatedData}
-    />
-  ),
+  assignment: (setOpen, type, data, relatedData) => {
+
+    console.log( "relatedData", relatedData);
+    return (
+      <AssignmentForm
+        type={type}
+        data={data}
+        setOpen={setOpen}
+        relatedData={relatedData}
+      />
+
+
+    );
+  },
   class: (setOpen, type, data, relatedData) => (
     <ClassForm
       type={type}
@@ -140,8 +146,13 @@ const forms: {
         type={type}
         data={data}
         setOpen={setOpen}
-        relatedData={relatedData}
+        relatedData={{
+          subjects: relatedData?.subjects,
+          classes: relatedData?.classes,
+          teachers: relatedData?.teachers,
+        }}
       />
+
     );
   },
   announcement: (setOpen, type, data, relatedData) => {
@@ -178,9 +189,21 @@ const forms: {
       />
     );
   },
+  examRoutine: (setOpen, type, data, relatedData) => {
+    return (
+      <ExamRoutineForm
+        type={type}
+        data={data}
+        setOpen={setOpen}
+        relatedData={relatedData}
+      />
+    );
+  },
+
   exam: (setOpen, type, data, relatedData) => {
     // No need for Cloudinary configuration
     return (
+
       <ExamForm
         type={type}
         data={data}
@@ -229,7 +252,7 @@ const FormModal = ({
   const [open, setOpen] = useState(false);
 
   const Form = () => {
-    const [state, formAction] = useFormState(deleteActionMap[table], {
+    const [state, formAction] = useActionState(deleteActionMap[table], {
       success: false,
       error: false,
     });

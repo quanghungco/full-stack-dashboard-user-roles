@@ -6,16 +6,14 @@ import ClientPaymentList from "@/components/ClientPaymentList";
 const Payments = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
   const { sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
-  const { page } = searchParams;
+  const { page, perPage } = await searchParams;
   const p = page ? parseInt(page) : 1;
-  const perPage = searchParams.perPage
-    ? parseInt(searchParams.perPage)
-    : ITEM_PER_PAGE;
+  const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   const [students, count] = await prisma.$transaction([
     prisma.student.findMany({
@@ -33,8 +31,8 @@ const Payments = async ({
           take: 1,
         },
       },
-      take: perPage,
-      skip: perPage * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
     prisma.student.count(),
   ]);
@@ -45,7 +43,7 @@ const Payments = async ({
       },
     },
   });
-  console.log(payments);
+  // console.log(payments);
 
   
 
@@ -56,7 +54,7 @@ const Payments = async ({
       total={count}
       role={role}
       page={p}
-      perPage={perPage}
+      perPage={itemsPerPage}
     />
   );
 };

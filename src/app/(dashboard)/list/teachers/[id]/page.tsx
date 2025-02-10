@@ -15,10 +15,11 @@ import { IoMail } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 
 const SingleTeacherPage = async ({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) => {
+
   const { sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
@@ -27,7 +28,7 @@ const SingleTeacherPage = async ({
         _count: { subjects: number; lessons: number; classes: number };
       })
     | null = await prisma.teacher.findUnique({
-    where: { id },
+    where: { id: (await params).id },
     include: {
       _count: {
         select: {

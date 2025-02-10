@@ -7,13 +7,14 @@ import Pagination from "@/components/Pagination";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { auth } from "@clerk/nextjs/server";
+import { Button } from "@/components/ui/button";
 
 export type PaymentHistory = Payment;
 
 const PaymentHistoryPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
   const { userId, sessionClaims } = auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
@@ -81,27 +82,13 @@ const PaymentHistoryPage = async ({
   
 
   // Handle pagination and search parameters
-  const { page, perPage, ...queryParams } = searchParams;
+  const { page, perPage } = await searchParams;
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
   const query: Prisma.PaymentWhereInput = {};
 
-  if (queryParams) {
-    for (const [key, value] of Object.entries(queryParams)) {
-      if (value !== undefined) {
-        switch (key) {
-          case "search":
-            query.studentId = { contains: value, mode: "insensitive" }; // Changed from studentName to studentId
-            break;
-          default:
-            break;
-        }
-      }
-    }
-  }
-
-  const [data, count] = await prisma.$transaction([
+  const [payments, count] = await prisma.$transaction([
     prisma.payment.findMany({
       where: query,
       include: {
@@ -115,10 +102,18 @@ const PaymentHistoryPage = async ({
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
-      orderBy: { createdAt: "desc" },
     }),
     prisma.payment.count({ where: query }),
   ]);
+
+  // Check if payments is null or undefined
+  if (!payments) {
+    return (
+      <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
+        <h1 className="text-lg font-semibold">No payments found.</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
@@ -135,7 +130,7 @@ const PaymentHistoryPage = async ({
         </div>
       </div>
       {/* LIST */}
-      <Table columns={columns} renderRow={renderRow} data={data} />
+      <Table columns={columns} renderRow={renderRow} data={payments} />
       {/* PAGINATION */}
       <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>

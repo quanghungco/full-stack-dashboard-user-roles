@@ -9,9 +9,7 @@ import {
   SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar"; // Import Shadcn Sidebar components
 import {
@@ -23,7 +21,10 @@ import { CiWallet } from "react-icons/ci";
 import { MdOutlinePayments } from "react-icons/md";
 import { RiFileList3Line } from "react-icons/ri";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
-
+import { GiNotebook } from "react-icons/gi";
+import { MdOutlineEventNote } from "react-icons/md";
+import { PiExam } from "react-icons/pi";
+import { RiPagesLine } from "react-icons/ri";
 // Define the structure of the menu items
 interface MenuItem {
   icon: string;
@@ -32,8 +33,21 @@ interface MenuItem {
   visible: string[];
 }
 
+interface MenuItem2 {
+  icon: React.ReactNode;
+  label: string;
+  visible: string[];
+  subLevel: {
+    subIcon: React.ReactNode;
+    subLabel: string;
+    subHref: string;
+    visible: string[];
+  }[];
+}
+
 const menuItems: MenuItem[] = [
   {
+
     icon: "/home.png",
     label: "Home",
     href: "/",
@@ -89,30 +103,30 @@ const menuItems: MenuItem[] = [
   //   visible: ["teacher","admin"],
   // },
 
-  {
-    icon: "/exam.png",
-    label: "Exams",
-    href: "/list/exams",
-    visible: ["admin", "teacher", "student"],
-  },
+  // {
+  //   icon: "/exam.png",
+  //   label: "Exams",
+  //   href: "/list/exams",
+  //   visible: ["admin", "teacher", "student"],
+  // },
   {
     icon: "/assignment.png",
     label: "Assignments",
     href: "/list/assignments",
     visible: ["teacher", "student"],
   },
-  {
-    icon: "/result.png",
-    label: "All Results",
-    href: "/list/results",
-    visible: ["admin", "teacher"],
-  },
-  {
-    icon: "/result.png",
-    label: "Your Results",
-    href: "/list/student-result",
-    visible: ["student"],
-  },
+  // {
+  //   icon: "/result.png",
+  //   label: "All Results",
+  //   href: "/list/results",
+  //   visible: ["admin", "teacher"],
+  // },
+  // {
+  //   icon: "/result.png",
+  //   label: "Your Results",
+  //   href: "/list/student-result",
+  //   visible: ["student"],
+  // },
   {
     icon: "/attendance.png",
     label: "Attendance",
@@ -148,13 +162,72 @@ const menuItems: MenuItem[] = [
   // },
 ];
 
+const menuItems2: MenuItem2[] = [
+
+
+{
+    icon: <GiNotebook />,
+    label: "Exams",
+    visible: ["admin", "teacher", "student"],
+    subLevel: [
+        {
+            subIcon: <MdOutlineEventNote />,
+            subLabel: "Routine",
+            subHref: "/list/exams",
+            visible: ["admin", "teacher", "student"],
+        },
+        {
+            subIcon: <RiPagesLine  />,
+            subLabel: "Admit",
+            subHref: "/list/exams/admit",
+            visible: ["admin", "student"],
+        },
+        {
+            subIcon: <PiExam  />,
+            subLabel: "Results",
+            subHref: "/list/results",
+            visible: ["admin", "teacher"],
+
+        },
+        {
+            subIcon: <PiExam  />,
+            subLabel: "Your Results",
+            subHref: "/list/student-result",
+            visible: ["student"]
+        },
+    ],
+},
+
+{
+  icon: <CiWallet/>,
+  label: "Payments",
+  visible: ["admin"],
+  subLevel: [
+      {
+          subIcon: <RiFileList3Line />,
+          subLabel: "Payment History",
+          subHref: "/list/payment/history",
+
+          visible: ["admin"],
+      },
+      {   
+          subIcon: <MdOutlinePayments />,
+          subLabel: "Make Payment",
+          subHref: "/list/payment",
+          visible: ["admin"],
+      },
+  ],
+},
+
+]
+
 const Menu = async () => {
   const user = await currentUser();
   const role = user?.publicMetadata.role as string;
 
   return (
     <Sidebar className="pt-16 ">
-      <SidebarContent>
+      <SidebarContent className="pb-5">
         <div className="flex flex-col gap-2 pt-2 pl-5 ">
           {menuItems.map((item) => {
             if (item.visible.includes(role)) {
@@ -172,55 +245,52 @@ const Menu = async () => {
             return null; // Return null if the item is not visible
           })}
         </div>
-        {role === "admin" && (
-          <SidebarMenu className="pb-5 pl-3">
+        {menuItems2.map((menuItem, index) =>
+        menuItem.visible.includes(role) ? (
+          <SidebarMenu key={index} className=" pl-[14px]">
             <Collapsible>
               <CollapsibleTrigger
                 asChild
-                className="hover:bg-lamaSkyLight text-gray-500 py-2 px-4"
+                className="text-gray-500 py-2 px-4"
               >
                 <SidebarMenuButton className="flex items-center justify-between gap-2 rounded-md">
-                  <span className="flex items-center gap-2">
-                    <CiWallet className="text-xl font-bold" />
-                    Payments
+                  <span className="flex items-center gap-4 text-[16px]">
+                    {menuItem.icon}
+                    {menuItem.label}
                   </span>
 
-                  {/* Toggle icons based on `data-state` */}
+
                   <IoIosArrowDown className="arrow-down transition-transform duration-300" />
                   <IoIosArrowForward className="arrow-forward transition-transform duration-300" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
 
-              <CollapsibleContent className="transition-all duration-700 ease-in-out">
-                <SidebarMenuSub className="px-0">
-                  <Link
-                    href="/list/payment"
-                    className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md hover:shadow-md"
-                  >
-                    <MdOutlinePayments /> Payment
-                  </Link>
-
-                </SidebarMenuSub>
-                <SidebarMenuSub className="px-0">
-                  <Link
-                    href="/list/payment/payment-history"
-                    className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md hover:shadow-md"
-                  >
-                    <RiFileList3Line /> Payment History
-                  </Link>
-
-                </SidebarMenuSub>
+              <CollapsibleContent className="transition-opacity duration-700 ease-in-out">
+                {menuItem.subLevel?.map(
+                  (subItem, subIndex) =>
+                    subItem.visible.includes(role) && (
+                      <SidebarMenuSub key={subIndex} className="px-0">
+                        <Link
+                          href={subItem.subHref}
+                          className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md hover:shadow-md"
+                        >
+                          {subItem.subIcon}
+                          {subItem.subLabel}
+                        </Link>
+                      </SidebarMenuSub>
+                    )
+                )}
               </CollapsibleContent>
             </Collapsible>
           </SidebarMenu>
-        )}
+        ) : null
+      )}
       </SidebarContent>
-
       <SidebarSeparator />
-
       <SidebarFooter>
         <div className="flex gap-4 py-5 pl-2 ">
           <UserButton />
+
           <span className="text-lg text-gray-500">
             {user?.firstName
               ? `${user.firstName}`

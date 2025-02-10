@@ -13,7 +13,7 @@ type ClassList = Class & { supervisor: Teacher };
 const ClassListPage = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
 
 const { sessionClaims } = auth();
@@ -69,7 +69,7 @@ const renderRow = (item: ClassList) => (
   </tr>
 );
 
-  const { page, perPage, ...queryParams } = searchParams;
+  const { page, perPage, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
 
