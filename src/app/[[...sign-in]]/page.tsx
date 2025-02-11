@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 const LoginPage = () => {
   const { isLoaded, isSignedIn, user } = useUser();
+  
 
   const router = useRouter();
 

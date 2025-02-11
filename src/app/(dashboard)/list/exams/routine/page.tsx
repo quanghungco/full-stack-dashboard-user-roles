@@ -9,18 +9,18 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs/server";
 
 type ExamRoutineList = ExamRoutine & {
-  class: {
+  classes: {
+    id: number;
+    name: string;
+  };
+  subject: {
     id: number;
     name: string;
   };
 };
 
-const ExamRoutinePage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
-}) => {
-  const { userId, sessionClaims } = auth();
+const ExamRoutinePage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) => {
+  const { userId, sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
   const columns = [
@@ -33,8 +33,21 @@ const ExamRoutinePage = async ({
       accessor: "class.name",
     },
     {
+      header: "Subject",
+      accessor: "subject.name",
+    },
+    {
+      header: "Subject Code",
+      accessor: "subject.id",
+    },
+    {
       header: "Exam Date",
-      accessor: "date",
+      accessor: "startTime",
+      className: "hidden md:table-cell",
+    },
+    {
+      header: "Time",
+      accessor: "time",
       className: "hidden md:table-cell",
     },
     ...(role === "admin"
@@ -53,9 +66,14 @@ const ExamRoutinePage = async ({
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
     >
       <td className="flex items-center gap-4 p-4 justify-center">{item.title}</td>
-      <td className="text-center">{item.class.name}</td>
+      <td className="text-center">{item.classes.name}</td>
+      <td className="text-center">{item.subject.name}</td>
+      <td className="text-center">{item.subject.id}</td>
       <td className="hidden md:table-cell text-center">
-        {new Intl.DateTimeFormat("en-US").format(new Date(item.date))}
+        {new Intl.DateTimeFormat("en-US", { year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(item.startTime))}
+      </td>
+      <td className="hidden md:table-cell text-center">
+      {new Intl.DateTimeFormat("en-US", {  timeStyle: "short" }).format(new Date(item.startTime))}
       </td>
       {role === "admin" && (
         <td>
@@ -79,10 +97,16 @@ const ExamRoutinePage = async ({
   }
 
   const [data, count] = await prisma.$transaction([
-    prisma.examRoutine?.findMany({
+    prisma.examRoutine.findMany({
       where: query,
       include: {
         classes: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        subject: {
           select: {
             id: true,
             name: true,
@@ -92,11 +116,10 @@ const ExamRoutinePage = async ({
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
     }),
-    prisma.examRoutine?.count({
+    prisma.examRoutine.count({
       where: query,
     }),
   ]);
-
 
   return (
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">

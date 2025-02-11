@@ -163,13 +163,13 @@ model Exam {
 }
 
 model ExamRoutine {
-  id        Int      @id @default(autoincrement())
+   id        Int      @id @default(autoincrement())
   title     String
-  date      DateTime
-  subjectId Int
-  subjects  Subject    @relation(fields: [subjectId], references: [id])
+  startTime DateTime
   classId   Int
   classes   Class    @relation(fields: [classId], references: [id])
+  subjectId Int
+  subject   Subject  @relation(fields: [subjectId], references: [id])
 }
 
 model Assignment {

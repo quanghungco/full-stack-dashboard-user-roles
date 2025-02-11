@@ -13,7 +13,7 @@ type ResultList = {
 };
 
 const StudentResultPage = async () => {
-  const { userId, sessionClaims } = auth();
+  const { userId, sessionClaims } = await auth();
   const user = await currentUser();
   // console.log("userId 0000=====",userId, "sessionClaims====", sessionClaims, "user====", user);
   const role = (sessionClaims?.metadata as { role?: string })?.role;

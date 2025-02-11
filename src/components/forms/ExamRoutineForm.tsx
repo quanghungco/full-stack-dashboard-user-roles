@@ -1,14 +1,16 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { examRoutineSchema, ExamRoutineSchema } from "@/lib/formValidationSchemas";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import {
+  examRoutineSchema,
+  ExamRoutineSchema,
+} from "@/lib/formValidationSchemas";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { createExamRoutine, updateExamRoutine } from "@/lib/examRoutineActions";
+import InputField from "../InputField";
 
 const ExamRoutineForm = ({
   type,
@@ -27,97 +29,125 @@ const ExamRoutineForm = ({
     formState: { errors, isSubmitting },
   } = useForm<ExamRoutineSchema>({
     resolver: zodResolver(examRoutineSchema),
-    defaultValues: data || { title: "", startTime: "", classId: "", subjectName: "" },
+  });
+
+  const [state, formAction] = useActionState(
+    type === "create" ? createExamRoutine : updateExamRoutine,
+    { success: false, error: false }
+  );
+
+  const onSubmit = handleSubmit((data) => {
+    startTransition(() => {
+      formAction(data); // Call your async function inside startTransition
+    });
   });
 
   const router = useRouter();
 
-  const onSubmit = handleSubmit(async (formData: ExamRoutineSchema) => {
-    try {
-      console.log(formData);
-      const response =
-        type === "create"
-          ? await createExamRoutine({ ...formData, success: false, error: false }, relatedData?.classes)
-          : await updateExamRoutine({ ...formData, success: false, error: false }, relatedData?.classes);
-
-
-      if (response && response.success) {
-        toast(`Exam has been ${type === "create" ? "created" : "updated"}!`);
-        setOpen(false);
-        router.refresh();
-      } else {
-        toast(`Failed: ${response?.error || "Unknown error"}`);
-      }
-    } catch (error) {
-      console.error("Submission Error:", error);
-      toast("Error submitting data. Check console.");
+  useEffect(() => {
+    if (state.success) {
+      toast(`Exam has been ${type === "create" ? "created" : "updated"}!`);
+      setOpen(false);
+      router.refresh();
     }
-  });
+  }, [state, router, type, setOpen]);
 
-  const { classes = [] } = relatedData || {};
-  console.log(classes);
-
-
+  const { classes = [], subjects = [] } = relatedData || {}; // Added subjects
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 p-4 border rounded-lg bg-white dark:bg-[#18181b]">
+    <form
+      className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md"
+      onSubmit={onSubmit}
+    >
       <h1 className="text-xl font-semibold">
-        {type === "create" ? "Create New Exam Routine" : "Update Exam Routine"}
+        {type === "create" ? "Create a new exam" : "Update the exam"}
       </h1>
 
-      <div className="flex flex-col gap-2">
-        <label className="block font-medium">Exam Title:</label>
-        <Input
-          type="text"
-          {...register("title")}
-          className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          placeholder="Enter Exam Title"
-          required
+      <div className="flex justify-between flex-wrap gap-4">
+        <InputField
+          label="Exam title"
+          name="title"
+          defaultValue={data?.title}
+          register={register}
+          error={errors?.title}
         />
-        {errors.title && <p className="text-xs text-red-400">{errors.title.message}</p>}
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="block font-medium">Start Date & Time:</label>
-        <Input
+        <InputField
+          label="Start Date"
+          name="startTime"
+          defaultValue={
+            data?.startTime
+              ? data.startTime.toISOString().slice(0, 16)
+              : undefined
+          }
+          register={register}
+          error={errors?.startTime}
           type="datetime-local"
-          {...register("startTime")}
-          className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          required
         />
-        {errors.startTime && <p className="text-xs text-red-400">{errors.startTime.message}</p>}
+        {data && (
+          <InputField
+            label="Id"
+            name="id"
+            defaultValue={data?.id}
+            register={register}
+            error={errors?.id}
+            hidden
+          />
+        )}
+
+        {/* Class Selection */}
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Class</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("classId")}
+            defaultValue={data?.classId}
+          >
+            {classes.length > 0 ? (
+              classes.map((classItem: { id: number; name: string }) => (
+                <option value={classItem.id} key={classItem.id}>
+                  {classItem.name}
+                </option>
+              ))
+            ) : (
+              <option disabled>No classes available</option>
+            )}
+          </select>
+        </div>
+
+        {/* Subject Selection */}
+        <div className="flex flex-col gap-2 w-full md:w-1/4">
+          <label className="text-xs text-gray-500">Subject</label>
+          <select
+            className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+            {...register("subjectId")}
+            defaultValue={data?.subjectId}
+          >
+            {subjects.length > 0 ? (
+              subjects.map((subjectItem: { id: number; name: string }) => (
+                <option value={subjectItem.id} key={subjectItem.id}>
+                  {subjectItem.name}
+                </option>
+              ))
+            ) : (
+              <option disabled>No subjects available</option>
+            )}
+          </select>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label className="block font-medium">Class:</label>
-        <Input
-          type="number"
-          {...register("classId", { required: "Class ID is required" })}
-          className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          placeholder="Enter Class ID"
-          required
-        />
-        {errors.classId && <p className="text-xs text-red-400">{errors.classId.message}</p>}
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <label className="block font-medium">Subject Name:</label>
-        <Input
-          type="text"
-          {...register("subjectId")} // Changed from "subjectName" to "subjectId"
-          className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-          placeholder="Enter Subject ID" // Updated placeholder to reflect the change
-          required
-        />
-        {errors.subjectId && <p className="text-xs text-red-400">{errors.subjectId.message}</p>}
-      </div>
-
+      {state.error && (
+        <span className="text-red-500">Something went wrong!</span>
+      )}
       <button
         type="submit"
         className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50"
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Processing..." : type === "create" ? "Create" : "Update"}
+        {isSubmitting
+          ? "Processing..."
+          : type === "create"
+          ? "Create"
+          : "Update"}
       </button>
     </form>
   );

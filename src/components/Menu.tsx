@@ -173,7 +173,7 @@ const menuItems2: MenuItem2[] = [
         {
             subIcon: <MdOutlineEventNote />,
             subLabel: "Routine",
-            subHref: "/list/exams",
+            subHref: "/list/exams/routine",
             visible: ["admin", "teacher", "student"],
         },
         {

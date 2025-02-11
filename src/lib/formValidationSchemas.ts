@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const subjectSchema = z.object({
-  id: z.coerce.number().min(1, { message: "Subject ID is required!" }),
+  id: z.coerce.number().min(1, { message: "Subject ID is required!" }), 
 
   name: z.string().min(1, { message: "Subject name is required!" }),
 });
@@ -224,13 +224,12 @@ export const examSchema = z.object({
 
 export type ExamSchema = z.infer<typeof examSchema>;
 
-export const examRoutineSchema = z.object({
-  id: z.number().optional(),
-  title: z.string().min(1, { message: "Title is required!" }),
+export const examRoutineSchema =z.object({
+  id: z.coerce.number().optional(),
+  title: z.string().min(1, { message: "Title name is required!" }),
   startTime: z.coerce.date({ message: "Start time is required!" }),
   classId: z.coerce.number({ message: "Class is required!" }),
-  subjectId: z.coerce.number({ message: "Subject is required!" }),
-  examDate: z.coerce.date({ message: "Date is required!" }),
+  subjectId: z.coerce.number({ message: "Subject is required!" }), // Added subjectId
 });
 export type ExamRoutineSchema = z.infer<typeof examRoutineSchema>;
 

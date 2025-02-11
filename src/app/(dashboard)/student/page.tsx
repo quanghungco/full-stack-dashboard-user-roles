@@ -3,7 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import SingleStudentPage from "../list/students/[id]/page";
 
 const StudentPage = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
   const user = await currentUser();
 
   // const classItem = await prisma.class.findMany({

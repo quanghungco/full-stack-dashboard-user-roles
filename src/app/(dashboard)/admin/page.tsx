@@ -1,17 +1,26 @@
 import Announcements from "@/components/Announcements";
 import AttendanceChartContainer from "@/components/AttendanceChartContainer";
 import CountChartContainer from "@/components/CountChartContainer";
-import EventCalendarContainer from "@/components/EventCalendarContainer";
+// import EventCalendarContainer from "@/components/EventCalendarContainer";
 import FinanceChart from "@/components/FinanceChart";
 import UserCard from "@/components/UserCard";
+import { auth } from "@clerk/nextjs/server";
 
-const AdminPage = ({
+const AdminPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
+  const { userId, sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+
+
+  // const headersList = await headers(); 
+  // const csp = headersList.get("Content-Security-Policy") || ''; 
+  // console.log(csp);
+
   return (
-    <div className="p-4 flex gap-4 flex-col md:flex-row">
+    <div className="p-4 flex gap-4 flex-col md:flex-row w-full">
 
       {/* LEFT */}
       <div className="w-full lg:w-2/3 flex flex-col gap-8">
@@ -39,10 +48,9 @@ const AdminPage = ({
         </div>
       </div>
       {/* RIGHT */}
-      <div className="w-full lg:w-1/3 flex flex-col gap-8">
-      <Announcements />
+      <div className="w-full lg:w-1/3 flex flex-col">
+        <Announcements />
         {/* <EventCalendarContainer searchParams={searchParams}/> */}
-        
       </div>
     </div>
   );
