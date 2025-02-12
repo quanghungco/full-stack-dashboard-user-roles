@@ -13,20 +13,19 @@ import { deleteTeacher } from "@/lib/teacherAction";
 import { deleteStudent } from "@/lib/studentAction";
 import { deleteAttendance } from "@/lib/attendenceAction";
 import { deleteParent } from "@/lib/actions";
-import { deleteExam } from "@/lib/examAction";
 import { deleteAdmission } from "@/lib/admissionAction";
 import { deleteResult } from "@/lib/resultAction";
 import { deleteAssignment } from "@/lib/assignmentAction";
 import { deleteFinance } from "@/lib/financeAction";
 import { deletePayment } from "@/lib/paymentAction";
 import ExamRoutineForm from "./forms/ExamRoutineForm";
+import { deleteExamRoutine } from "@/lib/examRoutineActions";
 
 const deleteActionMap = {
   subject: deleteSubject,
   class: deleteClass,
   teacher: deleteTeacher,
   student: deleteStudent,
-  exam: deleteExam,
   parent: deleteParent,
   lesson: deleteSubject,
   admission: deleteAdmission,
@@ -37,7 +36,7 @@ const deleteActionMap = {
   announcement: deleteAnnouncement,
   finance: deleteFinance,
   payment: deletePayment,
-  examRoutine: deleteExam,
+  examRoutine: deleteExamRoutine,
 };
 
 
@@ -65,9 +64,6 @@ const ClassForm = dynamic(() => import("./forms/ClassForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const LessonForm = dynamic(() => import("./forms/LessonForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const ExamForm = dynamic(() => import("./forms/ExamForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 const ParentForm = dynamic(() => import("./forms/ParentForm"), {
@@ -200,18 +196,6 @@ const forms: {
     );
   },
 
-  exam: (setOpen, type, data, relatedData) => {
-    // No need for Cloudinary configuration
-    return (
-
-      <ExamForm
-        type={type}
-        data={data}
-        setOpen={setOpen}
-        relatedData={relatedData}
-      />
-    );
-  },
   lesson: (setOpen, type, data, relatedData) => {
     // No need for Cloudinary configuration
     return (

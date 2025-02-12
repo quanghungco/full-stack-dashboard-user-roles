@@ -206,7 +206,7 @@ const menuItems2: MenuItem2[] = [
       {
           subIcon: <RiFileList3Line />,
           subLabel: "Payment History",
-          subHref: "/list/payment/history",
+          subHref: "/list/payment/payment-history",
 
           visible: ["admin"],
       },
@@ -228,18 +228,20 @@ const Menu = async () => {
   return (
     <Sidebar className="pt-16 ">
       <SidebarContent className="pb-5">
-        <div className="flex flex-col gap-2 pt-2 pl-5 ">
+        <div className="flex flex-col gap-2 pt-2 pl-2 ">
           {menuItems.map((item) => {
             if (item.visible.includes(role)) {
               return (
+                <SidebarMenu key={item.label}>
                 <Link
                   href={item.href}
                   key={item.label}
-                  className="flex items-center w-44 gap-4 text-gray-500 py-2 px-2 rounded-md hover:bg-lamaSkyLight hover:shadow-md hover:scale-105 transition-all duration-300"
+                  className="flex pl-2 items-center overflow-x-hidden w-[95%] gap-4 text-gray-500 py-2  rounded-md hover:bg-lamaSkyLight  hover:scale-105 transition-all duration-300"
                 >
                   <Image src={item.icon} alt="" width={20} height={20} />
                   <span className="hidden lg:block">{item.label}</span>
                 </Link>
+                </SidebarMenu>
               );
             }
             return null; // Return null if the item is not visible
@@ -247,7 +249,7 @@ const Menu = async () => {
         </div>
         {menuItems2.map((menuItem, index) =>
         menuItem.visible.includes(role) ? (
-          <SidebarMenu key={index} className=" pl-[14px]">
+          <SidebarMenu key={index} className=" ">
             <Collapsible>
               <CollapsibleTrigger
                 asChild
@@ -272,7 +274,7 @@ const Menu = async () => {
                       <SidebarMenuSub key={subIndex} className="px-0">
                         <Link
                           href={subItem.subHref}
-                          className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md hover:shadow-md"
+                          className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md "
                         >
                           {subItem.subIcon}
                           {subItem.subLabel}

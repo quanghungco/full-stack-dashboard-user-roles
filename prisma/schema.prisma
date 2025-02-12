@@ -38,7 +38,6 @@ model Admission {
   sscGPA           String?
   sscPassingYear   String?
   sscInstituteName String?
-
   hscEquivalent    String?
   hscGroup         String?
   hscBoard         String?
@@ -46,10 +45,10 @@ model Admission {
   hscGPA           String?
   hscPassingYear   String?
   hscInstituteName String?
-
   createdAt DateTime @default(now())
+  students Student[]
 }
-
+ 
 model Student {
   id          String       @id
   username    String       @unique
@@ -71,7 +70,7 @@ model Student {
   results     Result[]
   birthday    DateTime
   payments    Payment[]
-
+  admission   Admission[]
 }
 
 model Teacher {
@@ -121,7 +120,6 @@ model Class {
   lessons      Lesson[]
   students     Student[]
   events       Event[]
-  exams        Exam[]
   examRoutines   ExamRoutine[]
 }
 
@@ -152,15 +150,7 @@ model Lesson {
 
 }
 
-model Exam {
-  id        Int      @id @default(autoincrement())
-  title     String
-  startTime DateTime
-  endTime   DateTime
-  classId   Int
-  classes   Class    @relation(fields: [classId], references: [id])
-  
-}
+
 
 model ExamRoutine {
    id        Int      @id @default(autoincrement())

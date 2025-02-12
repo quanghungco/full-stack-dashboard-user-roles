@@ -61,7 +61,7 @@ const PaymentHistoryPage = async ({
       <td className="text-center">{item.studentId}</td>
       <td className="hidden md:table-cell gap-4 text-center">TK {item.amount}</td>
       <td className="hidden md:table-cell gap-4 text-center">{new Intl.DateTimeFormat("en-CA").format(new Date(item.createdAt))}</td>
-      <td className="hidden md:table-cell gap-4 text-center">{item.status}</td>
+      <td className={`text-center font-bold ${item ? (item.status === "Paid" ? "text-green-500 " : "text-orange-500") : "text-red-500"}`}>{item.status}</td>
       <td>
         <div className="flex items-center gap-2 justify-center">
           {role === "admin" && (
@@ -122,11 +122,11 @@ const PaymentHistoryPage = async ({
         <h1 className="hidden md:block text-lg font-semibold">Payment History</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
-          <div className="flex items-center gap-4 self-end">
+          {/* <div className="flex items-center gap-4 self-end">
             {role === "admin" && (
               <FormModal table="payment" type="create" />
             )}
-          </div>
+          </div> */}
         </div>
       </div>
       {/* LIST */}

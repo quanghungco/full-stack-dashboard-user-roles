@@ -133,17 +133,17 @@ async function main() {
   }
 
   // EXAM
-  for (let i = 1; i <= 10; i++) {
-    await prisma.exam.create({
-      data: {
-        title: `Exam ${i}`, 
-        startTime: new Date(new Date().setHours(new Date().getHours() + 1)), 
-        endTime: new Date(new Date().setHours(new Date().getHours() + 2)), 
-        classId: (i % 6) + 1, 
-        // lessonId: (i % 30) + 1, 
-      },
-    });
-  }
+  // for (let i = 1; i <= 10; i++) {
+  //   await prisma.exam.create({
+  //     data: {
+  //       title: `Exam ${i}`, 
+  //       startTime: new Date(new Date().setHours(new Date().getHours() + 1)), 
+  //       endTime: new Date(new Date().setHours(new Date().getHours() + 2)), 
+  //       classId: (i % 6) + 1, 
+  //       // lessonId: (i % 30) + 1, 
+  //     },
+  //   });
+  // }
 
   // ASSIGNMENT
   for (let i = 1; i <= 10; i++) {
