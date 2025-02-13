@@ -4,6 +4,7 @@ import CountChartContainer from "@/components/CountChartContainer";
 import EmergencyNumbers from "@/components/EmergencyNumbers";
 // import EventCalendarContainer from "@/components/EventCalendarContainer";
 import FinanceChart from "@/components/FinanceChart";
+import FinanceChartContainer from "@/components/FinanceChartContainer";
 import UserCard from "@/components/UserCard";
 import { auth } from "@clerk/nextjs/server";
 
@@ -45,7 +46,8 @@ const AdminPage = async ({
         </div>
         {/* BOTTOM CHART */}
         <div className="w-full h-[500px]">
-          <FinanceChart />
+          {/* <FinanceChart /> */}
+          <FinanceChartContainer />
         </div>
       </div>
       {/* RIGHT */}

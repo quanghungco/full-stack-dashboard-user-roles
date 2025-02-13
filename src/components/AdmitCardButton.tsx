@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import AdmitCardPDF from './AdmitCardPDF';
 import { MdDownload } from 'react-icons/md';
@@ -23,7 +22,7 @@ const AdmitCardButton = ({
   subjects: { id: number; name: string }[] 
 }) => {
 
-  console.log(" dsafafasdf=====",subjects);
+  // console.log(" dsafafasdf=====",subjects);
   
   return (
     <PDFDownloadLink

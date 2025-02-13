@@ -78,12 +78,7 @@ const menuItems: MenuItem[] = [
     href: "/list/students",
     visible: ["admin", "teacher"],
   },
-  // {
-  //   icon: "/parent.png",
-  //   label: "Parents",
-  //   href: "/list/parents",
-  //   visible: ["admin", "teacher"],
-  // },
+
   {
     icon: "/subject.png",
     label: "Subjects",
@@ -96,37 +91,14 @@ const menuItems: MenuItem[] = [
     href: "/list/classes",
     visible: ["admin", "teacher"],
   },
-  // {
-  //   icon: "/lesson.png",
-  //   label: "Lessons",
-  //   href: "/list/lessons",
-  //   visible: ["teacher","admin"],
-  // },
 
-  // {
-  //   icon: "/exam.png",
-  //   label: "Exams",
-  //   href: "/list/exams",
-  //   visible: ["admin", "teacher", "student"],
-  // },
   {
     icon: "/assignment.png",
     label: "Assignments",
     href: "/list/assignments",
     visible: ["teacher", "student"],
   },
-  // {
-  //   icon: "/result.png",
-  //   label: "All Results",
-  //   href: "/list/results",
-  //   visible: ["admin", "teacher"],
-  // },
-  // {
-  //   icon: "/result.png",
-  //   label: "Your Results",
-  //   href: "/list/student-result",
-  //   visible: ["student"],
-  // },
+
   {
     icon: "/attendance.png",
     label: "Attendance",
@@ -140,26 +112,7 @@ const menuItems: MenuItem[] = [
     href: "/list/finance",
     visible: ["admin"],
   },
-  // {
-  //   icon: "/wallet3.png",
-  //   label: "Payments",
-  //   href: "/list/payment",
-  //   visible: ["admin"],
-  // },
 
-  // {
-  //   icon: "/calendar.png",
-  //   label: "Events",
-  //   href: "/list/events",
-  //   visible: ["admin", "teacher", "student", "parent"],
-
-  // },
-  // {
-  //   icon: "/message.png",
-  //   label: "Messages",
-  //   href: "/list/messages",
-  //   visible: ["admin", "teacher", "student", "parent"],
-  // },
 ];
 
 const menuItems2: MenuItem2[] = [
