@@ -65,7 +65,7 @@ const [paidStudents, count] = await prisma.$transaction([
   const renderRow = (payment: any) => (
     <tr key={payment.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600">
       <td className="px-6 py-4">{payment.student.name}</td>
-      <td className="px-6 py-4">{payment.student.id}</td>
+      <td className="px-6 py-4">{payment.student.username}</td>
       <td className="px-6 py-4 text-center">{payment.student.class.name}</td>
       <td className="px-6 py-4 text-center">
         <span className="px-2 py-1 font-semibold bg-green-100 text-green-800 rounded-full">
@@ -74,8 +74,9 @@ const [paidStudents, count] = await prisma.$transaction([
       </td>
       <td className="px-6 py-4 flex items-center justify-center">
         <AdmitCardButton 
-          studentId={payment.student.id} 
+          studentId={payment.student.username} 
           studentName={payment.student.name} 
+          img={payment.student.img} 
           className={payment.student.class.name} 
           parentName={payment.student.parentName} 
           dob={payment.student.birthday} 

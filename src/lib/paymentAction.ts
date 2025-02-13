@@ -21,7 +21,7 @@ export const createPayment = async (
         id: data.id,
         amount: data.amount,
         status: data.status,
-        student: { connect: { id: data.studentId } },
+        student: { connect: { username: data.studentId } },
       },
     });
     return { success: true, payment };
@@ -42,7 +42,7 @@ export const updatePayment = async (
       data: {
         amount: data.amount,
         status: data.status,
-        student: { connect: { id: data.studentId } },
+        student: { connect: { username: data.studentId } },
       },
     });
     return { success: true, payment };
@@ -52,22 +52,7 @@ export const updatePayment = async (
   }
 };
 
-// export const deletePayment = async (
-//   id: string,
-//   currentState: CurrentState
-// ): Promise<PaymentActionResponse> => {
-//   try {
-//     const payment = await prisma.payment.delete({
-//       where: { id },
-//     });
-//     return { success: true, payment };
-//   } catch (error) {
-//     console.error(error);
-//     return { success: false, error: "Failed to delete payment." };
-//   }
-// };
-
-  export const deletePayment = async (currentState: CurrentState, data: FormData) => {
+export const deletePayment = async (currentState: CurrentState, data: FormData) => {
   const id = data.get("id") as string;
 
   try {

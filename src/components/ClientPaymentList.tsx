@@ -29,6 +29,8 @@ type Payment = {
 const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { students: StudentWithPayments[]; total: number; role?: string; page: number; perPage: number, payments: Payment[] }) => {
   const [openForm, setOpenForm] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+  console.log("fadfsadfas====",selectedStudentId);
+  
 
   const handleOpenForm = (studentId: string) => {
     setSelectedStudentId(studentId);
@@ -37,7 +39,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
 
   const columns = [
     { header: "Student Name", accessor: "name" },
-    { header: "Student ID", accessor: "id" },
+    { header: "Student ID", accessor: "username" },
     { header: "Fees", accessor: "fees" },
     { header: "Due Fees", accessor: "due" },
     { header: "Paid Fees", accessor: "paid" },
@@ -49,7 +51,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
     const payment = student.payments[0];
     const classes = student.class;
     const totalPaid = payments
-      .filter(payment => payment.studentId === student.id)
+      .filter(payment => payment.studentId === student.username)
       .reduce((sum, payment) => sum + payment.amount, 0);
     console.log(totalPaid);
     const due = classes ? Math.max(classes.fees - totalPaid, 0) : 0;
@@ -59,7 +61,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
     return (
       <tr key={student.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600">
         <td className="flex items-center gap-4 p-4 justify-center">{student.name}</td>
-        <td className="text-center ">{student.id}</td>
+        <td className="text-center ">{student.username}</td>
         <td className="text-center">{classes ? classes.fees : 0}</td>
         <td className="text-center">{due > 0 ? due : 0}</td>
         <td className="text-center">{totalPaid}</td>
@@ -72,7 +74,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
 
         <td className="flex justify-center">
           <button
-            onClick={() => handleOpenForm(student.id.toString())}
+            onClick={() => handleOpenForm(student.username)}
             className="bg-sky-500 text-white px-4 py-1 rounded-md"
           >
             Pay

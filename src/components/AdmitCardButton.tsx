@@ -7,14 +7,16 @@ import { MdDownload } from 'react-icons/md';
 
 const AdmitCardButton = ({ 
   studentId, 
-  studentName, 
+  studentName,
+  img, 
   className, 
   parentName, 
   dob, 
   subjects 
 }: { 
   studentId: string, 
-  studentName: string, 
+  studentName: string,
+  img: string, 
   className: string, 
   parentName: string, 
   dob: Date, 
@@ -28,6 +30,7 @@ const AdmitCardButton = ({
       document={<AdmitCardPDF 
         studentId={studentId} 
         studentName={studentName}
+        img={img}
         className={className} 
         parentName={parentName} 
         dob={dob.toISOString().split('T')[0]}  // Convert Date to string and get only the date

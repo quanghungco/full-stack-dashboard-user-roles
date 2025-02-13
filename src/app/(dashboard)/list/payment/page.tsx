@@ -39,7 +39,7 @@ const Payments = async ({
   const payments = await prisma.payment.findMany({
     where: {
       studentId: {
-        in: students.map(student => student.id),
+        in: students.map(student => student.username),
       },
     },
   });
