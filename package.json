@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/elements": "^0.14.6",
-    "@clerk/nextjs": "^5.4.1",
+    "@clerk/nextjs": "^5.7.5",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^6.2.1",
     "@radix-ui/react-collapsible": "^1.1.3",

@@ -18,6 +18,7 @@ const DownloadPaymentPDF: React.FC<PaymentHistory & { student: { name: string; s
         ["Amount", `${data.amount}/=`],
         ["Payment Date", data.createdAt.toISOString().split("T")[0]],
         ["Status", data.status],
+        ["Signature", "________________________________"]
       ],
 
     });

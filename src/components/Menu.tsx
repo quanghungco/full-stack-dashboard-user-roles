@@ -9,6 +9,7 @@ import {
   SidebarFooter,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarMenuItem,
   SidebarMenuSub,
   SidebarSeparator,
 } from "@/components/ui/sidebar"; // Import Shadcn Sidebar components
@@ -47,7 +48,6 @@ interface MenuItem2 {
 
 const menuItems: MenuItem[] = [
   {
-
     icon: "/home.png",
     label: "Home",
     href: "/",
@@ -163,63 +163,59 @@ const menuItems: MenuItem[] = [
 ];
 
 const menuItems2: MenuItem2[] = [
-
-
-{
+  {
     icon: <GiNotebook />,
     label: "Exams",
     visible: ["admin", "teacher", "student"],
     subLevel: [
-        {
-            subIcon: <MdOutlineEventNote />,
-            subLabel: "Routine",
-            subHref: "/list/exams/routine",
-            visible: ["admin", "teacher", "student"],
-        },
-        {
-            subIcon: <RiPagesLine  />,
-            subLabel: "Admit",
-            subHref: "/list/exams/admit",
-            visible: ["admin", "student"],
-        },
-        {
-            subIcon: <PiExam  />,
-            subLabel: "Results",
-            subHref: "/list/results",
-            visible: ["admin", "teacher"],
-
-        },
-        {
-            subIcon: <PiExam  />,
-            subLabel: "Your Results",
-            subHref: "/list/student-result",
-            visible: ["student"]
-        },
-    ],
-},
-
-{
-  icon: <CiWallet/>,
-  label: "Payments",
-  visible: ["admin"],
-  subLevel: [
       {
-          subIcon: <RiFileList3Line />,
-          subLabel: "Payment History",
-          subHref: "/list/payment/payment-history",
-
-          visible: ["admin"],
+        subIcon: <MdOutlineEventNote />,
+        subLabel: "Routine",
+        subHref: "/list/exams/routine",
+        visible: ["admin", "teacher", "student"],
       },
-      {   
-          subIcon: <MdOutlinePayments />,
-          subLabel: "Make Payment",
-          subHref: "/list/payment",
-          visible: ["admin"],
+      {
+        subIcon: <RiPagesLine />,
+        subLabel: "Admit",
+        subHref: "/list/exams/admit",
+        visible: ["admin", "student"],
       },
-  ],
-},
+      {
+        subIcon: <PiExam />,
+        subLabel: "Results",
+        subHref: "/list/results",
+        visible: ["admin", "teacher"],
+      },
+      {
+        subIcon: <PiExam />,
+        subLabel: "Your Results",
+        subHref: "/list/student-result",
+        visible: ["student"],
+      },
+    ],
+  },
 
-]
+  {
+    icon: <CiWallet />,
+    label: "Payments",
+    visible: ["admin"],
+    subLevel: [
+      {
+        subIcon: <RiFileList3Line />,
+        subLabel: "Payment History",
+        subHref: "/list/payment/payment-history",
+
+        visible: ["admin"],
+      },
+      {
+        subIcon: <MdOutlinePayments />,
+        subLabel: "Make Payment",
+        subHref: "/list/payment",
+        visible: ["admin"],
+      },
+    ],
+  },
+];
 
 const Menu = async () => {
   const user = await currentUser();
@@ -229,64 +225,68 @@ const Menu = async () => {
     <Sidebar className="pt-16 ">
       <SidebarContent className="pb-5">
         <div className="flex flex-col gap-2 pt-2 pl-2 ">
-          {menuItems.map((item) => {
-            if (item.visible.includes(role)) {
-              return (
-                <SidebarMenu key={item.label}>
-                <Link
-                  href={item.href}
-                  key={item.label}
-                  className="flex pl-2 items-center overflow-x-hidden w-[95%] gap-4 text-gray-500 py-2  rounded-md hover:bg-lamaSkyLight  hover:scale-105 transition-all duration-300"
-                >
-                  <Image src={item.icon} alt="" width={20} height={20} />
-                  <span className="hidden lg:block">{item.label}</span>
-                </Link>
-                </SidebarMenu>
-              );
-            }
-            return null; // Return null if the item is not visible
-          })}
+          <SidebarMenu>
+            {menuItems.map((item) => {
+              if (item.visible.includes(role)) {
+                return (
+                  <SidebarMenuItem className=" overflow-hidden" key={item.label}>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        href={item.href}
+                        key={item.label}
+                        className="flex pl-2 items-center   gap-4 text-gray-500 py-2  rounded-md  hover:scale-105 transition-all duration-300"
+                      >
+                        <Image src={item.icon} alt="" width={20} height={20} />
+                        <span className="hidden lg:block">{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              }
+
+              return null; // Return null if the item is not visible
+            })}
+          </SidebarMenu>
         </div>
         {menuItems2.map((menuItem, index) =>
-        menuItem.visible.includes(role) ? (
-          <SidebarMenu key={index} className=" ">
-            <Collapsible>
-              <CollapsibleTrigger
-                asChild
-                className="text-gray-500 py-2 px-4"
-              >
-                <SidebarMenuButton className="flex items-center justify-between gap-2 rounded-md">
-                  <span className="flex items-center gap-4 text-[16px]">
-                    {menuItem.icon}
-                    {menuItem.label}
-                  </span>
+          menuItem.visible.includes(role) ? (
+            <SidebarMenu key={index} className=" ">
+              <Collapsible>
+                <CollapsibleTrigger
+                  asChild
+                  className="text-gray-500 py-2 px-4  rounded-md "
+                >
+                  <SidebarMenuButton className="flex items-center justify-between gap-2 rounded-md">
+                    <span className="flex items-center gap-4 text-[16px]">
+                      {menuItem.icon}
+                      {menuItem.label}
+                    </span>
 
+                    <IoIosArrowDown className="arrow-down transition-transform duration-300" />
+                    <IoIosArrowForward className="arrow-forward transition-transform duration-300" />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
 
-                  <IoIosArrowDown className="arrow-down transition-transform duration-300" />
-                  <IoIosArrowForward className="arrow-forward transition-transform duration-300" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
-
-              <CollapsibleContent className="transition-opacity duration-700 ease-in-out">
-                {menuItem.subLevel?.map(
-                  (subItem, subIndex) =>
-                    subItem.visible.includes(role) && (
-                      <SidebarMenuSub key={subIndex} className="px-0">
-                        <Link
-                          href={subItem.subHref}
-                          className="flex items-center gap-2 py-2 text-gray-500 pl-3 hover:bg-lamaSkyLight rounded-md "
-                        >
-                          {subItem.subIcon}
-                          {subItem.subLabel}
-                        </Link>
-                      </SidebarMenuSub>
-                    )
-                )}
-              </CollapsibleContent>
-            </Collapsible>
-          </SidebarMenu>
-        ) : null
-      )}
+                <CollapsibleContent className="arrow-down ease-in-out transition-transform duration-300">
+                  {menuItem.subLevel?.map(
+                    (subItem, subIndex) =>
+                      subItem.visible.includes(role) && (
+                        <SidebarMenuSub key={subIndex} className="px-0">
+                          <Link
+                            href={subItem.subHref}
+                            className="flex items-center gap-2 py-2 text-gray-500 pl-3  rounded-md hover:scale-105 transition-all duration-300"
+                          >
+                            {subItem.subIcon}
+                            {subItem.subLabel}
+                          </Link>
+                        </SidebarMenuSub>
+                      )
+                  )}
+                </CollapsibleContent>
+              </Collapsible>
+            </SidebarMenu>
+          ) : null
+        )}
       </SidebarContent>
       <SidebarSeparator />
       <SidebarFooter>

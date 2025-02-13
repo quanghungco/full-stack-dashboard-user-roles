@@ -63,15 +63,17 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
         <td className="text-center">{classes ? classes.fees : 0}</td>
         <td className="text-center">{due > 0 ? due : 0}</td>
         <td className="text-center">{totalPaid}</td>
-        <td className={`text-center font-bold ${payment ? (payment.status === "Paid" ? "text-green-500 " : payment.status === "Not Paid" ? "text-red-500" : "text-orange-500") : "text-red-500"}`}>
+        <td className={`text-center `}>
+          <span className={`text-center font-semibold py-1 px-2 rounded-full ${payment ? (payment.status === "Paid" ? "text-green-800 bg-green-100" : payment.status === "Not Paid" ? "text-red-500 bg-red-100"  : "text-orange-500 bg-orange-100") : "text-red-600 bg-red-100"}`}>
           {payment ? payment.status : "Not Paid"}
+          </span>
         </td>
 
 
         <td className="flex justify-center">
           <button
             onClick={() => handleOpenForm(student.id.toString())}
-            className="bg-blue-500 text-white px-4 py-1 rounded-md"
+            className="bg-sky-500 text-white px-4 py-1 rounded-md"
           >
             Pay
           </button>
