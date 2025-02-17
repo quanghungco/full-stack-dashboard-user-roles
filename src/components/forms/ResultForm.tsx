@@ -112,41 +112,44 @@ const ResultForm = ({
       {/* Dynamic fields for subjects and marks */}
       <div>
         <h2 className="text-lg font-semibold">Subjects</h2>
+        
         {fields.map((field, index) => (
           <div key={field.id} className="flex gap-2 mt-4">
-            <Input
-              type="number"
-              placeholder="Subject ID"
-              {...register(`subjects.${index}.subjectId`, {
-                required: "Subject ID is required",
-                min: {
-                  value: 1,
-                  message: "Subject ID must be greater than 0"
-                },
-                valueAsNumber: true
-              })}
-              className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-            />
-            {errors.subjects?.[index]?.subjectId && (
-              <p className="text-xs text-red-400">
-                {errors.subjects[index]?.subjectId?.message}
-              </p>
-            )}
+            <div className="flex flex-col w-full">
+              <label className="block font-medium">Subject ID:</label>
+              <Input
+                type="number"
+                placeholder="Subject ID"
+                {...register(`subjects.${index}.subjectId`, { valueAsNumber: true})}
+                min={0}
+
+                className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+              />
+              {errors.subjects?.[index]?.subjectId && (
+                <p className="text-xs text-red-400">
+                  {errors.subjects[index]?.subjectId?.message}
+                </p>
+              )}
+            </div>
             
 
-          
+            <div className="flex flex-col w-full">
+            <label className="block font-medium">Marks:</label>
             <Input
               type="number"
               placeholder="Marks"
               {...register(`subjects.${index}.marks`, { valueAsNumber: true })}
+              min={0}
               className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
               required
             />
-            <Button type="button" className="bg-red-400" onClick={() => remove(index)}>Remove</Button>
+            </div>
+            <Button type="button" className="bg-red-500 hover:text-red-500 mt-6 text-white" onClick={() => remove(index)}>Remove</Button>
+            
           </div>
         ))}
         <Button
-          className="bg-green-400 mt-2"
+          className="bg-green-400 mt-2 flex order-end items-center text-white hover:text-green-500"
           type="button"
           onClick={() => append({ subjectId: 0, subjectName: "", marks: 0 })}
         >
@@ -156,7 +159,7 @@ const ResultForm = ({
 
       <button
         type="submit"
-        className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50"
+        className="bg-blue-500 text-white p-2 rounded-md disabled:opacity-50 w-full"
         disabled={isSubmitting}
       >
         {isSubmitting ? "Processing..." : type === "create" ? "Create" : "Update"}

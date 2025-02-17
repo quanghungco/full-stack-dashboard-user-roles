@@ -20,12 +20,15 @@ export const createAttendance = async (data: AttendanceSchema) => {
     try {
       const attendance = await prisma.attendance.create({
         data: {
-          className: data.className,
+          classId: data.classId,
           date: new Date(data.date), // Ensure valid Date object
           day: data.day,
           present: data.present,
           total: data.total,
         },
+        include: {
+          classes: true, // Include subject
+      },
       });
       return { success: true, attendance };
     } catch (error) {
@@ -39,7 +42,7 @@ export const createAttendance = async (data: AttendanceSchema) => {
       const attendance = await prisma.attendance.update({
         where: { id },
         data: {
-          className: data.className,
+          classId: data.classId,
           date: new Date(data.date),
           day: data.day,
           present: data.present,

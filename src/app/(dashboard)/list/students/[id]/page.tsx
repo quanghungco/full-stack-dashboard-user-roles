@@ -20,7 +20,7 @@ const SingleStudentPage = async ({
   params: Promise<{ id: string }>;
 }) => {
   const { sessionClaims } = await auth();
-  
+
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
   const student:
@@ -45,51 +45,6 @@ const SingleStudentPage = async ({
         {/* TOP */}
         <div className="grid grid-cols-1 lg:grid-cols-3 md:gap-4 ">
           {/* USER INFO CARD */}
-          {/* <div className="bg-lamaSky py-6 px-4 rounded-md flex-1 flex gap-4">
-            <div className="w-1/3">
-              <Image
-                src={student.img || "/noAvatar.png"}
-                alt=""
-                width={144}
-                height={144}
-                className="w-36 h-30 rounded-full object-cover"
-              />
-            </div>
-            <div className="w-2/3 flex flex-col justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <h1 className="text-xl font-semibold">
-                  {student.name + " " + student.surname}
-                </h1>
-                {role === "admin" && (
-                  <FormContainer table="student" type="update" data={student} />
-                )}
-              </div>
-              <p className="text-sm text-gray-500">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-              </p>
-              <div className="flex items-center justify-between gap-2 flex-wrap text-xs font-medium">
-                <div className="w-full md:w-1/3 lg:w-full 2xl:w-1/3 flex items-center gap-2">
-                  <Image src="/blood.png" alt="" width={14} height={14} />
-                  <span>{student.bloodType}</span>
-                </div>
-                <div className="w-full md:w-1/3 lg:w-full 2xl:w-1/3 flex items-center gap-2">
-                  <Image src="/date.png" alt="" width={14} height={14} />
-                  <span>
-                    {new Intl.DateTimeFormat("en-GB").format(student.birthday)}
-                  </span>
-                </div>
-                <div className="w-full md:w-1/3 lg:w-full 2xl:w-1/3 flex items-center gap-2">
-                  <Image src="/mail.png" alt="" width={14} height={14} />
-                  <span>{student.email || "-"}</span>
-                </div>
-                <div className="w-full md:w-1/3 lg:w-full 2xl:w-1/3 flex items-center gap-2">
-                  <Image src="/phone.png" alt="" width={14} height={14} />
-                  <span>{student.phone || "-"}</span>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <div className="bg-lamaSky dark:bg-gray-600 py-6 px-4 rounded-md  w-full col-span-2">
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
@@ -115,9 +70,10 @@ const SingleStudentPage = async ({
                       />
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  </p>
+                  <div className="text-sm text-gray-400 mt-2  ">
+                    <p className="">Student ID: {student.username}</p>
+                    <p>Class: {student.class.name}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -134,9 +90,8 @@ const SingleStudentPage = async ({
                 </span>
               </div>
               <div className=" w-full flex items-center gap-2">
-                
-                  <IoMail className="w-4 h-4" /> <span>Email: {student.email || "-"}</span>
-             
+                <IoMail className="w-4 h-4" />{" "}
+                <span>Email: {student.email || "-"}</span>
               </div>
               <div className="w-full  flex items-center gap-2">
                 <FaPhoneAlt className="w-4 h-4" />
@@ -147,8 +102,6 @@ const SingleStudentPage = async ({
           {/* SMALL CARDS */}
           <div className="flex flex-col gap-y-2 w-full md:col-span-1 mt-4 md:mt-0">
             {/* CARD */}
-
-
 
             {/* <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
               <Image
@@ -190,7 +143,6 @@ const SingleStudentPage = async ({
                 className="w-5 h-5"
               />
               <div className="">
-
                 <h1 className="text-xl font-semibold">
                   {student.class._count.lessons}
                 </h1>
@@ -207,7 +159,6 @@ const SingleStudentPage = async ({
                 className="w-5 h-5"
               />
               <div className="">
-
                 <h1 className="text-xl font-semibold">{student.class.name}</h1>
                 <span className="text-sm text-gray-400">Class</span>
               </div>
@@ -225,12 +176,12 @@ const SingleStudentPage = async ({
         <div className="bg-white dark:bg-[#18181b] p-4 rounded-md">
           <h1 className="text-xl font-semibold">Shortcuts</h1>
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
-            <Link
+            {/* <Link
               className="p-3 rounded-md bg-lamaSkyLight"
               href={`/list/lessons?classId=${student.class.id}`}
             >
               Student Lessons
-            </Link>
+            </Link> */}
             <Link
               className="p-3 rounded-md bg-lamaPurpleLight"
               href={`/list/teachers?classId=${student.class.id}`}

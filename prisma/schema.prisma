@@ -121,6 +121,7 @@ model Class {
   students     Student[]
   events       Event[]
   examRoutines   ExamRoutine[]
+  attendances  Attendance[]
 }
 
 
@@ -208,12 +209,15 @@ model Announcement {
 
 model Attendance {
   id        Int      @id @default(autoincrement())
-  className String   // Field for the class name
+  classId   Int      // Field for the class ID
+  classes   Class @relation(fields: [classId], references: [id])
   date      DateTime // Field for the date of attendance
   day       Day      // Enum for the day of the week
   present   Int   // Field to indicate if the student is present 
   total     Int   
 }
+
+
 model Finance {
   id          Int      @id @default(autoincrement())
   type        String   // "income" or "expense"

@@ -7,6 +7,7 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Attendance, Prisma } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
+
 const AttendanceListPage = async ({
   searchParams,
 }: {
@@ -48,12 +49,12 @@ const AttendanceListPage = async ({
       : []),
   ];
 
-  const renderRow = (item: Attendance) => (
+  const renderRow = (item: Attendance & { classes: { name: string } }) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
     >
-      <td className="flex items-center justify-center gap-4 p-4">{item.className}</td>
+      <td className="flex items-center justify-center gap-4 p-4">{item.classes?.name}</td>
       <td className="hidden md:table-cell text-center">{item.date.toISOString().split("T")[0]}</td>
       <td className="hidden md:table-cell text-center">{item.day}</td>
       <td className="text-center">{item.present}</td>
@@ -72,29 +73,17 @@ const AttendanceListPage = async ({
   );
 
   const { page, perPage, ...queryParams } = await searchParams;
-  const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
+  const p = page ? parseInt(page) : 1;
 
-
-  // URL PARAMS CONDITION
-  const query: Prisma.AttendanceWhereInput = {};
-
-  if (queryParams) {
-    for (const [key, value] of Object.entries(queryParams)) {
-      if (value !== undefined) {
-        switch (key) {
-          case "className":
-            query.className = { contains: value, mode: "insensitive" };
-            break;
-          case "date":
-            query.date = new Date(value);
-            break;
-          default:
-            break;
-        }
-      }
-    }
-  }
+  const query: Prisma.AttendanceWhereInput = {
+    ...(queryParams?.className && {
+      className: { contains: queryParams.className, mode: "insensitive" },
+    }),
+    ...(queryParams?.date && {
+      date: new Date(queryParams.date),
+    }),
+  };
 
   const [data, count] = await prisma.$transaction([
     prisma.attendance.findMany({

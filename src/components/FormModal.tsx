@@ -102,8 +102,8 @@ const forms: {
       relatedData={relatedData}
     />
   ),
-  attendance: (setOpen, type, data) => (
-    <AttendanceForm type={type} data={data} setOpen={setOpen} />
+  attendance: (setOpen, type, data, relatedData) => (
+    <AttendanceForm  type={type} data={data} setOpen={setOpen} relatedData={relatedData} />
   ),
   assignment: (setOpen, type, data, relatedData) => {
 

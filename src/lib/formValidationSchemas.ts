@@ -276,7 +276,7 @@ export const attendanceSchema = z.object({
     ],
     { message: "Day is required" }
   ),
-  className: z.string().min(1, "Class name is required"),
+  classId: z.coerce.number({ message: "Class is required!" }),
 });
 
 export type AttendanceSchema = z.infer<typeof attendanceSchema>;

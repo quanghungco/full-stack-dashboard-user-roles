@@ -17,9 +17,7 @@ const AdminPage = async ({
   const role = (sessionClaims?.metadata as { role?: string })?.role;
 
 
-  // const headersList = await headers(); 
-  // const csp = headersList.get("Content-Security-Policy") || ''; 
-  // console.log(csp);
+
 
   return (
     <div className="p-4 flex gap-4 flex-col md:flex-row w-full">

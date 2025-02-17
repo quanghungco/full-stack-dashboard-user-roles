@@ -176,21 +176,21 @@ async function main() {
   }
 
   // ATTENDANCE
-  for (let i = 1; i <= 10; i++) {
-    await prisma.attendance.create({
-      data: {
-        date: new Date(),
-        present: 1,
-        className: `Class ${(i % 6) + 1}`,
-        day: Day[
-          Object.keys(Day)[
-            Math.floor(Math.random() * Object.keys(Day).length)
-          ] as keyof typeof Day
-        ],
-        total: 30
-      },
-    });
-  }
+  // for (let i = 1; i <= 10; i++) {
+  //   await prisma.attendance.create({
+  //     data: {
+  //       date: new Date(),
+  //       present: 1,
+  //       className: `Class ${(i % 6) + 1}`,
+  //       day: Day[
+  //         Object.keys(Day)[
+  //           Math.floor(Math.random() * Object.keys(Day).length)
+  //         ] as keyof typeof Day
+  //       ],
+  //       total: 30
+  //     },
+  //   });
+  // }
 
   // EVENT
   for (let i = 1; i <= 5; i++) {
