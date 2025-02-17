@@ -7,6 +7,9 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Attendance, Prisma } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
 
+type AttendanceWithClass = Attendance & {
+  classes: { id: number; name: string };
+};
 
 const AttendanceListPage = async ({
   searchParams,
@@ -19,7 +22,7 @@ const AttendanceListPage = async ({
   const columns = [
     {
       header: "Class Name",
-      accessor: "className",
+      accessor: "class.name",
     },
     {
       header: "Date",
@@ -39,7 +42,7 @@ const AttendanceListPage = async ({
       header: "Total Students",
       accessor: "total",
     },
-    ...( role === "admin" || role === "teacher"
+    ...(role === "admin" || role === "teacher"
       ? [
           {
             header: "Actions",
@@ -48,20 +51,25 @@ const AttendanceListPage = async ({
         ]
       : []),
   ];
+  
 
-  const renderRow = (item: Attendance & { classes: { name: string } }) => (
+  const renderRow = (item: AttendanceWithClass) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
     >
-      <td className="flex items-center justify-center gap-4 p-4">{item.classes?.name}</td>
-      <td className="hidden md:table-cell text-center">{item.date.toISOString().split("T")[0]}</td>
+      <td className="flex items-center justify-center gap-4 p-4">
+        {item.classes.name}
+      </td>
+      <td className="hidden md:table-cell text-center">
+        {item.date.toISOString().split("T")[0]}
+      </td>
       <td className="hidden md:table-cell text-center">{item.day}</td>
       <td className="text-center">{item.present}</td>
       <td className="text-center">{item.total}</td>
       <td>
         <div className="flex items-center gap-2 justify-center">
-          {( role === "admin" || role === "teacher") && (
+          {(role === "admin" || role === "teacher") && (
             <>
               <FormContainer table="attendance" type="update" data={item} />
               <FormContainer table="attendance" type="delete" id={item.id} />
@@ -76,39 +84,48 @@ const AttendanceListPage = async ({
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   const p = page ? parseInt(page) : 1;
 
-  const query: Prisma.AttendanceWhereInput = {
-    ...(queryParams?.className && {
-      className: { contains: queryParams.className, mode: "insensitive" },
-    }),
-    ...(queryParams?.date && {
-      date: new Date(queryParams.date),
-    }),
-  };
+  const query: Prisma.AttendanceWhereInput = {};
+
+  if (queryParams?.classId) {
+    query.classId = parseInt(queryParams?.classId);
+  }
 
   const [data, count] = await prisma.$transaction([
     prisma.attendance.findMany({
       where: query,
+      include: {
+        classes: {
+          select: {
+            id: true,
+            name: true,
+          },
+        }
+      },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
     }),
-
-    prisma.attendance.count({ where: query }),
+    prisma.attendance.count({
+      where: query,
+    }),
   ]);
+
 
   return (
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
       {/* TOP */}
       <div className="flex items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">All Attendance Records</h1>
+        <h1 className="hidden md:block text-lg font-semibold">
+          All Attendance Records
+        </h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            {(role === "admin" || role === "teacher") && <FormContainer table="attendance" type="create" />}
+            {(role === "admin" || role === "teacher") && (
+              <FormContainer table="attendance" type="create" />
+            )}
           </div>
         </div>
       </div>
-
-
 
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />

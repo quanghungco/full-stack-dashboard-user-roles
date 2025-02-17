@@ -7,6 +7,7 @@ import FinanceChart from "@/components/FinanceChart";
 import FinanceChartContainer from "@/components/FinanceChartContainer";
 import UserCard from "@/components/UserCard";
 import { auth } from "@clerk/nextjs/server";
+import { Suspense } from "react";
 
 const AdminPage = async ({
   searchParams,
@@ -15,9 +16,6 @@ const AdminPage = async ({
 }) => {
   const { userId, sessionClaims } = await auth();
   const role = (sessionClaims?.metadata as { role?: string })?.role;
-
-
-
 
   return (
     <div className="p-4 flex gap-4 flex-col md:flex-row w-full">
@@ -44,8 +42,13 @@ const AdminPage = async ({
         </div>
         {/* BOTTOM CHART */}
         <div className="w-full h-[500px]">
-          {/* <FinanceChart /> */}
-          <FinanceChartContainer />
+          <Suspense fallback={
+            <div className="bg-white dark:bg-[#18181b] rounded-xl w-full h-full p-4 flex items-center justify-center">
+              <p>Loading finance data...</p>
+            </div>
+          }>
+            <FinanceChartContainer />
+          </Suspense>
         </div>
       </div>
       {/* RIGHT */}
