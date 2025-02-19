@@ -1,93 +1,108 @@
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-// import saltAndHashPassword from "./utils/password"
-// import { getUserFromDb } from "./lib/userAction"
-import { signInSchema } from "./lib/formValidationSchemas"
-import prisma from './lib/prisma';
+import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import prisma from "@/lib/prisma";
+import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import type { NextAuthOptions } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 
-const handler = NextAuth({
+// Define the User type based on your Prisma schema
+type UserWithRole = {
+  id: string;
+  email: string;
+  name: string | null;
+  role: "ADMIN" | "TEACHER" | "STUDENT" | "USER";
+};
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name: string | null;
+      email: string;
+      role: "ADMIN" | "TEACHER" | "STUDENT" | "USER";
+    };
+  }
+
+  interface User extends UserWithRole {}
+}
+
+declare module "next-auth/jwt" {
+  interface JWT extends UserWithRole {}
+}
+
+const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
+  session: { strategy: "jwt" },
+  pages: {
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role; // Store role in token
-      }
-      return token;
-    },
-    async session({ session, token }: { session: any, token: any }) {
-      if (token && session.user) {
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-    async redirect({ url, baseUrl }) {
-      // Ensure redirection always goes to /dashboard/admin
-      if (url === "/") {
-        return `${baseUrl}/dashboard/admin`;
-      }
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
-  },
-  // callbacks: {
-  //   async jwt({ token, user }) {
-  //     if (user) {
-  //       token.role = user.role;
-  //       token.id = user.id;
-  //     }
-  //     return token;
-  //   },
-  //   async session({ session, token }: { session: any, token: any }) {
-  //     if (session.user) {
-  //       session.user.role = token.role as string;
-  //       session.user.id = token.id as string;
-  //     }
-  //     return session;
-  //   }
-  // },
   providers: [
-    Credentials({
+    CredentialsProvider({
+      name: "credentials",
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-
-
-      authorize: async (credentials) => {
-        const { email, password } = await signInSchema.parseAsync(credentials);
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Invalid credentials");
+        }
 
         const user = await prisma.user.findUnique({
-          where: { email },
+          where: { email: credentials.email },
         });
 
         if (!user) {
-          throw new Error("Invalid credentials.");
+          throw new Error("User not found");
         }
 
-        const isValidPassword = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
 
-        if (!isValidPassword) {
-          throw new Error("Invalid credentials.");
+        if (!isPasswordValid) {
+          throw new Error("Invalid password");
         }
 
         return {
           id: user.id,
           email: user.email,
-          role: user.role,
           name: user.name,
+          role: user.role,
         };
-      }
-      ,
+      },
     }),
   ],
-  pages: {
-    signIn: '/auth/login',
-    error: "/auth/error",
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id as string;
+        token.email = user.email as string;
+        token.name = user.name;
+        token.role = user.role as "ADMIN" | "TEACHER" | "STUDENT" | "USER";
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.name = token.name ?? null;
+        session.user.role = token.role as
+          | "ADMIN"
+          | "TEACHER"
+          | "STUDENT"
+          | "USER";
+      }
+      return session;
+    },
   },
-})
-export const { auth } = handler
-export const { GET, POST } = handler
+};
+
+const handler = NextAuth(authOptions);
+export { authOptions };
+export const { auth, signIn, signOut } = handler;
+export const handlers = handler;

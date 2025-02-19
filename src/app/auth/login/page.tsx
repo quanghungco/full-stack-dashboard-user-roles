@@ -1,51 +1,40 @@
 "use client";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
-const DEFAULT_EMAIL = "admin@example.com";
-const DEFAULT_PASSWORD = "12345678";
-
-const LoginPage = () => {
+export default function LoginPage() {
   const router = useRouter();
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError("");
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const formData = new FormData(e.currentTarget);
 
-    if (!email || !password) {
-      setError("Please enter both email and password.");
-      return;
-    }
+    try {
+      const res = await signIn("credentials", {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        redirect: false,
+      });
 
-    // Check if credentials match default credentials
-    if (email === DEFAULT_EMAIL && password === DEFAULT_PASSWORD) {
-      console.log("Logged in as Admin with default credentials.");
-      router.push("/dashboard/admin");
-      return;
-    }
+      if (res?.error) {
+        setError(res.error);
+        return;
+      }
 
-    // Normal authentication process using NextAuth
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-    if (result?.ok) {
-      router.push("/dashboard/admin"); // Manually redirect
-    }
-
-    if (result?.error) {
-      setError("Invalid email or password.");
-    } else {
-      router.push("/dashboard"); // Redirect after successful login
+      router.push("/dashboard");
+      router.refresh();
+    } catch (error) {
+      setError("Something went wrong!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,20 +49,22 @@ const LoginPage = () => {
         </h2>
 
         {error && (
-          <p className="mt-2 text-center text-red-500">{error}</p>
+          <div className="mt-4 p-4 bg-red-100 text-red-600 rounded-md text-center">
+            {error}
+          </div>
         )}
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
-              Your email
+              Email
             </label>
             <input
               type="email"
               name="email"
+              required
               className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="name@example.com"
-              required
             />
           </div>
 
@@ -84,22 +75,21 @@ const LoginPage = () => {
             <input
               type="password"
               name="password"
+              required
               className="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               placeholder="••••••••"
-              required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-sky-600 text-white py-2 rounded-lg hover:bg-sky-700 transition"
+            disabled={isLoading}
+            className="w-full bg-sky-600 text-white py-2 rounded-lg hover:bg-sky-700 transition disabled:opacity-50"
           >
-            Sign in
+            {isLoading ? "Signing in..." : "Sign in"}
           </button>
         </form>
       </div>
     </section>
   );
-};
-
-export default LoginPage;
+}

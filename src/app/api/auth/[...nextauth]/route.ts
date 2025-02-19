@@ -1,5 +1,4 @@
-// import { handlers } from "@/auth
-import { GET, POST } from "@/auth"
+// import { handlers } from "@/auth"
+import { handlers } from "@/auth";
 
-export { GET, POST }
-
+export { handlers as GET, handlers as POST };

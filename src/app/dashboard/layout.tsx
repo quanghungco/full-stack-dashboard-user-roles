@@ -6,10 +6,15 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 // import { headers } from "next/headers";
 
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
 
   if (!session?.user) {
     redirect("/auth/login");

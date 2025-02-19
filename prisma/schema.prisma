@@ -13,16 +13,16 @@ model Admin {
 }
 
 model User {
-  id       String  @id @default(cuid())
-  name     String?
-  username String  @unique
-  email    String  @unique
-  password String
-  role     Role    @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  id        String    @id @default(cuid())
+  name      String?
+  username  String    @unique
+  email     String    @unique
+  password  String
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  accounts  Account[]
+  sessions  Session[]
 
   @@map("users") // Optional: maps table name in database
 }
@@ -39,12 +39,12 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
 
@@ -53,7 +53,7 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -62,7 +62,7 @@ model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
 
@@ -73,9 +73,8 @@ enum Role {
   USER
 }
 
-
 model Admission {
-  id               Int      @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   studentName      String
   contactNumber    String
   bloodGroup       String
@@ -107,11 +106,35 @@ model Admission {
   hscGPA           String?
   hscPassingYear   String?
   hscInstituteName String?
-  createdAt DateTime @default(now())
-  students Student[]
+  createdAt        DateTime  @default(now())
+  students         Student[]
 }
- 
+
 model Student {
+  id         String      @id
+  username   String      @unique
+  name       String
+  surname    String
+  email      String?     @unique
+  phone      String?     @unique
+  address    String
+  img        String?
+  bloodType  String
+  sex        UserSex
+  createdAt  DateTime    @default(now())
+  parentNId  BigInt?
+  parentName String?
+  classId    Int
+  class      Class       @relation(fields: [classId], references: [id])
+  gradeId    Int
+  grade      Grade       @relation(fields: [gradeId], references: [id])
+  results    Result[]
+  birthday   DateTime
+  payments   Payment[]
+  admission  Admission[]
+}
+
+model Teacher {
   id          String       @id
   username    String       @unique
   name        String
@@ -123,30 +146,6 @@ model Student {
   bloodType   String
   sex         UserSex
   createdAt   DateTime     @default(now())
-  parentNId   BigInt?
-  parentName  String?
-  classId     Int
-  class       Class        @relation(fields: [classId], references: [id])
-  gradeId     Int
-  grade       Grade        @relation(fields: [gradeId], references: [id])
-  results     Result[]
-  birthday    DateTime
-  payments    Payment[]
-  admission   Admission[]
-}
-
-model Teacher {
-  id          String    @id
-  username    String    @unique
-  name        String
-  surname     String
-  email       String?   @unique
-  phone       String?   @unique
-  address     String
-  img         String?
-  bloodType   String
-  sex         UserSex
-  createdAt   DateTime  @default(now())
   subjects    Subject[]
   lessons     Lesson[]
   classes     Class[]
@@ -166,37 +165,35 @@ model Parent {
 }
 
 model Grade {
-  id    Int @id @default(autoincrement())
-  level Int @unique
+  id       Int       @id @default(autoincrement())
+  level    Int       @unique
   students Student[]
 }
 
 model Class {
-  id       Int    @id @default(autoincrement())
-  name     String @unique
-  fees     Int          
-  capacity Int
-  assignments Assignment[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  fees         Int
+  capacity     Int
+  assignments  Assignment[]
   supervisorId String?
-  supervisor   Teacher?  @relation(fields: [supervisorId], references: [id])
+  supervisor   Teacher?      @relation(fields: [supervisorId], references: [id])
   lessons      Lesson[]
   students     Student[]
   events       Event[]
-  examRoutines   ExamRoutine[]
+  examRoutines ExamRoutine[]
   attendances  Attendance[]
 }
 
-
 model Subject {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  teachers Teacher[]
-  lessons  Lesson[]
-  results  Result[]
-  assignments Assignment[]
-  examRoutines   ExamRoutine[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  teachers     Teacher[]
+  lessons      Lesson[]
+  results      Result[]
+  assignments  Assignment[]
+  examRoutines ExamRoutine[]
 }
-
 
 model Lesson {
   id        Int      @id @default(autoincrement())
@@ -204,19 +201,16 @@ model Lesson {
   day       Day
   startTime DateTime
   endTime   DateTime
-  subjectId   Int
-  subject     Subject      @relation(fields: [subjectId], references: [id])
-  classId     Int
-  class       Class        @relation(fields: [classId], references: [id])
-  teacherId   String
-  teacher     Teacher      @relation(fields: [teacherId], references: [id])
-
+  subjectId Int
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  classId   Int
+  class     Class    @relation(fields: [classId], references: [id])
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
 }
 
-
-
 model ExamRoutine {
-   id        Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   title     String
   startTime DateTime
   classId   Int
@@ -226,29 +220,27 @@ model ExamRoutine {
 }
 
 model Assignment {
-  id        Int      @id @default(autoincrement())
-  title     String
+  id          Int       @id @default(autoincrement())
+  title       String
   description String?
-  startDate DateTime @default(now())
-  dueDate   DateTime
-  subject   Subject[]
-  class     Class[]
-  teacher   Teacher[]
+  startDate   DateTime  @default(now())
+  dueDate     DateTime
+  subject     Subject[]
+  class       Class[]
+  teacher     Teacher[]
 }
 
 model Result {
-  id         String   @id @default(uuid())
-  studentId  String
-  subjectId  Int
-  marks      Int?
-  grade      String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  student    Student  @relation(fields: [studentId], references: [username], onDelete: Cascade)
-  subject    Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  studentId String
+  subjectId Int
+  marks     Int?
+  grade     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   Student  @relation(fields: [studentId], references: [username], onDelete: Cascade)
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
 }
-
-
 
 model Event {
   id          Int      @id @default(autoincrement())
@@ -270,19 +262,18 @@ model Announcement {
 }
 
 model Attendance {
-  id        Int      @id @default(autoincrement())
-  classId   Int      // Field for the class ID
-  classes   Class @relation(fields: [classId], references: [id])
-  date      DateTime // Field for the date of attendance
-  day       Day      // Enum for the day of the week
-  present   Int   // Field to indicate if the student is present 
-  total     Int   
+  id      Int      @id @default(autoincrement())
+  classId Int // Field for the class ID
+  classes Class    @relation(fields: [classId], references: [id])
+  date    DateTime // Field for the date of attendance
+  day     Day // Enum for the day of the week
+  present Int // Field to indicate if the student is present 
+  total   Int
 }
-
 
 model Finance {
   id          Int      @id @default(autoincrement())
-  type        String   // "income" or "expense"
+  type        String // "income" or "expense"
   amount      Float
   description String?
   date        DateTime @default(now())
@@ -291,14 +282,13 @@ model Finance {
 }
 
 model Payment {
-  id         String  @id @default(cuid())
-  amount     Float
-  status     PaymentStatus
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  studentId  String
-  student    Student  @relation(fields: [studentId], references: [username], onDelete: Cascade)
-
+  id        String        @id @default(cuid())
+  amount    Float
+  status    PaymentStatus
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  studentId String
+  student   Student       @relation(fields: [studentId], references: [username], onDelete: Cascade)
 }
 
 enum PaymentStatus {
@@ -307,14 +297,10 @@ enum PaymentStatus {
   Due
 }
 
-
-
-
 enum UserSex {
   MALE
   FEMALE
 }
-
 
 enum Day {
   SUNDAY
@@ -324,5 +310,4 @@ enum Day {
   THURSDAY
   FRIDAY
   SATURDAY
-  
 }

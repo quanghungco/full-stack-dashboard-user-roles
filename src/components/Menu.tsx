@@ -1,3 +1,5 @@
+"use client";
+
 // Menu.tsx (Server Component)
 // import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
@@ -26,7 +28,8 @@ import { GiNotebook } from "react-icons/gi";
 import { MdOutlineEventNote } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
 import { RiPagesLine } from "react-icons/ri";
-import { User } from "lucide-react";
+import { User, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 // Define the structure of the menu items
 interface MenuItem {
   icon: string;
@@ -193,7 +196,7 @@ const menuItems2: MenuItem2[] = [
         visible: ["admin"],
       },
       {
-        subIcon: <User/>,
+        subIcon: <User />,
         subLabel: "Teachers",
         subHref: "teachers",
         visible: ["admin"],
@@ -202,7 +205,23 @@ const menuItems2: MenuItem2[] = [
   },
 ];
 
-const Menu = async () => {
+// First, create a client component for the logout button
+const LogoutButton = () => {
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        onClick={() => signOut({ callbackUrl: "/auth/login" })}
+        className="flex items-center gap-4 text-gray-500 py-2 pl-2 rounded-md hover:scale-105 transition-all duration-300"
+      >
+        <LogOut size={20} />
+        <span className="hidden lg:block">Logout</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+};
+
+// Then use it in the server component Menu
+const Menu = () => {
   // const user = await currentUser();
   // const role = user?.publicMetadata.role as string;
 
@@ -277,17 +296,11 @@ const Menu = async () => {
         )}
       </SidebarContent>
       <SidebarSeparator />
-      {/* <SidebarFooter>
-        <div className="flex gap-4 py-5 pl-2 ">
-          <UserButton />
-
-          <span className="text-lg text-gray-500">
-            {user?.firstName
-              ? `${user.firstName}`
-              : `${user?.publicMetadata?.role as string}`}
-          </span>
-        </div>
-      </SidebarFooter> */}
+      <SidebarFooter>
+        <SidebarMenu>
+          <LogoutButton />
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };
