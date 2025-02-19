@@ -3,7 +3,7 @@ import React from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { FaDownload } from "react-icons/fa";
-import { PaymentHistory } from "@/app/(dashboard)/list/payment/payment-history/page";
+import { PaymentHistory } from "@/app/dashboard/list/payment/payment-history/page";
 
 
 const DownloadPaymentPDF: React.FC<PaymentHistory & { student: { name: string; surname: string }}> = (data) => {

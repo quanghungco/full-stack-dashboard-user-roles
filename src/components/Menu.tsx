@@ -1,8 +1,8 @@
 // Menu.tsx (Server Component)
-import { currentUser } from "@clerk/nextjs/server";
+// import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+// import { UserButton } from "@clerk/nextjs";
 import {
   Sidebar,
   SidebarContent,
@@ -19,13 +19,14 @@ import {
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
 import { CiWallet } from "react-icons/ci";
-import { MdOutlinePayments } from "react-icons/md";
+import { MdAdminPanelSettings, MdOutlinePayments } from "react-icons/md";
 import { RiFileList3Line } from "react-icons/ri";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { GiNotebook } from "react-icons/gi";
 import { MdOutlineEventNote } from "react-icons/md";
 import { PiExam } from "react-icons/pi";
 import { RiPagesLine } from "react-icons/ri";
+import { User } from "lucide-react";
 // Define the structure of the menu items
 interface MenuItem {
   icon: string;
@@ -49,9 +50,21 @@ interface MenuItem2 {
 const menuItems: MenuItem[] = [
   {
     icon: "/home.png",
-    label: "Home",
-    href: "/",
-    visible: ["admin", "teacher", "student"],
+    label: "Admin Dashboard",
+    href: "/admin",
+    visible: ["admin"],
+  },
+  {
+    icon: "/home.png",
+    label: "Teacher Dashboard",
+    href: "/teacher",
+    visible: ["teacher"],
+  },
+  {
+    icon: "/home.png",
+    label: "Student Dashboard",
+    href: "/student",
+    visible: ["student"],
   },
   {
     icon: "/announcement.png",
@@ -112,7 +125,6 @@ const menuItems: MenuItem[] = [
     href: "/list/finance",
     visible: ["admin"],
   },
-
 ];
 
 const menuItems2: MenuItem2[] = [
@@ -124,25 +136,25 @@ const menuItems2: MenuItem2[] = [
       {
         subIcon: <MdOutlineEventNote />,
         subLabel: "Routine",
-        subHref: "/list/exams/routine",
+        subHref: "exams/routine",
         visible: ["admin", "teacher", "student"],
       },
       {
         subIcon: <RiPagesLine />,
         subLabel: "Admit",
-        subHref: "/list/exams/admit",
+        subHref: "exams/admit",
         visible: ["admin", "student"],
       },
       {
         subIcon: <PiExam />,
         subLabel: "Results",
-        subHref: "/list/results",
+        subHref: "results",
         visible: ["admin", "teacher"],
       },
       {
         subIcon: <PiExam />,
         subLabel: "Your Results",
-        subHref: "/list/student-result",
+        subHref: "student-result",
         visible: ["student"],
       },
     ],
@@ -156,14 +168,34 @@ const menuItems2: MenuItem2[] = [
       {
         subIcon: <RiFileList3Line />,
         subLabel: "Payment History",
-        subHref: "/list/payment/payment-history",
+        subHref: "payment/payment-history",
 
         visible: ["admin"],
       },
       {
         subIcon: <MdOutlinePayments />,
         subLabel: "Make Payment",
-        subHref: "/list/payment",
+        subHref: "payment",
+        visible: ["admin"],
+      },
+    ],
+  },
+
+  {
+    icon: <User />,
+    label: "Users Managment",
+    visible: ["admin"],
+    subLevel: [
+      {
+        subIcon: <MdAdminPanelSettings />,
+        subLabel: "Admin",
+        subHref: "admins",
+        visible: ["admin"],
+      },
+      {
+        subIcon: <User/>,
+        subLabel: "Teachers",
+        subHref: "teachers",
         visible: ["admin"],
       },
     ],
@@ -171,8 +203,8 @@ const menuItems2: MenuItem2[] = [
 ];
 
 const Menu = async () => {
-  const user = await currentUser();
-  const role = user?.publicMetadata.role as string;
+  // const user = await currentUser();
+  // const role = user?.publicMetadata.role as string;
 
   return (
     <Sidebar className="pt-16 ">
@@ -180,29 +212,30 @@ const Menu = async () => {
         <div className="flex flex-col gap-2 pt-2 pl-2 ">
           <SidebarMenu>
             {menuItems.map((item) => {
-              if (item.visible.includes(role)) {
-                return (
-                  <SidebarMenuItem className=" overflow-hidden" key={item.label}>
-                    <SidebarMenuButton asChild>
-                      <Link
-                        href={item.href}
-                        key={item.label}
-                        className="flex pl-2 items-center   gap-4 text-gray-500 py-2  rounded-md  hover:scale-105 transition-all duration-300"
-                      >
-                        <Image src={item.icon} alt="" width={20} height={20} />
-                        <span className="hidden lg:block">{item.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              }
+              // if (item.visible.includes(role)) {
+              return (
+                <SidebarMenuItem className=" overflow-hidden" key={item.label}>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      href={`/dashboard${item.href}`}
+                      key={item.label}
+                      className="flex pl-2 items-center   gap-4 text-gray-500 py-2  rounded-md  hover:scale-105 transition-all duration-300"
+                    >
+                      <Image src={item.icon} alt="" width={20} height={20} />
+                      <span className="hidden lg:block">{item.label}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+              // }
 
               return null; // Return null if the item is not visible
             })}
           </SidebarMenu>
         </div>
-        {menuItems2.map((menuItem, index) =>
-          menuItem.visible.includes(role) ? (
+        {menuItems2.map(
+          (menuItem, index) => (
+            // menuItem.visible.includes(role) ? (
             <SidebarMenu key={index} className=" ">
               <Collapsible>
                 <CollapsibleTrigger
@@ -221,28 +254,30 @@ const Menu = async () => {
                 </CollapsibleTrigger>
 
                 <CollapsibleContent className="arrow-down ease-in-out transition-transform duration-300">
-                  {menuItem.subLevel?.map(
-                    (subItem, subIndex) =>
-                      subItem.visible.includes(role) && (
-                        <SidebarMenuSub key={subIndex} className="px-0">
-                          <Link
-                            href={subItem.subHref}
-                            className="flex items-center gap-2 py-2 text-gray-500 pl-3  rounded-md hover:scale-105 transition-all duration-300"
-                          >
-                            {subItem.subIcon}
-                            {subItem.subLabel}
-                          </Link>
-                        </SidebarMenuSub>
-                      )
-                  )}
+                  {
+                    menuItem.subLevel?.map((subItem, subIndex) => (
+                      // subItem.visible.includes(role) && (
+                      <SidebarMenuSub key={subIndex} className="px-0">
+                        <Link
+                          href={` /dashboard/list/${subItem.subHref}`}
+                          className="flex items-center gap-2 py-2 text-gray-500 pl-3  rounded-md hover:scale-105 transition-all duration-300"
+                        >
+                          {subItem.subIcon}
+                          {subItem.subLabel}
+                        </Link>
+                      </SidebarMenuSub>
+                    ))
+                    // )
+                  }
                 </CollapsibleContent>
               </Collapsible>
             </SidebarMenu>
-          ) : null
+          )
+          //   ) : null
         )}
       </SidebarContent>
       <SidebarSeparator />
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <div className="flex gap-4 py-5 pl-2 ">
           <UserButton />
 
@@ -252,7 +287,7 @@ const Menu = async () => {
               : `${user?.publicMetadata?.role as string}`}
           </span>
         </div>
-      </SidebarFooter>
+      </SidebarFooter> */}
     </Sidebar>
   );
 };

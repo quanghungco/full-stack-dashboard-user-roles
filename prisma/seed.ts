@@ -1,5 +1,6 @@
 import { Day, PrismaClient, UserSex } from "@prisma/client";
 const prisma = new PrismaClient();
+import bcrypt from "bcryptjs";
 
 async function main() {
   // ADMIN
@@ -17,6 +18,48 @@ async function main() {
       console.log(`Admin with ID ${id} already exists.`);
     }
   }
+
+
+  const hashedPassword = await bcrypt.hash("password123", 10);
+
+  await prisma.user.upsert({
+    where: { email: "admin@example.com" },
+    update: {},
+    create: {
+      name: "Admin User",
+      username: "admin",
+      email: "admin@example.com",
+      password: hashedPassword,
+      role: "ADMIN",
+    },
+  });
+
+  await prisma.user.upsert({
+    where: { email: "teacher@example.com" },
+    update: {},
+    create: {
+      name: "Teacher User",
+      username: "teacher1",
+      email: "teacher@example.com",
+      password: hashedPassword,
+      role: "TEACHER",
+    },
+  });
+
+  await prisma.user.upsert({
+    where: { email: "student@example.com" },
+    update: {},
+    create: {
+      name: "Student User",
+      username: "student1",
+      email: "student@example.com",
+      password: hashedPassword,
+      role: "STUDENT",
+    },
+  });
+
+  console.log("Example users seeded successfully.");
+
 
   // GRADE
   for (let i = 1; i <= 6; i++) {

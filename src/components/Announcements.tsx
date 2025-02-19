@@ -1,19 +1,18 @@
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+// import { auth } from "@clerk/nextjs/server";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
 const Announcements = async () => {
-  const { userId, sessionClaims } = auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  // const { userId, sessionClaims } = auth();
+  // const role = (sessionClaims?.metadata as { role?: string })?.role;
   // console.log("hdsajhjds =====", sessionClaims);
   
 
-  const roleConditions = {
-    teacher: { lessons: { some: { teacherId: userId! } } },
-    student: { students: { some: { id: userId! } } },
-    // parent: { students: { some: { parentId: userId! } } },
-  };
+  // const roleConditions = {
+  //   teacher: { lessons: { some: { teacherId: userId! } } },
+  //   student: { students: { some: { id: userId! } } },
+  // };
 
   const data = await prisma.announcement.findMany({
     // take: 5,

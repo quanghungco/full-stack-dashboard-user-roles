@@ -5,7 +5,7 @@ import {
   TeacherSchema,
 } from "./formValidationSchemas";
 import prisma from "./prisma";
-import { clerkClient } from "@clerk/nextjs/server";
+// import { clerkClient } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 
 type CurrentState = { success: boolean; error: boolean };
@@ -21,32 +21,32 @@ export const createTeacher = async (
     data: TeacherSchema
   ) => {
     try {
-      const user = await clerkClient.users.createUser({
-        username: data.username,
-        password: data.password,
-        firstName: data.name,
-        lastName: data.surname,
-        publicMetadata: { role: "teacher" },
-      });
+      // const user = await clerkClient.users.createUser({
+      //   username: data.username,
+      //   password: data.password,
+      //   firstName: data.name,
+      //   lastName: data.surname,
+      //   publicMetadata: { role: "teacher" },
+      // });
   
-      await prisma.teacher.create({
-        data: {
-          id: user.id,
-          username: data.username,
-          name: data.name,
-          surname: data.surname,
-          email: data.email || null,
-          phone: data.phone || null,
-          address: data.address,
-          img: data.img || null,
-          bloodType: data.bloodType,
-          sex: data.sex,
-          joiningDate: data.joiningDate,
-          subjects: {
-            connect: data.subjects ? [{ id: parseInt(data.subjects) }] : [],
-          },
-        },
-      });
+      // await prisma.teacher.create({
+      //   data: {
+      //     id: user.id,
+      //     username: data.username,
+      //     name: data.name,
+      //     surname: data.surname,
+      //     email: data.email || null,
+      //     phone: data.phone || null,
+      //     address: data.address,
+      //     img: data.img || null,
+      //     bloodType: data.bloodType,
+      //     sex: data.sex,
+      //     joiningDate: data.joiningDate,
+      //     subjects: {
+      //       connect: data.subjects ? [{ id: parseInt(data.subjects) }] : [],
+      //     },
+      //   },
+      // });
   
       // revalidatePath("/list/teachers");
       return { success: true, error: false };
@@ -64,12 +64,12 @@ export const createTeacher = async (
       return { success: false, error: true };
     }
     try {
-      const user = await clerkClient.users.updateUser(data.id, {
-        username: data.username,
-        ...(data.password !== "" && { password: data.password }),
-        firstName: data.name,
-        lastName: data.surname,
-      });
+      // const user = await clerkClient.users.updateUser(data.id, {
+      //   username: data.username,
+      //   ...(data.password !== "" && { password: data.password }),
+      //   firstName: data.name,
+      //   lastName: data.surname,
+      // });
   
       await prisma.teacher.update({
         where: {
@@ -106,7 +106,7 @@ export const createTeacher = async (
   ) => {
     const id = data.get("id") as string;
     try {
-      await clerkClient.users.deleteUser(id);
+      // await clerkClient.users.deleteUser(id);
   
       await prisma.teacher.delete({
         where: {

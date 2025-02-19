@@ -1,4 +1,38 @@
-import { z } from "zod";
+import {  z } from "zod";
+
+
+export const signInSchema = z.object({
+  email: z.string({ required_error: "Email is required" })
+    .min(1, "Email is required")
+    .email("Invalid email"),
+  password: z.string({ required_error: "Password is required" })
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
+})
+
+export type SignInSchema = z.infer<typeof signInSchema>;
+
+export const registerSchema = z
+  .object({
+    email: z.string().email({
+      message: "Email is required",
+    }),
+    password: z.string().min(6, {
+      message: "Minimum 6 characters required",
+    }),
+    confirmPassword: z.string(),
+    name: z.string().min(1, {
+      message: "Name is required",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type RegisterSchema = z.infer<typeof registerSchema>;
+
 
 export const subjectSchema = z.object({
   id: z.coerce.number().min(1, { message: "Subject ID is required!" }), 

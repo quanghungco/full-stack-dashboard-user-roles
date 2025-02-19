@@ -1,59 +1,46 @@
-// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-// import { routeAccessMap } from "./lib/settings";
-// import { NextResponse } from "next/server";
-
-// const matchers = Object.keys(routeAccessMap).map((route) => ({
-//   matcher: createRouteMatcher([route]),
-//   allowedRoles: routeAccessMap[route],
-// }));
-
-
-// export default clerkMiddleware(async (auth, req) => {
-//   // if (isProtectedRoute(req)) auth().protect()
-
-//   const { sessionClaims } = await auth();
-//   const role = (sessionClaims?.metadata as { role?: string })?.role;
-
-//   for (const { matcher, allowedRoles } of matchers) {
-//     if (matcher(req) && !allowedRoles.includes(role!)) {
-//       return NextResponse.redirect(new URL(`/${role}`, req.url));
-//     }
-//   }
-// });
-
-// export const config = {
-//   matcher: [
-//     // Skip Next.js internals and all static files, unless found in search params
-//     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-//     // Always run for API routes
-//     "/(api|trpc)(.*)",
-//   ],
-// };
-
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { routeAccessMap } from "./lib/settings";
 import { NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
-const matchers = Object.keys(routeAccessMap).map((route) => ({
-  matcher: createRouteMatcher([route]),
-  allowedRoles: routeAccessMap[route],
-}));
+export default withAuth(
+  function middleware(req) {
+    const token = req.nextauth.token;
+    const path = req.nextUrl.pathname;
 
-export default clerkMiddleware(async (auth, req) => {
-  // Wait for authentication before using session data
-  const { sessionClaims } = await auth();  // ✅ Ensure this is awaited
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-
-  for (const { matcher, allowedRoles } of matchers) {
-    if (matcher(req) && !allowedRoles.includes(role!)) {
-      return NextResponse.redirect(new URL(`/${role}`, req.url));
+    // If no token or role, redirect to login
+    if (!token?.role) {
+      return NextResponse.redirect(new URL('/auth/login', req.url));
     }
+
+    if (path === '/dashboard') {
+      const rolePath = `/dashboard/${String(token.role).toLowerCase()}`;
+      return NextResponse.redirect(new URL(rolePath, req.url));
+    }
+    // Role-based route protection
+    if (path.startsWith('/dashboard/admin') && token.role !== 'ADMIN') {
+      return NextResponse.redirect(new URL(`/dashboard/${String(token.role).toLowerCase()}`, req.url));
+    }
+    if (path.startsWith('/dashboard/teacher') && token.role !== 'TEACHER') {
+      return NextResponse.redirect(new URL(`/dashboard/${String(token.role).toLowerCase()}`, req.url));
+    }
+    if (path.startsWith('/dashboard/student') && token.role !== 'STUDENT') {
+      return NextResponse.redirect(new URL(`/dashboard/${String(token.role).toLowerCase()}`, req.url));
+    }
+
+    return NextResponse.next();
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token
+    },
+    pages: {
+      signIn: "/auth/login",
+    },
   }
-});
+);
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    "/dashboard/:path*",
+    "/api/auth/:path*", // Ensure NextAuth API routes are handled correctly
   ],
 };
