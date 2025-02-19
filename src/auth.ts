@@ -15,19 +15,40 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role;
-        token.id = user.id;
+        token.role = user.role; // Store role in token
       }
       return token;
     },
     async session({ session, token }: { session: any, token: any }) {
-      if (session.user) {
+      if (token && session.user) {
         session.user.role = token.role as string;
-        session.user.id = token.id as string;
       }
       return session;
-    }
+    },
+    async redirect({ url, baseUrl }) {
+      // Ensure redirection always goes to /dashboard/admin
+      if (url === "/") {
+        return `${baseUrl}/dashboard/admin`;
+      }
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
   },
+  // callbacks: {
+  //   async jwt({ token, user }) {
+  //     if (user) {
+  //       token.role = user.role;
+  //       token.id = user.id;
+  //     }
+  //     return token;
+  //   },
+  //   async session({ session, token }: { session: any, token: any }) {
+  //     if (session.user) {
+  //       session.user.role = token.role as string;
+  //       session.user.id = token.id as string;
+  //     }
+  //     return session;
+  //   }
+  // },
   providers: [
     Credentials({
       credentials: {

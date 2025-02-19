@@ -8,29 +8,33 @@ export default withAuth(
 
     // If no token or role, redirect to login
     if (!token?.role) {
-      return NextResponse.redirect(new URL('/auth/login', req.url));
+      return NextResponse.redirect(new URL("/auth/login", req.url));
     }
 
-    if (path === '/dashboard') {
+    // Redirect logged-in users to their respective dashboards
+    if (path === "/dashboard") {
       const rolePath = `/dashboard/${String(token.role).toLowerCase()}`;
       return NextResponse.redirect(new URL(rolePath, req.url));
     }
-    // Role-based route protection
-    if (path.startsWith('/dashboard/admin') && token.role !== 'ADMIN') {
-      return NextResponse.redirect(new URL(`/dashboard/${String(token.role).toLowerCase()}`, req.url));
-    }
-    if (path.startsWith('/dashboard/teacher') && token.role !== 'TEACHER') {
-      return NextResponse.redirect(new URL(`/dashboard/${String(token.role).toLowerCase()}`, req.url));
-    }
-    if (path.startsWith('/dashboard/student') && token.role !== 'STUDENT') {
-      return NextResponse.redirect(new URL(`/dashboard/${String(token.role).toLowerCase()}`, req.url));
+
+    // Ensure users only access their allowed dashboard
+    const rolePaths = {
+      ADMIN: "/dashboard/admin",
+      TEACHER: "/dashboard/teacher",
+      STUDENT: "/dashboard/student",
+    };
+
+    const userRolePath = rolePaths[token.role as keyof typeof rolePaths] || "/dashboard";
+
+    if (!path.startsWith(userRolePath)) {
+      return NextResponse.redirect(new URL(userRolePath, req.url));
     }
 
     return NextResponse.next();
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token
+      authorized: ({ token }) => !!token,
     },
     pages: {
       signIn: "/auth/login",

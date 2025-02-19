@@ -17,9 +17,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const userRole = session.user.role?.toLowerCase();
 
-  if (!["admin", "teacher", "student"].includes(userRole)) {
-    redirect("/auth/error"); // Redirect to an error page if role is invalid
-  }
+  // if (!["admin", "teacher", "student"].includes(userRole)) {
+  //   redirect("/auth/error"); // Redirect to an error page if role is invalid
+  // }
 
   return (
     <ThemeProvider>
