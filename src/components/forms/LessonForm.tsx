@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { lessonSchema, LessonSchema } from "@/lib/formValidationSchemas";
+import { lessonSchema, LessonSchema } from "@/schema/formValidationSchemas";
 import { createLesson, updateLesson } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";

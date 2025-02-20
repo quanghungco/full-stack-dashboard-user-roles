@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { financeSchema, FinanceSchema } from "@/lib/formValidationSchemas";
+import { financeSchema, FinanceSchema } from "@/schema/formValidationSchemas";
 import { createFinance, updateFinance } from "@/lib/financeAction";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { toast } from "react-toastify";

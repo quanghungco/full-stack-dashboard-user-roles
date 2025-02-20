@@ -7,6 +7,7 @@ export default withAuth(
     const isOnAuthPage = req.nextUrl.pathname.startsWith("/auth/login");
     const isAuthenticated = !!req.nextauth?.token;
 
+
     // Redirect authenticated users away from login
     if (isOnAuthPage && isAuthenticated) {
       return NextResponse.redirect(new URL("/dashboard", req.url));

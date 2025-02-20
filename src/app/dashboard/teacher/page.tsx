@@ -1,6 +1,6 @@
 import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
-import EmergencyNumbers from "@/components/EmergencyNumbers";
+import EmergencyNumbers from "@/components/shared/EmergencyNumbers";
 // import { auth } from "@clerk/nextjs/server";
 
 const TeacherPage = async () => {

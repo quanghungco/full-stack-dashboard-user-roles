@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   examRoutineSchema,
   ExamRoutineSchema,
-} from "@/lib/formValidationSchemas";
+} from "@/schema/formValidationSchemas";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { createExamRoutine, updateExamRoutine } from "@/lib/examRoutineActions";

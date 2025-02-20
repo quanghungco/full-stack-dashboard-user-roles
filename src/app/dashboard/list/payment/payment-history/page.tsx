@@ -1,6 +1,6 @@
 import { Payment, Prisma } from "@prisma/client";
 import FormModal from "@/components/FormModal";
-import DownloadPaymentPDF from "@/components/forms/PaymentPdfDownload"; // Import the component
+import DownloadPaymentPDF from "@/components/pdf/PaymentPdfDownload"; // Import the component
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import Pagination from "@/components/Pagination";

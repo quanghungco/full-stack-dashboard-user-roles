@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import {
   attendanceSchema,
   AttendanceSchema,
-} from "@/lib/formValidationSchemas";
+} from "@/schema/formValidationSchemas";
 // import { createAttendance, updateAttendance } from "@/lib/actions";
 import { createAttendance, updateAttendance } from "@/lib/attendenceAction";
 import { toast } from "react-toastify";

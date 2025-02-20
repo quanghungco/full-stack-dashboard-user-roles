@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import InputField from "../InputField";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { studentSchema, StudentSchema } from "@/lib/formValidationSchemas";
+import { studentSchema, StudentSchema } from "@/schema/formValidationSchemas";
 import { useFormState } from "react-dom";
 // import { createStudent, updateStudent } from "@/lib/actions";
 import { createStudent, updateStudent } from "@/lib/studentAction";

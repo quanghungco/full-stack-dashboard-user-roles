@@ -1,35 +1,52 @@
+// * Comnfiguration for authentication
 import NextAuth from "next-auth";
+// import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { getUserById, getUserByEmail } from "./lib/actions/user.action";
 import prisma from "@/lib/prisma";
+import Google from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
-import type { JWT } from "next-auth/jwt";
 
-// Define the User type based on your Prisma schema
-type UserWithRole = {
-  id: string;
-  email: string;
-  name: string | null;
-  role: "ADMIN" | "TEACHER" | "STUDENT" | "USER";
-};
+// export const authOptions = {
+//   providers: [
+//     Google({
+//       clientId: process.env.GOOGLE_CLIENT_ID!,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+//     }),
+//     // Add other providers as needed
+//   ],
+//   // Add any additional NextAuth options here
+// };
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      name: string | null;
-      email: string;
-      role: "ADMIN" | "TEACHER" | "STUDENT" | "USER";
-    };
-  }
+// export default NextAuth(authOptions);
+// import type { JWT } from "next-auth/jwt";
 
-  interface User extends UserWithRole {}
-}
+// // Define the User type based on your Prisma schema
+// type UserWithRole = {
+//   id: string;
+//   email: string;
+//   name: string | null;
+//   role: "ADMIN" | "TEACHER" | "STUDENT" | "USER";
+// };
 
-declare module "next-auth/jwt" {
-  interface JWT extends UserWithRole {}
-}
+// declare module "next-auth" {
+//   interface Session {
+//     user: {
+//       id: string;
+//       name: string | null;
+//       email: string;
+//       role: "ADMIN" | "TEACHER" | "STUDENT" | "USER";
+//     };
+//   }
+
+//   interface User extends UserWithRole {}
+// }
+
+// declare module "next-auth/jwt" {
+//   interface JWT extends UserWithRole {}
+// }
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),

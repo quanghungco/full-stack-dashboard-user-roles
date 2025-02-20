@@ -6,7 +6,7 @@ import InputField from "../InputField";
 import {
   classSchema,
   ClassSchema,
-} from "@/lib/formValidationSchemas";
+} from "@/schema/formValidationSchemas";
 // import {
 //   createClass,
 //   createSubject,

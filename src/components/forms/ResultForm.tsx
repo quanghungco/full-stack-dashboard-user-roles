@@ -3,7 +3,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { resultSchema, ResultSchema } from "@/lib/formValidationSchemas";
+import { resultSchema, ResultSchema } from "@/schema/formValidationSchemas";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "react-toastify";

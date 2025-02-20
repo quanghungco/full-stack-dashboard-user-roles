@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import {
   LessonSchema,
   ParentSchema,
-} from "./formValidationSchemas";
+} from "../schema/formValidationSchemas";
 import prisma from "./prisma";
 // import { clerkClient } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";

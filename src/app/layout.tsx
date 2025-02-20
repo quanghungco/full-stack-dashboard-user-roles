@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "@/components/providers/AuthProvider";
+import TopLoader from "@/components/shared/TopLoader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <TopLoader />
         <AuthProvider>
           {children}
           <ToastContainer position="bottom-right" theme="dark" />

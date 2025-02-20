@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   announcementSchema,
   AnnouncementSchema,
-} from "@/lib/formValidationSchemas";
+} from "@/schema/formValidationSchemas";
 // import { createAnnouncement, updateAnnouncement } from "@/lib/actions";
 import {
   createAnnouncement,

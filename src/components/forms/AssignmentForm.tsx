@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import { assignmentSchema, AssignmentSchema } from "@/lib/formValidationSchemas";
+import { assignmentSchema, AssignmentSchema } from "@/schema/formValidationSchemas";
 import { createAssignment, updateAssignment } from "@/lib/assignmentAction";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";
