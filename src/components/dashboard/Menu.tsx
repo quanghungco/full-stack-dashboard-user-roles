@@ -196,8 +196,8 @@ const menuItems2: MenuItem2[] = [
       },
       {
         subIcon: <User />,
-        subLabel: "Teachers",
-        subHref: "teachers",
+        subLabel: "Add Users",
+        subHref: "users",
         visible: ["admin"],
       },
     ],

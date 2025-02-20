@@ -19,6 +19,8 @@ import { deletePayment } from "@/lib/paymentAction";
 import ExamRoutineForm from "./forms/ExamRoutineForm";
 import { deleteExamRoutine } from "@/lib/examRoutineActions";
 import toast from "react-hot-toast";
+import UserForm from "./forms/UserForm";
+import { deleteUser } from "@/lib/userAction";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -34,6 +36,7 @@ const deleteActionMap = {
   announcement: deleteAnnouncement,
   finance: deleteFinance,
   payment: deletePayment,
+  users: deleteUser,
   examRoutine: deleteExamRoutine,
 };
 
@@ -89,6 +92,15 @@ const forms: {
     relatedData?: any
   ) => JSX.Element;
 } = {
+  users: (setOpen, type, data, relatedData) => {
+    return (
+      <UserForm
+        type={type}
+        data={data}
+        setOpen={setOpen}
+      />
+    );
+  },
   subject: (setOpen, type, data, relatedData) => (
     <SubjectForm
       type={type}
@@ -131,7 +143,6 @@ const forms: {
 
   teacher: (setOpen, type, data, relatedData) => {
     // No need for Cloudinary configuration
-
     return (
       <TeacherForm
         type={type}

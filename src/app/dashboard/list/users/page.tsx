@@ -3,42 +3,34 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
-import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Announcement, Prisma } from "@prisma/client";
+import { Prisma, User } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
+import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 
-
-type AnnouncementList = Announcement;
-const AnnouncementListPage = async ({
+const UsersPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
-  
-  const session = await getServerSession(authOptions); 
+  const session = await getServerSession(authOptions);
   const role = session?.user?.role?.toLowerCase();
 
-  
-  
   const columns = [
     {
-      header: "Title",
-      accessor: "title",
+      header: "Info",
+      accessor: "info",
     },
     {
-      header: "Description", // Corrected spelling from "Discription" to "Description"
-      accessor: "description", // Corrected accessor from "discription" to "description"
-    },
-    {
-      header: "Start Date",
-      accessor: "startDate",
+      header: "Username",
+      accessor: "username",
       className: "hidden md:table-cell",
     },
     {
-      header: "End Date",
-      accessor: "endDate",
+      header: "Role",
+      accessor: "role",
       className: "hidden md:table-cell",
     },
     ...(role === "admin"
@@ -50,78 +42,65 @@ const AnnouncementListPage = async ({
         ]
       : []),
   ];
-  
-  const renderRow = (item: AnnouncementList) => (
+
+  const renderRow = (item: User) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
     >
-      <td className="flex items-center p-4 justify-center">{item.title}</td>
-      <td className="hidden md:table-cell w-1/4 gap-4 text-center">
-        {item.description.length > 10 
-          ? item.description.split(' ').slice(0, 10).join(' ') + '...'
-          : item.description}
-      </td>
-      <td className="hidden md:table-cell gap-4 text-center">
-        {new Intl.DateTimeFormat("en-US").format(item.startDate)}
-      </td>
-      <td className="hidden md:table-cell gap-4 text-center">
-
-        {new Intl.DateTimeFormat("en-US").format(item.endDate)}
-      </td>
-
-      <td>
-        <div className="flex items-center gap-2 justify-center">
-
-          {role === "admin" && (
-            <>
-              <FormContainer table="announcement" type="update" data={item} />
-              <FormContainer table="announcement" type="delete" id={item.id} />
-            </>
-          )} 
+      <td className="flex items-center gap-4 p-4 justify-center">
+        <div className="flex flex-col">
+          <h3 className="font-semibold">{item.name}</h3>
+          <p className="text-xs text-gray-500">{item.email}</p>
         </div>
       </td>
+      <td className="hidden md:table-cell text-center">{item.username}</td>
+      <td className="hidden md:table-cell text-center">{item.role}</td>
+      {role === "admin" && (
+        <td>
+          <div className="flex items-center gap-2 justify-center">
+
+            <FormContainer table="users" type="update" data={item} />
+            <FormContainer table="users" type="delete" id={item.id} />
+
+          </div>
+        </td>
+      )}
     </tr>
   );
+
   const { page, perPage, ...queryParams } = await searchParams;
 
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
-  // URL PARAMS CONDITION
-
-  const query: Prisma.AnnouncementWhereInput = {};
+  const query: Prisma.UserWhereInput = {};
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
-      if (value !== undefined) {
-        switch (key) {
-          case "search":
-            query.title = { contains: value, mode: "insensitive" };
-            break;
-          default:
-            break;
-        }
+      if (value !== undefined && key === "search") {
+        query.OR = [
+          { name: { contains: value, mode: "insensitive" } },
+          { email: { contains: value, mode: "insensitive" } },
+          { username: { contains: value, mode: "insensitive" } },
+        ];
       }
     }
   }
 
   const [data, count] = await prisma.$transaction([
-    prisma.announcement.findMany({
+    prisma.user.findMany({
       where: query,
-      take: ITEM_PER_PAGE,
-      skip: ITEM_PER_PAGE * (p - 1),
+      take: itemsPerPage,
+      skip: itemsPerPage * (p - 1),
     }),
-    prisma.announcement.count({ where: query }),
+    prisma.user.count({ where: query }),
   ]);
 
   return (
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
-      {/* TOP */}
       <div className="flex items-center justify-between">
-        <h1 className="hidden md:block text-lg font-semibold">
-          All Announcements
-        </h1>
+        <h1 className="hidden md:block text-lg font-semibold">All Users</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
@@ -132,17 +111,15 @@ const AnnouncementListPage = async ({
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
             {role === "admin" && (
-              <FormContainer table="announcement" type="create" />
-            )} 
+              <FormContainer table="users" type="create" />
+            )}
           </div>
         </div>
       </div>
-      {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINATION */}
       <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };
 
-export default AnnouncementListPage;
+export default UsersPage;

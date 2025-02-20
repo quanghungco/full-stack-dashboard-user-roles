@@ -48,12 +48,12 @@ const SubjectListPage = async ({
 
       <td>
         <div className="flex items-center gap-2 justify-center">
-          {/* {role === "admin" && ( */}
+          {role === "admin" && (
           <>
             <FormContainer table="subject" type="update" data={item} />
             <FormContainer table="subject" type="delete" id={item.id} />
           </>
-          {/* )} */}
+          )}
         </div>
       </td>
     </tr>
