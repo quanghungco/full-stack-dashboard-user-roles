@@ -2,11 +2,8 @@ import Announcements from "@/components/Announcements";
 import AttendanceChartContainer from "@/components/charts/AttendanceChartContainer";
 import CountChartContainer from "@/components/charts/CountChartContainer";
 import EmergencyNumbers from "@/components/shared/EmergencyNumbers";
-// import EventCalendarContainer from "@/components/EventCalendarContainer";
-import FinanceChart from "@/components/charts/FinanceChart";
 import FinanceChartContainer from "@/components/charts/FinanceChartContainer";
 import UserCard from "@/components/UserCard";
-// import { auth } from "@clerk/nextjs/server";
 import { Suspense } from "react";
 
 const AdminPage = async ({

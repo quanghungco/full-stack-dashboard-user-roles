@@ -27,6 +27,8 @@ const StudentPage = async () => {
     <div className="p-4 flex gap-4 flex-col lg:flex-row w-full">
       {/* LEFT */}
       <div className="w-full ">
+
+        <h1>This is student dashboard</h1>
       {/* <SingleStudentPage params={Promise.resolve({id: student?.id || ''})}/> */}
 
 

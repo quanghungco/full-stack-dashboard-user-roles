@@ -10,8 +10,8 @@ import { useFormState } from "react-dom";
 // import { createTeacher, updateTeacher } from "@/lib/actions";
 import { createTeacher, updateTeacher } from "@/lib/teacherAction";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../shared/ImageUpload";
+import toast from "react-hot-toast";
 
 const bloodTypes = [
   "A(+ve)",
@@ -96,7 +96,7 @@ const TeacherForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Teacher has been ${type === "create" ? "created" : "updated"}!`);
+      toast.success(`Teacher has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     }

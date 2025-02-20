@@ -6,9 +6,9 @@ import { lessonSchema, LessonSchema } from "@/schema/formValidationSchemas";
 import { createLesson, updateLesson } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import InputField from "../InputField";
+import toast from "react-hot-toast";
 
 const LessonForm = ({
   type,
@@ -53,7 +53,7 @@ const LessonForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Lesson has been ${type === "create" ? "created" : "updated"}!`);
+      toast.success(`Lesson has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     }

@@ -15,7 +15,7 @@ export default function DashboardPage() {
 
   const role = (session?.user?.role as string)?.toLowerCase();
   
-  console.log(role);
+
 
   return redirect(`/dashboard/${role}`);
 }

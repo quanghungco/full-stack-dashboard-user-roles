@@ -7,10 +7,10 @@ import {
   examRoutineSchema,
   ExamRoutineSchema,
 } from "@/schema/formValidationSchemas";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { createExamRoutine, updateExamRoutine } from "@/lib/examRoutineActions";
 import InputField from "../InputField";
+import toast from "react-hot-toast";
 
 const ExamRoutineForm = ({
   type,
@@ -46,7 +46,7 @@ const ExamRoutineForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Exam has been ${type === "create" ? "created" : "updated"}!`);
+      toast.success(`Exam has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     }

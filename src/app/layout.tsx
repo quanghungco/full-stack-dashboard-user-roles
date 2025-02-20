@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
 import AuthProvider from "@/components/providers/AuthProvider";
 import TopLoader from "@/components/shared/TopLoader";
 
@@ -24,7 +23,7 @@ export default function RootLayout({
       <TopLoader />
         <AuthProvider>
           {children}
-          <ToastContainer position="bottom-right" theme="dark" />
+          <Toaster position="bottom-right" />
         </AuthProvider>
       </body>
     </html>

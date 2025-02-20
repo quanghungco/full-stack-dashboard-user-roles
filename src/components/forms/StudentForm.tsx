@@ -10,8 +10,8 @@ import { useFormState } from "react-dom";
 // import { createStudent, updateStudent } from "@/lib/actions";
 import { createStudent, updateStudent } from "@/lib/studentAction";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../shared/ImageUpload";
+import toast from "react-hot-toast";
 
 const StudentForm = ({
   type,
@@ -85,11 +85,11 @@ const StudentForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Student has been ${type === "create" ? "created" : "updated"}!`);
+      toast.success(`Student has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     } else if (state.error) {
-      toast(`Student has not been ${type === "create" ? "created" : "updated"}!`);
+      toast.error(`Student has not been ${type === "create" ? "created" : "updated"}!`);
     }
   }, [state, router, type, setOpen]);
 

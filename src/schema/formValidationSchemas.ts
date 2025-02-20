@@ -253,27 +253,6 @@ export const examRoutineSchema =z.object({
 });
 export type ExamRoutineSchema = z.infer<typeof examRoutineSchema>;
 
-export const parentSchema = z.object({
-  id: z.string().optional(),
-
-  username: z.string().min(1, "Username is required"),
-
-  email: z.string().email("Invalid email address"),
-
-  password: z.string().min(6, "Password must be at least 6 characters"),
-
-  name: z.string().min(1, "First name is required"),
-
-  surname: z.string().min(1, "Last name is required"),
-
-  phone: z.string().nullable().optional(), // Allow null
-
-  address: z.string().nullable().optional(), // Allow null
-
-  // Add any other fields as necessary
-});
-
-export type ParentSchema = z.infer<typeof parentSchema>;
 
 export const resultSchema = z.object({
   id: z.number().optional(),

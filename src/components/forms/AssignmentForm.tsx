@@ -7,8 +7,8 @@ import { assignmentSchema, AssignmentSchema } from "@/schema/formValidationSchem
 import { createAssignment, updateAssignment } from "@/lib/assignmentAction";
 import { useFormState } from "react-dom";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const AssignmentForm = ({
   type,
@@ -42,7 +42,7 @@ const AssignmentForm = ({
 
   useEffect(() => {
     if (state.success) {
-      toast(`Assignment has been ${type === "create" ? "created" : "updated"}!`);
+      toast.success(`Assignment has been ${type === "create" ? "created" : "updated"}!`);
       setOpen(false);
       router.refresh();
     }
