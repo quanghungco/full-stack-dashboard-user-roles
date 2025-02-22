@@ -287,7 +287,9 @@ const Menu = () => {
       <SidebarSeparator />
       <SidebarFooter>
         <SidebarMenu>
+        <SidebarMenuItem>
           <LogoutButton />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>

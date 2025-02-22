@@ -1,18 +1,16 @@
 "use client"
 import { LogOut } from "lucide-react";
-import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { signOut } from "next-auth/react";
+import { Button } from "../ui/button";
 
 export const LogoutButton = () => {
     return (
-      <SidebarMenuItem>
-        <SidebarMenuButton
+        <Button
           onClick={() => signOut({ callbackUrl: "/auth/login" })}
-          className="flex items-center gap-4 text-gray-500 py-2 pl-2 rounded-md hover:scale-105 transition-all duration-300"
+          className="flex items-center w-full gap-4 py-2 pl-2 rounded-md hover:scale-105 transition-all duration-300"
         >
           <LogOut size={20} />
           <span className="hidden lg:block">Logout</span>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
+        </Button>
     );
   };
