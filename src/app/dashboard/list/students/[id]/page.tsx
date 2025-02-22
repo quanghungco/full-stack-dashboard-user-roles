@@ -12,8 +12,8 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { HiCalendarDateRange } from "react-icons/hi2";
 import { IoMail } from "react-icons/io5";
 import { MdBloodtype } from "react-icons/md";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/auth";
+// import { getServerSession } from "next-auth/next";
+// import { authOptions } from "@/auth";
 
 
 const SingleStudentPage = async ({
@@ -21,8 +21,8 @@ const SingleStudentPage = async ({
 }: {
   params: Promise<{ id: string }>;
 }) => {
-  const session = await getServerSession(authOptions); 
-  const role = session?.user?.role?.toLowerCase();
+  // const session = await getServerSession(authOptions); 
+  // const role = session?.user?.role?.toLowerCase();
 
   const student:
     | (Student & {

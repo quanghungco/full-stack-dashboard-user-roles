@@ -27,13 +27,9 @@ const StudentPage = async () => {
 
 
   return (
-
       <div className="w-full ">
-
       <SingleStudentPage params={Promise.resolve({id: student?.id || ''})}/> 
 
-      
-        
       </div>
   );
 };
