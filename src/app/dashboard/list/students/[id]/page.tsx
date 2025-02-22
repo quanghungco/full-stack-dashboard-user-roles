@@ -12,8 +12,8 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { HiCalendarDateRange } from "react-icons/hi2";
 import { IoMail } from "react-icons/io5";
 import { MdBloodtype } from "react-icons/md";
-// import { getServerSession } from "next-auth/next";
-// import { authOptions } from "@/auth";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/auth";
 
 
 const SingleStudentPage = async ({
@@ -21,8 +21,8 @@ const SingleStudentPage = async ({
 }: {
   params: Promise<{ id: string }>;
 }) => {
-  // const session = await getServerSession(authOptions); 
-  // const role = session?.user?.role?.toLowerCase();
+  const session = await getServerSession(authOptions); 
+  const role = session?.user?.role?.toLowerCase();
 
   const student:
     | (Student & {
@@ -63,13 +63,13 @@ const SingleStudentPage = async ({
                     <h1 className="text-xl font-semibold">
                       {student.name + " " + student.surname}
                     </h1>
-                    {/* {role === "admin" && ( */}
+                    {role === "admin" && (
                       <FormContainer
                         table="teacher"
                         type="update"
                         data={student}
                       />
-                    {/* )} */}
+                     )} 
                   </div>
                   <div className="text-sm text-gray-400 mt-2  ">
                     <p className="">Student ID: {student.username}</p>

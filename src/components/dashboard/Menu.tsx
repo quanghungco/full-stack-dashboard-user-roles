@@ -146,7 +146,7 @@ const menuItems2: MenuItem2[] = [
         subIcon: <RiPagesLine />,
         subLabel: "Admit",
         subHref: "exams/admit",
-        visible: ["admin", "student"],
+        visible: ["admin"],
       },
       {
         subIcon: <PiExam />,
@@ -216,8 +216,6 @@ const menuItems2: MenuItem2[] = [
 
 // Then use it in the server component Menu
 const Menu = () => {
-  // const user = await currentUser();
-  // const role = user?.publicMetadata.role as string;
   const { data: session } = useSession();
   const role = (session?.user?.role as string)?.toLowerCase();
 
