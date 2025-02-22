@@ -8,7 +8,13 @@ import { useSession } from "next-auth/react";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const menuItems = [ "Admission", "Academics", "Administration", "Dashboard", "Contact"];
+    const menuItems = [
+        { label: "Admission", href: "/admission" },
+        { label: "Academics", href: "/academics" },
+        { label: "Administration", href: "/administration" },
+        { label: "Dashboard", href: "/dashboard" },
+        { label: "Contact", href: "/contact" }
+    ];
     const { data: session } = useSession();
     const user = session?.user;
     const toggleMenu = () => {
@@ -53,12 +59,12 @@ const Header = () => {
                     <nav className="hidden md:block">
                         <ul className="flex pt-[2px] space-x-6">
                             {menuItems.map((item) => (
-                                <li key={item}>
+                                <li key={item.label}>
                                     <Link
-                                        href={`/${item.toLowerCase()}`}
+                                        href={item.href}
                                         className="hover:text-gray-300 transition duration-200"
                                     >
-                                        {item}
+                                        {item.label}
                                     </Link>
                                 </li>
                             ))}
@@ -89,13 +95,13 @@ const Header = () => {
                 >
                     <ul className="px-4 py-2">
                         {menuItems.map((item) => (
-                            <li key={item} className="py-2">
+                            <li key={item.label} className="py-2">
                                 <Link
-                                    href={`/${item.toLowerCase()}`}
+                                    href={item.href}
                                     className="block hover:text-gray-300 transition duration-200"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
-                                    {item}
+                                    {item.label}
                                 </Link>
                             </li>
                         ))}
