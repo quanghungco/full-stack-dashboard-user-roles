@@ -22,9 +22,9 @@ export default async function DashboardLayout({
 
   const userRole = session.user.role?.toLowerCase();
 
-  // if (!["admin", "teacher", "student"].includes(userRole)) {
-  //   redirect("/auth/error"); // Redirect to an error page if role is invalid
-  // }
+  if (!["admin", "teacher", "student"].includes(userRole)) {
+    redirect("/auth/error"); // Redirect to an error page if role is invalid
+  }
 
   return (
     <ThemeProvider>

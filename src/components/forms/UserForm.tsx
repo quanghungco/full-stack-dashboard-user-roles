@@ -8,6 +8,7 @@ import { UserSchema, userSchema } from "@/schema/formValidationSchemas";
 import { createUser, updateUser } from "@/lib/userAction";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import bcrypt from 'bcryptjs';
 
 const UserForm = ({
   type,
@@ -46,6 +47,13 @@ const UserForm = ({
 
   const onSubmit = handleSubmit(async (formData) => {
     try {
+      if (type === "create" && formData.password) {
+        // Hash password before sending to server
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(formData.password, salt);
+        formData.password = hashedPassword;
+      }
+      
       formAction(formData);
     } catch (error) {
       console.error("Form submission error:", error);

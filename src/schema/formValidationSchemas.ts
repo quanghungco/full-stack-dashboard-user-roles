@@ -273,6 +273,16 @@ export const paymentSchema = z.object({
 
 export type PaymentSchema = z.infer<typeof paymentSchema>;
 
+export const onlinePayment = z.object({
+  id: z.string().optional(),
+  transactionId: z.string().min(1, { message: "Transaction ID is required!" }),
+  amount: z.number().min(0, { message: "Amount must be a positive number!" }),
+  status: z.enum(["NotPaid", "Paid", "Due"], { message: "Status is required!" }),
+  studentId: z.string().min(1, { message: "Student ID is required!" }),
+});
+
+export type OnlinePayment = z.infer<typeof onlinePayment>;
+
 
 export const userSchema = z.object({
   id: z.string().optional(),

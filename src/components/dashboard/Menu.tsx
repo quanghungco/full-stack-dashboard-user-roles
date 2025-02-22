@@ -28,6 +28,7 @@ import { RiPagesLine } from "react-icons/ri";
 import { User } from "lucide-react";
 import { LogoutButton } from "../auth/LogoutButton";
 import { useSession } from "next-auth/react";
+import { FaAmazonPay } from "react-icons/fa";
 
 // Define the structure of the menu items
 interface MenuItem {
@@ -165,19 +166,25 @@ const menuItems2: MenuItem2[] = [
   {
     icon: <CiWallet />,
     label: "Payments",
-    visible: ["admin"],
+    visible: ["admin", "student"],
     subLevel: [
       {
-        subIcon: <RiFileList3Line />,
-        subLabel: "Payment History",
-        subHref: "payment/payment-history",
-
-        visible: ["admin"],
+        subIcon: <FaAmazonPay />,
+        subLabel: "Online Payment",
+        subHref: "payment/online-payment",
+        visible: ["admin", "student"],
       },
       {
         subIcon: <MdOutlinePayments />,
         subLabel: "Make Payment",
         subHref: "payment",
+        visible: ["admin"],
+      },
+      {
+        subIcon: <RiFileList3Line />,
+        subLabel: "Payment History",
+        subHref: "payment/payment-history",
+
         visible: ["admin"],
       },
     ],
@@ -196,7 +203,7 @@ const menuItems2: MenuItem2[] = [
       },
       {
         subIcon: <User />,
-        subLabel: "Add Users",
+        subLabel: "Users",
         subHref: "users",
         visible: ["admin"],
       },
@@ -217,7 +224,7 @@ const Menu = () => {
   return (
     <Sidebar className="pt-16 ">
       <SidebarContent className="pb-5">
-        <div className="flex flex-col gap-2 pt-2 pl-2 ">
+        <div className="flex flex-col gap-3 pt-2 pl-2 ">
           <SidebarMenu>
             {menuItems.map((item) => {
               if (item.visible.includes(role)) {
@@ -248,7 +255,7 @@ const Menu = () => {
                     asChild
                     className="text-gray-500 py-2 px-4 rounded-md"
                   >
-                    <SidebarMenuButton className="flex items-center justify-between gap-2 rounded-md">
+                    <SidebarMenuButton className="flex items-center justify-between gap-3 rounded-md">
                       <span className="flex items-center gap-4 text-[16px]">
                         {menuItem.icon}
                         {menuItem.label}

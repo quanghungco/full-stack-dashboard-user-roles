@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 
 const Navbar = async () => {
-  // const user = await currentUser();
 
   const session = await getServerSession(authOptions); 
   const user = session?.user;

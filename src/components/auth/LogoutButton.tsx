@@ -1,5 +1,4 @@
-
-""
+"use client"
 import { LogOut } from "lucide-react";
 import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 import { signOut } from "next-auth/react";
