@@ -17,7 +17,7 @@ type ResultActionResponse = {
 export const createResult = async (
     data: { studentId: string; subjectId: number; marks: number; grade: string }[]
   ) => {
-    // console.log("Function createResult called with data:", data);
+  console.log("Function createResult called with data:", data);
   
     try {
       if (!data || data.length === 0) {
