@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { lessonSchema, LessonSchema } from "@/schema/formValidationSchemas";
 import { createLesson, updateLesson } from "@/lib/actions";
 import { useFormState } from "react-dom";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import InputField from "../InputField";
 import toast from "react-hot-toast";
@@ -45,8 +45,10 @@ const LessonForm = ({
     //   toast.error("Please select a subject before submitting.");
     //   return;
     // }
-    formAction(data);
-    console.log("sdjkjs====",data);
+    React.startTransition(() => {
+      formAction(data);
+    });
+    // console.log("sdjkjs====",data);
   });
 
   const router = useRouter();
