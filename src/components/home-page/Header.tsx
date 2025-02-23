@@ -9,11 +9,11 @@ import { useSession } from "next-auth/react";
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems = [
-        { label: "Admission", href: "/admission" },
-        { label: "Academics", href: "/academics" },
-        { label: "Administration", href: "/administration" },
+        { label: "Admission", href: "/" },
+        { label: "Academics", href: "/" },
+        { label: "Administration", href: "/" },
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Contact", href: "/contact" }
+        { label: "Contact", href: "/" }
     ];
     const { data: session } = useSession();
     const user = session?.user;
@@ -22,7 +22,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-blue-900 text-white py-4 shadow-md relative">
+        <header className="bg-gray-900 text-white py-4 shadow-md relative">
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center">
@@ -57,7 +57,7 @@ const Header = () => {
 
                     {/* Desktop navigation */}
                     <nav className="hidden md:block">
-                        <ul className="flex pt-[2px] space-x-6">
+                        <ul className="flex pt-1 space-x-6">
                             {menuItems.map((item) => (
                                 <li key={item.label}>
                                     <Link
