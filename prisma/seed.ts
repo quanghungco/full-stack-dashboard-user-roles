@@ -45,17 +45,18 @@ async function main() {
     },
   });
 
-  await prisma.user.upsert({
-    where: { email: "student@example.com" },
-    update: {},
-    create: {
-      name: "Student User",
-      username: "student1",
-      email: "student@example.com",
-      password: hashedPassword,
-      role: "STUDENT",
-    },
-  });
+  // Create 50 student users
+  for (let i = 1; i <= 50; i++) {
+    await prisma.user.create({
+      data: {
+        name: `Student User ${i}`,
+        username: `student${i}`,
+        email: `student${i}@example.com`,
+        password: hashedPassword,
+        role: "STUDENT",
+      },
+    });
+  }
 
   console.log("Example users seeded successfully.");
 

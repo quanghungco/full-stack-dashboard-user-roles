@@ -16,11 +16,11 @@ import { deleteResult } from "@/lib/resultAction";
 import { deleteAssignment } from "@/lib/assignmentAction";
 import { deleteFinance } from "@/lib/financeAction";
 import { deletePayment } from "@/lib/paymentAction";
-import ExamRoutineForm from "./forms/ExamRoutineForm";
+import ExamRoutineForm from "./ExamRoutineForm";
 import { deleteExamRoutine } from "@/lib/examRoutineActions";
 import toast from "react-hot-toast";
-import UserForm from "./forms/UserForm";
 import { deleteUser } from "@/lib/userAction";
+import { deleteClassMaterial } from "@/lib/classMeterialAction";
 
 const deleteActionMap = {
   subject: deleteSubject,
@@ -38,48 +38,51 @@ const deleteActionMap = {
   payment: deletePayment,
   users: deleteUser,
   examRoutine: deleteExamRoutine,
+  classMaterial: deleteClassMaterial,
 };
 
 
-// USE LAZY LOADING
+const AnnouncementForm = dynamic(() => import("./AnnouncementForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const AdmissionForm = dynamic(() => import("./AdmissionForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const TeacherForm = dynamic(() => import("./TeacherForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const StudentForm = dynamic(() => import("./StudentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const SubjectForm = dynamic(() => import("./SubjectForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const ClassForm = dynamic(() => import("./ClassForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const LessonForm = dynamic(() => import("./LessonForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const AttendanceForm = dynamic(() => import("./AttendanceForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const ResultForm = dynamic(() => import("./ResultForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const AssignmentForm = dynamic(() => import("./AssignmentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const FinanceForm = dynamic(() => import("./FinanceForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const PaymentForm = dynamic(() => import("./PaymentForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+const UserForm = dynamic(() => import("./UserForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
 
-// import TeacherForm from "./forms/TeacherForm";
-// import StudentForm from "./forms/StudentForm";
-
-const AnnouncementForm = dynamic(() => import("./forms/AnnouncementForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const AdmissionForm = dynamic(() => import("./forms/AdmissionForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const StudentForm = dynamic(() => import("./forms/StudentForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const SubjectForm = dynamic(() => import("./forms/SubjectForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const ClassForm = dynamic(() => import("./forms/ClassForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const LessonForm = dynamic(() => import("./forms/LessonForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const AttendanceForm = dynamic(() => import("./forms/AttendanceForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const ResultForm = dynamic(() => import("./forms/ResultForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const AssignmentForm = dynamic(() => import("./forms/AssignmentForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const FinanceForm = dynamic(() => import("./forms/FinanceForm"), {
-  loading: () => <h1>Loading...</h1>,
-});
-const PaymentForm = dynamic(() => import("./forms/PaymentForm"), {
+const ClassMaterialForm = dynamic(() => import("./ClassMaterialForm"), {
   loading: () => <h1>Loading...</h1>,
 });
 // TODO: OTHER FORMS
@@ -110,11 +113,11 @@ const forms: {
     />
   ),
   attendance: (setOpen, type, data, relatedData) => (
-    <AttendanceForm  type={type} data={data} setOpen={setOpen} relatedData={relatedData} />
+    <AttendanceForm type={type} data={data} setOpen={setOpen} relatedData={relatedData} />
   ),
   assignment: (setOpen, type, data, relatedData) => {
 
-    console.log( "relatedData", relatedData);
+    console.log("relatedData", relatedData);
     return (
       <AssignmentForm
         type={type}
@@ -134,6 +137,15 @@ const forms: {
       relatedData={relatedData}
     />
   ),
+  classMaterial: (setOpen, type, data, relatedData) => (
+    <ClassMaterialForm
+      type={type}
+      data={data}
+      setOpen={setOpen}
+      relatedData={relatedData}
+    />
+  ),
+
   finance: (setOpen, type, data, relatedData) => (
     <FinanceForm type={type} data={data} setOpen={setOpen} />
   ),
@@ -234,8 +246,8 @@ const FormModal = ({
     type === "create"
       ? "bg-lamaYellow"
       : type === "update"
-      ? "bg-lamaSky"
-      : "bg-lamaPurple";
+        ? "bg-lamaSky"
+        : "bg-lamaPurple";
 
   const [open, setOpen] = useState(false);
 

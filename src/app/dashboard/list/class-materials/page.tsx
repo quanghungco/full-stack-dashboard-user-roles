@@ -4,24 +4,24 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Announcement, Prisma } from "@prisma/client";
+import { ClassMaterial, Prisma } from "@prisma/client";
 import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 
 
-type AnnouncementList = Announcement;
-const AnnouncementListPage = async ({
+type ClassMeterialList = ClassMaterial;
+const ClassMeterialListPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) => {
-  
-  const session = await getServerSession(authOptions); 
+
+  const session = await getServerSession(authOptions);
   const role = session?.user?.role?.toLowerCase();
 
-  
-  
+
+
   const columns = [
     {
       header: "Title",
@@ -43,42 +43,38 @@ const AnnouncementListPage = async ({
     },
     ...(role === "admin"
       ? [
-          {
-            header: "Actions",
-            accessor: "action",
-          },
-        ]
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
       : []),
   ];
-  
-  const renderRow = (item: AnnouncementList) => (
+
+  const renderRow = (item: ClassMeterialList) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]"
     >
       <td className="flex items-center p-4 justify-center">{item.title}</td>
-      <td className="hidden md:table-cell w-1/4 gap-4 text-center">
-        {item.description.length > 10 
-          ? item.description.split(' ').slice(0, 10).join(' ') + '...'
-          : item.description}
-      </td>
+      {/*       
       <td className="hidden md:table-cell gap-4 text-center">
         {new Intl.DateTimeFormat("en-US").format(item.startDate)}
       </td>
       <td className="hidden md:table-cell gap-4 text-center">
 
         {new Intl.DateTimeFormat("en-US").format(item.endDate)}
-      </td>
+      </td> */}
 
       <td>
         <div className="flex items-center gap-2 justify-center">
 
           {role === "admin" && (
             <>
-              <FormContainer table="announcement" type="update" data={item} />
-              <FormContainer table="announcement" type="delete" id={item.id} />
+              <FormContainer table="classMaterial" type="update" data={item} />
+              <FormContainer table="classMaterial" type="delete" id={item.id} />
             </>
-          )} 
+          )}
         </div>
       </td>
     </tr>
@@ -90,7 +86,7 @@ const AnnouncementListPage = async ({
 
   // URL PARAMS CONDITION
 
-  const query: Prisma.AnnouncementWhereInput = {};
+  const query: Prisma.ClassMaterialWhereInput = {};
 
   if (queryParams) {
     for (const [key, value] of Object.entries(queryParams)) {
@@ -107,12 +103,12 @@ const AnnouncementListPage = async ({
   }
 
   const [data, count] = await prisma.$transaction([
-    prisma.announcement.findMany({
+    prisma.classMaterial.findMany({
       where: query,
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
-    prisma.announcement.count({ where: query }),
+    prisma.classMaterial.count({ where: query }),
   ]);
 
   return (
@@ -120,7 +116,7 @@ const AnnouncementListPage = async ({
       {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">
-          All Announcements
+          Clsss Meterials
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
@@ -132,8 +128,8 @@ const AnnouncementListPage = async ({
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
             {role === "admin" && (
-              <FormContainer table="announcement" type="create" />
-            )} 
+              <FormContainer table="classMaterial" type="create" />
+            )}
           </div>
         </div>
       </div>
@@ -145,4 +141,4 @@ const AnnouncementListPage = async ({
   );
 };
 
-export default AnnouncementListPage;
+export default ClassMeterialListPage;

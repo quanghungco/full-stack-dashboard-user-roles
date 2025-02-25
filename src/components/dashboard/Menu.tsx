@@ -28,7 +28,7 @@ import { PiExam, PiChalkboardTeacherFill } from "react-icons/pi";
 import { RiPagesLine, RiFileList3Line } from "react-icons/ri";
 import { FaAmazonPay, FaUsers, FaUsersCog } from "react-icons/fa";
 import { ImBooks } from "react-icons/im";
-import { IoPersonAddSharp } from "react-icons/io5";
+import { IoNewspaperSharp, IoPersonAddSharp } from "react-icons/io5";
 import { LiaChalkboardTeacherSolid } from "react-icons/lia";
 import { CiWallet } from "react-icons/ci";
 import { FaUsersRectangle } from "react-icons/fa6";
@@ -45,8 +45,9 @@ const menuItems = [
   { icon: <IoPersonAddSharp />, label: "Admission", href: "/list/admission", visible: ["admin"] },
   { icon: <LiaChalkboardTeacherSolid />, label: "Teachers", href: "/list/teachers", visible: ["admin", "teacher"] },
   { icon: <PiChalkboardTeacherFill />, label: "Students", href: "/list/students", visible: ["admin", "teacher"] },
-  { icon: <ImBooks />, label: "Subjects", href: "/list/subjects", visible: ["admin"] },
   { icon: <GiTeacher />, label: "Classes", href: "/list/classes", visible: ["admin", "teacher"] },
+  { icon: <ImBooks />, label: "Subjects", href: "/list/subjects", visible: ["admin"] },
+  { icon: <IoNewspaperSharp />, label: "Class Materials", href: "/list/class-materials", visible: ["admin", "teacher", "student"] },
   { icon: <GiNewspaper />, label: "Assignments", href: "/list/assignments", visible: ["teacher", "student"] },
   { icon: <FaUsersRectangle />, label: "Attendance", href: "/list/attendance", visible: ["admin", "teacher"] },
   { icon: <GrMoney />, label: "Finance", href: "/list/finance", visible: ["admin"] },
@@ -90,19 +91,22 @@ const Menu = () => {
   return (
     <Sidebar collapsible="icon" className="z-50">
       <SidebarHeader>
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 mb-2">
           <Image src="/logo.png" alt="logo" width={32} height={32} />
-          <span className="font-bold">GenSchool</span>
+          <span className="font-bold text-2xl">GenSchool</span>
         </Link>
+
       </SidebarHeader>
-      <SidebarContent className="overflow-x-hidden list-none">
+      <SidebarSeparator />
+      <SidebarContent className="overflow-x-hidden list-none my-5 pl-2">
+
         {menuItems.map((item, index) =>
           item.visible.includes(role) ? (
             item.subLevel ? (
               <SidebarMenu key={index}>
                 <Collapsible>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton className="flex items-center justify-between gap-3 rounded-md">
+                    <SidebarMenuButton className="flex items-center justify-between gap-3 rounded-md ">
                       <span className="flex items-center gap-4 text-[16px]">{item.icon}{item.label}</span>
                       <IoIosArrowDown className="arrow-down transition-transform duration-300" />
                       <IoIosArrowForward className="arrow-forward transition-transform duration-300" />
@@ -111,7 +115,9 @@ const Menu = () => {
                   <CollapsibleContent>
                     {item.subLevel.filter(sub => sub.visible.includes(role)).map((sub, subIndex) => (
                       <SidebarMenuSub key={subIndex}>
-                        <Link href={`/dashboard/list/${sub.subHref}`} className="flex items-center gap-2 py-2 pl-3">{sub.subIcon}{sub.subLabel}</Link>
+                        <SidebarMenuButton asChild>
+                          <Link href={`/dashboard/list/${sub.subHref}`} className="flex items-center gap-2 py-2 pl-1 transition-transform hover:scale-105">{sub.subIcon}{sub.subLabel}</Link>
+                        </SidebarMenuButton>
                       </SidebarMenuSub>
                     ))}
                   </CollapsibleContent>
@@ -120,7 +126,7 @@ const Menu = () => {
             ) : (
               <SidebarMenuItem key={index}>
                 <SidebarMenuButton asChild>
-                  <Link href={`/dashboard${item.href}`} className="flex items-center gap-4 py-2 pl-2">{item.icon}{item.label}</Link>
+                    <Link href={`/dashboard${item.href}`} className="flex items-center gap-4 py-2 pl-2 transition-transform hover:scale-105">{item.icon}{item.label}</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )

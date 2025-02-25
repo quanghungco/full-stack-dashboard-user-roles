@@ -1,4 +1,4 @@
-import FormContainer from "@/components/FormContainer";
+import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
@@ -41,8 +41,7 @@ const SubjectListPage = async ({
   const renderRow = (item: SubjectList) => (
     <tr
       key={item.id}
-      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
-    >
+      className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]" >
       <td className="flex items-center gap-4 p-4 justify-center">{item.id}</td>
       <td className=" text-center">{item.name}</td>
 

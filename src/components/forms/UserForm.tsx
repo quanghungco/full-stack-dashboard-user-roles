@@ -91,15 +91,13 @@ const UserForm = ({
           register={register}
           error={errors?.email}
         />
-        {type === "create" && (
-          <InputField
-            label="Password*"
-            name="password"
-            type="password"
-            register={register}
-            error={errors?.password}
-          />
-        )}
+        <InputField
+          label="Password*"
+          name="password"
+          type="password"
+          register={register}
+          error={errors?.password}
+        />
         {data && (
           <InputField
             label="Id"

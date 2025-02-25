@@ -1,4 +1,4 @@
-import FormContainer from "@/components/FormContainer";
+import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
@@ -36,11 +36,11 @@ const TeacherListPage = async ({
       accessor: "subjects",
       className: "hidden md:table-cell",
     },
-    {
-      header: "Classes",
-      accessor: "classes",
-      className: "hidden md:table-cell",
-    },
+    // {
+    //   header: "Classes",
+    //   accessor: "classes",
+    //   className: "hidden md:table-cell",
+    // },
     {
       header: "Phone",
       accessor: "phone",
@@ -64,8 +64,7 @@ const TeacherListPage = async ({
   const renderRow = (item: TeacherList) => (
     <tr
       key={item.id}
-      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600"
-    >
+      className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]" >
       <td className="flex items-center gap-4 p-4 justify-center">
         <Image
           src={item.img || "/noAvatar.png"}
@@ -84,9 +83,9 @@ const TeacherListPage = async ({
         {item.subjects.map((subject) => subject.name).join(",")}
 
       </td>
-      <td className="hidden md:table-cell text-center">
+      {/* <td className="hidden md:table-cell text-center">
         {item.classes.map((classItem) => classItem.name).join(",")}
-      </td>
+      </td> */}
       <td className="hidden md:table-cell text-center">{item.phone}</td>
       <td className="hidden md:table-cell text-center">{item.address}</td>
       <td>

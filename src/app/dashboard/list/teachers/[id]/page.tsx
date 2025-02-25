@@ -2,7 +2,7 @@ import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import { MdBloodtype } from "react-icons/md";
 import { HiCalendarDateRange } from "react-icons/hi2";
-import FormContainer from "@/components/FormContainer";
+import FormContainer from "@/components/forms/FormContainer";
 import Performance from "@/components/Performance";
 import prisma from "@/lib/prisma";
 import { Teacher } from "@prisma/client";

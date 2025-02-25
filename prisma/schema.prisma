@@ -23,6 +23,7 @@ model User {
   updatedAt DateTime  @updatedAt
   accounts  Account[]
   sessions  Session[]
+  classMeterials ClassMaterial[]
 
   @@map("users") // Optional: maps table name in database
 }
@@ -39,11 +40,10 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
 
   @@id([provider, providerAccountId])
 }
@@ -184,6 +184,7 @@ model Class {
   events       Event[]
   examRoutines ExamRoutine[]
   attendances  Attendance[]
+  classMaterials ClassMaterial[]
 }
 
 model Subject {
@@ -301,6 +302,22 @@ model OnlinePayment {
   studentId String
   student   Student       @relation(fields: [studentId], references: [username], onDelete: Cascade)
 }
+
+model ClassMaterial {
+  id         String   @id @default(uuid()) // Unique identifier
+  title      String   // Title of the material
+  pdfUrl     String   // URL of the uploaded PDF
+  classId    Int   // ID of the related class
+  uploadedAt DateTime @default(now()) // Timestamp of upload
+  uploadedBy String   // ID of the teacher who uploaded the PDF
+
+  // Relations
+  class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher    User     @relation(fields: [uploadedBy], references: [username], onDelete: Cascade)
+
+  @@map("class_materials") // Custom table name in the database
+}
+
 
 
 enum PaymentStatus {

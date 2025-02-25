@@ -299,3 +299,13 @@ export const userSchema = z.object({
 
 export type UserSchema = z.infer<typeof userSchema>;
 
+export const classMaterialSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, { message: "Title is required!" }),
+  pdfUrl: z.string().min(1, { message: "PDF URL is required!" }),
+  classId: z.coerce.number().min(1, { message: "Class ID is required!" }),
+  uploadedAt: z.coerce.date().optional(),
+  uploadedBy: z.string().min(1, { message: "Uploader username is required!" }),
+});
+
+export type ClassMaterialSchema = z.infer<typeof classMaterialSchema>;

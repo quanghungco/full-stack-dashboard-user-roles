@@ -60,7 +60,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
 
 
     return (
-      <tr key={student.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600">
+      <tr key={student.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
         <td className="flex items-center gap-4 p-4 justify-center">{student.name}</td>
         <td className="text-center ">{student.username}</td>
         <td className="text-center">{classes ? classes.fees : 0}</td>

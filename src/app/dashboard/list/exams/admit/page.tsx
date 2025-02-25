@@ -65,7 +65,7 @@ const [paidStudents, count] = await prisma.$transaction([
   
 
   const renderRow = (payment: any) => (
-    <tr key={payment.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600">
+    <tr key={payment.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
       <td className="px-6 py-4 text-center">{payment.student.name}</td>
       <td className="px-6 py-4 text-center">{payment.student.username}</td>
       <td className="px-6 py-4 text-center">{payment.student.class.name}</td>

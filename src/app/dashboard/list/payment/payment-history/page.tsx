@@ -1,5 +1,5 @@
 import { Payment, Prisma } from "@prisma/client";
-import FormModal from "@/components/FormModal";
+import FormModal from "@/components/forms/FormModal";
 import DownloadPaymentPDF from "@/components/pdf/PaymentPdfDownload"; // Import the component
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
@@ -55,7 +55,7 @@ const PaymentHistoryPage = async ({
 
   // Define renderRow function to render each payment row
   const renderRow = (item: PaymentHistory & { student: { name: string; surname: string; }; className: string }) => (
-    <tr key={item.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-500 dark:even:bg-gray-600">
+    <tr key={item.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
       <td className="flex items-center p-4 justify-center">{item.student.name} {item.student.surname}</td>
       <td className="text-center">{item.studentId}</td>
       <td className="hidden md:table-cell gap-4 text-center">TK {item.amount}</td>
