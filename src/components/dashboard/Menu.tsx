@@ -53,7 +53,7 @@ const menuItems = [
   { icon: <GrMoney />, label: "Finance", href: "/list/finance", visible: ["admin"] },
   {
     icon: <GiNotebook />,
-    label: "Exams",
+    label: "Exams Management",
     visible: ["admin", "teacher", "student"],
     subLevel: [
       { subIcon: <MdOutlineEventNote />, subLabel: "Routine", subHref: "exams/routine", visible: ["admin", "teacher", "student"] },

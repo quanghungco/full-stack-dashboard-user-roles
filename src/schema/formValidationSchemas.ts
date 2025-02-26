@@ -203,19 +203,11 @@ export type ExamRoutineSchema = z.infer<typeof examRoutineSchema>;
 
 
 export const resultSchema = z.object({
-  id: z.number().optional(),
-  score: z.number().optional(),
-  subjects: z
-    .array(
-      z.object({
-        subjectId: z.number().min(1, "Subject ID is required"),
-        subjectName: z.string().min(1, "Subject Name is required"),
-        marks: z.number().min(0, "Marks must be a non-negative number"), // Marks should be a number
-      })
-    )
-    .min(1, "At least one subject is required"), // Ensure at least one subject is provided
   studentId: z.string().min(1, "Student ID is required"),
-  examId: z.number().optional(),
+  subjects: z.array(z.object({
+    subjectId: z.number().min(1, "Subject ID is required"),
+    marks: z.number().min(0).max(100, "Marks must be between 0 and 100"),
+  })).min(1, "At least one subject is required"),
 });
 
 export type ResultSchema = z.infer<typeof resultSchema>;
@@ -305,7 +297,6 @@ export const classMaterialSchema = z.object({
   pdfUrl: z.string().min(1, { message: "PDF URL is required!" }),
   classId: z.coerce.number().min(1, { message: "Class ID is required!" }),
   uploadedAt: z.coerce.date().optional(),
-  uploadedBy: z.string().min(1, { message: "Uploader name is required!" }),
 });
 
 export type ClassMaterialSchema = z.infer<typeof classMaterialSchema>;

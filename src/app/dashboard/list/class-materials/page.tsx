@@ -5,24 +5,21 @@ import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { ClassMaterial, Prisma } from "@prisma/client";
-import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import Link from "next/link";
 import { FaDownload } from "react-icons/fa";
 
+type ClassMaterialList = ClassMaterial & {
+  class: {
+    id: number;
+    name: string;
+  };
+};
 
-type ClassMeterialList = ClassMaterial;
-const ClassMeterialListPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
-}) => {
-
+const ClassMaterialListPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
   const session = await getServerSession(authOptions);
   const role = session?.user?.role?.toLowerCase();
-
-
 
   const columns = [
     {
@@ -34,14 +31,13 @@ const ClassMeterialListPage = async ({
       accessor: "class.name",
     },
     {
-      header: "Uploaded By",
-      accessor: "uploadedBy",
+      header: "Uploaded Date",
+      accessor: "uploadedAt",
     },
     {
-      header: "Pdf file",
-      accessor: "pdfFile",
+      header: "PDF File",
+      accessor: "pdfUrl",
     },
-
     ...(role === "admin"
       ? [
         {
@@ -52,25 +48,26 @@ const ClassMeterialListPage = async ({
       : []),
   ];
 
-  const renderRow = (item: ClassMeterialList) => (
+  const renderRow = (item: ClassMaterialList) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]"
     >
-      <td className="text-center p-4 ">{item.title}</td>
-
-      <td className="text-center ">{item.classId}</td>
-      <td className="text-center ">{item.uploadedBy}</td>
-
-      <td className=" text-sky-500 font-semibold ">
-        <Link className="flex gap-2 justify-center" href={item.pdfUrl} target="_blank" rel="noopener noreferrer">
+      <td className="text-center p-4">{item.title}</td>
+      <td className="text-center">{item.class?.name || 'N/A'}</td>
+      <td className="text-center">{item.uploadedAt?.toLocaleDateString()}</td>
+      <td className="text-sky-500 font-semibold">
+        <Link
+          className="flex gap-2 justify-center"
+          href={item.pdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           {item.title}.pdf <FaDownload />
         </Link>
       </td>
-
       <td>
         <div className="flex items-center gap-2 justify-center">
-
           {role === "admin" && (
             <>
               <FormContainer table="classMaterial" type="update" data={item} />
@@ -81,12 +78,10 @@ const ClassMeterialListPage = async ({
       </td>
     </tr>
   );
-  const { page, perPage, ...queryParams } = await searchParams;
 
+  const { page, perPage, ...queryParams } = await Promise.resolve(searchParams);
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
-
-  // URL PARAMS CONDITION
 
   const query: Prisma.ClassMaterialWhereInput = {};
 
@@ -107,6 +102,9 @@ const ClassMeterialListPage = async ({
   const [data, count] = await prisma.$transaction([
     prisma.classMaterial.findMany({
       where: query,
+      include: {
+        class: true, // Include the class relation
+      },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
@@ -115,32 +113,23 @@ const ClassMeterialListPage = async ({
 
   return (
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
-      {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">
-          Clsss Meterials
+          Class Materials
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/sort.png" alt="" width={14} height={14} />
-            </button>
             {(role === "admin" || role === "teacher") && (
               <FormContainer table="classMaterial" type="create" />
             )}
           </div>
         </div>
       </div>
-      {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
-      {/* PAGINATION */}
       <Pagination page={p} count={count} perPage={itemsPerPage} />
     </div>
   );
 };
 
-export default ClassMeterialListPage;
+export default ClassMaterialListPage;

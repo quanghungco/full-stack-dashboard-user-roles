@@ -9,17 +9,8 @@ import { createResult } from "@/lib/resultAction";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Dispatch, SetStateAction } from "react";
+import { resultSchema, ResultSchema } from "@/schema/formValidationSchemas";
 
-// Schema for the form
-const resultFormSchema = z.object({
-  studentId: z.string().min(1, "Student ID is required"),
-  subjects: z.array(z.object({
-    subjectId: z.number().min(1, "Subject ID is required"),
-    marks: z.number().min(0).max(100, "Marks must be between 0 and 100"),
-  })).min(1, "At least one subject is required"),
-});
-
-type ResultFormSchema = z.infer<typeof resultFormSchema>;
 
 interface FormProps {
   type: "create" | "update";
@@ -35,8 +26,8 @@ const ResultForm = ({ type, data, setOpen, relatedData }: FormProps) => {
     handleSubmit,
     control,
      formState: { errors },
-   } = useForm<ResultFormSchema>({
-     resolver: zodResolver(resultFormSchema),
+  } = useForm<ResultSchema>({
+    resolver: zodResolver(resultSchema),
      defaultValues: {
        studentId: data?.studentId || "",
        subjects: data?.subjects || [{ subjectId: 0, marks: 0 }],
@@ -58,7 +49,7 @@ const ResultForm = ({ type, data, setOpen, relatedData }: FormProps) => {
     return "F";
    };
 
-  const onSubmit = async (formData: ResultFormSchema) => {
+  const onSubmit = async (formData: ResultSchema) => {
     try {
         const resultsPayload = formData.subjects.map(subject => ({
           studentId: formData.studentId,
@@ -67,7 +58,7 @@ const ResultForm = ({ type, data, setOpen, relatedData }: FormProps) => {
           grade: getGrade(Number(subject.marks))
         }));
 
-        console.log("Submitting data:", resultsPayload);
+      // console.log("Submitting data:", resultsPayload);
         const response = await createResult(resultsPayload);
 
         if (response.success) {
@@ -78,7 +69,7 @@ const ResultForm = ({ type, data, setOpen, relatedData }: FormProps) => {
           toast.error(response.error || "Failed to create results");
         }
       } catch (error) {
-        console.error("Submission error:", error);
+      // console.error("Submission error:", error);
         toast.error("Error creating results");
       }
    };

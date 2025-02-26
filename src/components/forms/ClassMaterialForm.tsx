@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import InputField from "../InputField";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { classMaterialSchema, ClassMaterialSchema } from "@/schema/formValidationSchemas";
@@ -23,7 +23,6 @@ const ClassMaterialForm: React.FC<FormProps> = ({
    setOpen,
    relatedData,
 }) => {
-   const [selectedFile, setSelectedFile] = useState<File | null>(null);
    const [pdfUrl, setPdfUrl] = useState(data?.pdfUrl || ""); 
    const [loading, setLoading] = useState(false);
    const router = useRouter();
@@ -34,73 +33,50 @@ const ClassMaterialForm: React.FC<FormProps> = ({
       formState: { errors },
    } = useForm<ClassMaterialSchema>({
       resolver: zodResolver(classMaterialSchema),
+      defaultValues: {
+         title: data?.title || "",
+         classId: data?.classId || relatedData?.classId || "",
+         pdfUrl: data?.pdfUrl || "",
+      }
    });
 
-   // Handle form submission
    const onSubmit = handleSubmit(async (formData) => {
       setLoading(true);
 
       try {
-         let uploadedPdfUrl = pdfUrl; // Use existing URL if no new file selected
-
-         // If a new file is selected, upload it
-         if (selectedFile) {
-            const formData = new FormData();
-            formData.append("file", selectedFile);
-
-            const response = await fetch("/api/uploadthing/pdfUploader", {
-               method: "POST",
-               body: formData,
-            });
-
-            if (!response.ok) throw new Error("Failed to upload PDF");
-
-            const result = await response.json();
-            uploadedPdfUrl = result.url;
-            setPdfUrl(uploadedPdfUrl);
-         }
-
-         if (!uploadedPdfUrl) {
-            toast.error("PDF upload failed. Please try again.");
+         if (!pdfUrl) {
+            toast.error("Please upload a PDF file");
             return;
          }
 
-         // Convert uploadedAt to Date (if it's a string)
-         const formattedUploadedAt = typeof formData.uploadedAt === 'string'
-            ? new Date(formData.uploadedAt)
-            : formData.uploadedAt;
-
-         // Prepare payload with the uploaded PDF URL and formatted uploadedAt
          const payload = {
             ...formData,
-            pdfUrl: uploadedPdfUrl,
-            uploadedAt: formattedUploadedAt || new Date(), // Use current date if uploadedAt is not provided
+            pdfUrl: pdfUrl,
+            classId: Number(formData.classId),
+            uploadedAt: new Date(),
          };
 
-         console.log("Submitting Form Data:", payload);
+         console.log("Submitting payload:", payload);
 
-         // Call the create/update function based on the form type
          const response = await (type === "create" ? createClassMaterial : updateClassMaterial)(
-            { success: false, error: true },
+            { success: false, error: false },
             payload
          );
 
          if (response.success) {
             toast.success(`Class Material ${type === "create" ? "created" : "updated"} successfully!`);
-            setTimeout(() => setOpen(false), 500);
+            setOpen(false);
             router.refresh();
          } else {
-            toast.error("Submission failed. Please check your input.");
+            toast.error(response.message || "Failed to save class material");
          }
       } catch (error) {
-         console.error("Error submitting form:", error);
-         toast.error("An unexpected error occurred.");
+         console.error("Submission error:", error);
+         toast.error("Failed to save class material");
       } finally {
          setLoading(false);
       }
    });
-
-
 
    return (
       <div>
@@ -112,7 +88,8 @@ const ClassMaterialForm: React.FC<FormProps> = ({
                {type === "create" ? "Create a new Class Material" : "Update the Class Material"}
             </h1>
 
-            <div className="flex justify-between flex-wrap gap-4">
+
+            <div className="flex gap-4 w-full">
                <InputField
                   label="Title"
                   name="title"
@@ -129,29 +106,16 @@ const ClassMaterialForm: React.FC<FormProps> = ({
                   register={register}
                   error={errors?.classId}
                />
-
-               <InputField
-                  label="Uploaded By"
-                  name="uploadedBy"
-                  defaultValue={data?.uploadedBy}
-                  register={register}
-                  error={errors?.uploadedBy}
-               />
+            </div>
 
                {/* PDF Upload Section */}
-               <div className="flex flex-col gap-4 w-1/4 justify-center">
-                  <label className="text-gray-700 font-medium dark:text-gray-500">
+            <div className="flex flex-col gap-4 justify-center">
+               <label className="text-gray-700 font-medium dark:text-gray-500 text-center">
                      Upload PDF
                   </label>
 
                   <UploadDropzone
-                     endpoint="pdfUploader"
-                     onBeforeUploadBegin={(files) => {
-                        if (files.length > 0) {
-                           setSelectedFile(files[0]);
-                        }
-                        return files;
-                     }}
+                  endpoint="pdfUploader"
                      onClientUploadComplete={(res) => {
                         if (res && res.length > 0) {
                            setPdfUrl(res[0].url);
@@ -162,13 +126,18 @@ const ClassMaterialForm: React.FC<FormProps> = ({
                         toast.error(`Upload failed: ${error.message}`);
                      }}
                   />
-               </div>
+
+               {pdfUrl && (
+                  <p className="text-sm text-green-600">
+                     PDF uploaded successfully
+                  </p>
+               )}
             </div>
 
             <button
                type="submit"
                disabled={loading}
-               className={`bg-sky-400 text-white p-2 rounded-md ${loading ? "opacity-50" : ""}`}
+               className={`bg-sky-400 text-white p-2 rounded-md hover:bg-sky-500 transition-colors ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
                {loading ? "Submitting..." : type === "create" ? "Create" : "Update"}
             </button>

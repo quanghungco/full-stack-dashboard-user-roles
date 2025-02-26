@@ -1,36 +1,30 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { ClassMaterialSchema } from "../schema/formValidationSchemas";
+import { ClassMaterialSchema, classMaterialSchema } from "../schema/formValidationSchemas";
 import prisma from "./prisma";
 
-type CurrentState = { success: boolean; error: boolean };
+type CurrentState = { success: boolean; error: boolean; message?: string };
 
 export const createClassMaterial = async (
    currentState: CurrentState,
-   data: ClassMaterialSchema
+   formData: ClassMaterialSchema
 ) => {
    try {
-      // Ensure all required fields are present
-      if (!data.title || !data.pdfUrl || !data.classId || !data.uploadedBy) {
-         return {
-            success: false,
-            error: true,
-            message: "Missing required fields",
-         };
-      }
+      // Validate the input data against the schema
+      const validatedData = classMaterialSchema.parse(formData);
 
       // Create class material entry in the database
-      await prisma.classMaterial.create({
+      const newMaterial = await prisma.classMaterial.create({
          data: {
-            title: data.title,
-            pdfUrl: data.pdfUrl,
-            classId: data.classId,
-            uploadedAt: data.uploadedAt || new Date(), // Use current date if not provided
-            uploadedBy: data.uploadedBy,
+            title: validatedData.title,
+            pdfUrl: validatedData.pdfUrl,
+            classId: validatedData.classId,
+            uploadedAt: validatedData.uploadedAt || new Date(),
          },
       });
 
+      revalidatePath("/class-materials");
       return { success: true, error: false };
    } catch (err) {
       console.error("Create class material error:", err);
@@ -42,50 +36,15 @@ export const createClassMaterial = async (
    }
 };
 
-// export const createClassMaterial = async (
-//    currentState: CurrentState,
-//    data: ClassMaterialSchema
-// ) => {
-//    try {
-//       // Validate required fields
-//       if (!data.title || !data.pdfUrl || !data.classId || !data.uploadedBy) {
-//          return {
-//             success: false,
-//             error: true,
-//             message: "Missing required fields",
-//          };
-//       }
-
-//       const newMaterial = await prisma.classMaterial.create({
-//          data: {
-//             title: data.title,
-//             pdfUrl: data.pdfUrl,  // Ensure PDF URL is not empty
-//             classId: data.classId,
-//             uploadedAt: data.uploadedAt || new Date(),
-//             uploadedBy: data.uploadedBy,
-//          },
-//       });
-
-//       console.log("Created Material:", newMaterial);
-
-//       // revalidatePath("/class-materials");
-//       return { success: true, error: false };
-//    } catch (err) {
-//       console.error("Create class material error:", err);
-//       return {
-//          success: false,
-//          error: true,
-//          message: err instanceof Error ? err.message : "Failed to create class material",
-//       };
-//    }
-// };
-
 export const updateClassMaterial = async (
    currentState: CurrentState,
-   data: ClassMaterialSchema
+   formData: ClassMaterialSchema
 ) => {
    try {
-      if (!data.id) {
+      // Validate the input data against the schema
+      const validatedData = classMaterialSchema.parse(formData);
+
+      if (!validatedData.id) {
          return {
             success: false,
             error: true,
@@ -95,18 +54,17 @@ export const updateClassMaterial = async (
 
       await prisma.classMaterial.update({
          where: {
-            id: data.id
+            id: validatedData.id
          },
          data: {
-            title: data.title,
-            pdfUrl: data.pdfUrl,
-            classId: data.classId,
-            uploadedBy: data.uploadedBy,
-            uploadedAt: data.uploadedAt
+            title: validatedData.title,
+            pdfUrl: validatedData.pdfUrl,
+            classId: validatedData.classId,
+            uploadedAt: validatedData.uploadedAt
          },
       });
 
-      // revalidatePath("/class-materials");
+      revalidatePath("/class-materials");
       return { success: true, error: false };
    } catch (err) {
       console.error("Update class material error:", err);
@@ -119,19 +77,32 @@ export const updateClassMaterial = async (
 };
 
 export const deleteClassMaterial = async (
-   prevState: { success: boolean; error: boolean },
+   prevState: CurrentState,
    formData: FormData
 ) => {
    try {
-      const id = formData.get('id') as string;
+      const id = formData.get('id');
+
+      if (!id || typeof id !== 'string') {
+         return {
+            success: false,
+            error: true,
+            message: "Invalid ID provided"
+         };
+      }
+
       await prisma.classMaterial.delete({
-         where: {
-            id: id.toString(), // Ensure id is a number
-         },
+         where: { id }
       });
+
+      revalidatePath("/class-materials");
       return { success: true, error: false };
    } catch (err) {
-      console.log(err);
-      return { success: false, error: true };
+      console.error("Delete class material error:", err);
+      return {
+         success: false,
+         error: true,
+         message: err instanceof Error ? err.message : "Failed to delete class material"
+      };
    }
 };
