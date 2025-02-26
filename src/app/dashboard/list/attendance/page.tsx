@@ -43,7 +43,7 @@ const AttendanceListPage = async ({
       header: "Total Students",
       accessor: "total",
     },
-    ...(role === "admin" || role === "teacher"
+    ...(role === "admin"
       ? [
           {
             header: "Actions",
@@ -69,7 +69,7 @@ const AttendanceListPage = async ({
       <td className="text-center">{item.total}</td>
       <td>
         <div className="flex items-center gap-2 justify-center">
-          {(role === "admin" || role === "teacher") && (
+          {(role === "admin") && (
             <>
               <FormContainer table="attendance" type="update" data={item} />
               <FormContainer table="attendance" type="delete" id={item.id} />

@@ -8,6 +8,7 @@ import { ClassMaterial, Prisma } from "@prisma/client";
 import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import Link from "next/link";
 
 
 type ClassMeterialList = ClassMaterial;
@@ -28,19 +29,18 @@ const ClassMeterialListPage = async ({
       accessor: "title",
     },
     {
-      header: "Description", // Corrected spelling from "Discription" to "Description"
-      accessor: "description", // Corrected accessor from "discription" to "description"
+      header: "Class Name",
+      accessor: "class.name",
     },
     {
-      header: "Start Date",
-      accessor: "startDate",
-      className: "hidden md:table-cell",
+      header: "Uploaded By",
+      accessor: "uploadedBy",
     },
     {
-      header: "End Date",
-      accessor: "endDate",
-      className: "hidden md:table-cell",
+      header: "Pdf file",
+      accessor: "pdfFile",
     },
+
     ...(role === "admin"
       ? [
         {
@@ -56,15 +56,16 @@ const ClassMeterialListPage = async ({
       key={item.id}
       className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]"
     >
-      <td className="flex items-center p-4 justify-center">{item.title}</td>
-      {/*       
-      <td className="hidden md:table-cell gap-4 text-center">
-        {new Intl.DateTimeFormat("en-US").format(item.startDate)}
-      </td>
-      <td className="hidden md:table-cell gap-4 text-center">
+      <td className="flex items-center p-4 ">{item.title}</td>
 
-        {new Intl.DateTimeFormat("en-US").format(item.endDate)}
-      </td> */}
+      <td className="text-center ">{item.classId}</td>
+      <td className="text-center ">{item.uploadedBy}</td>
+
+      <td className="text-center text-orange-400 font-semibold  ">
+        <Link href={item.pdfUrl} target="_blank" rel="noopener noreferrer">
+          {item.title}.pdf
+        </Link>
+      </td>
 
       <td>
         <div className="flex items-center gap-2 justify-center">
@@ -127,7 +128,7 @@ const ClassMeterialListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" && (
+            {role === "admin" || role === "teacher" && (
               <FormContainer table="classMaterial" type="create" />
             )}
           </div>

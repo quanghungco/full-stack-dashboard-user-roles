@@ -23,7 +23,6 @@ model User {
   updatedAt DateTime  @updatedAt
   accounts  Account[]
   sessions  Session[]
-  classMeterials ClassMaterial[]
 
   @@map("users") // Optional: maps table name in database
 }
@@ -309,11 +308,9 @@ model ClassMaterial {
   pdfUrl     String   // URL of the uploaded PDF
   classId    Int   // ID of the related class
   uploadedAt DateTime @default(now()) // Timestamp of upload
-  uploadedBy String   // ID of the teacher who uploaded the PDF
-
+  uploadedBy String
   // Relations
   class      Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
-  teacher    User     @relation(fields: [uploadedBy], references: [username], onDelete: Cascade)
 
   @@map("class_materials") // Custom table name in the database
 }
