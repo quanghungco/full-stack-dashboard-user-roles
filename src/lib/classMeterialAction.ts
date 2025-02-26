@@ -11,36 +11,74 @@ export const createClassMaterial = async (
    data: ClassMaterialSchema
 ) => {
    try {
-      // Validate required fields
+      // Ensure all required fields are present
       if (!data.title || !data.pdfUrl || !data.classId || !data.uploadedBy) {
          return {
             success: false,
             error: true,
-            message: "Missing required fields"
+            message: "Missing required fields",
          };
       }
 
+      // Create class material entry in the database
       await prisma.classMaterial.create({
          data: {
             title: data.title,
             pdfUrl: data.pdfUrl,
             classId: data.classId,
-            uploadedAt: data.uploadedAt || new Date(),
+            uploadedAt: data.uploadedAt || new Date(), // Use current date if not provided
             uploadedBy: data.uploadedBy,
          },
       });
 
-      revalidatePath("/class-materials");
       return { success: true, error: false };
    } catch (err) {
       console.error("Create class material error:", err);
       return {
          success: false,
          error: true,
-         message: err instanceof Error ? err.message : "Failed to create class material"
+         message: err instanceof Error ? err.message : "Failed to create class material",
       };
    }
 };
+
+// export const createClassMaterial = async (
+//    currentState: CurrentState,
+//    data: ClassMaterialSchema
+// ) => {
+//    try {
+//       // Validate required fields
+//       if (!data.title || !data.pdfUrl || !data.classId || !data.uploadedBy) {
+//          return {
+//             success: false,
+//             error: true,
+//             message: "Missing required fields",
+//          };
+//       }
+
+//       const newMaterial = await prisma.classMaterial.create({
+//          data: {
+//             title: data.title,
+//             pdfUrl: data.pdfUrl,  // Ensure PDF URL is not empty
+//             classId: data.classId,
+//             uploadedAt: data.uploadedAt || new Date(),
+//             uploadedBy: data.uploadedBy,
+//          },
+//       });
+
+//       console.log("Created Material:", newMaterial);
+
+//       // revalidatePath("/class-materials");
+//       return { success: true, error: false };
+//    } catch (err) {
+//       console.error("Create class material error:", err);
+//       return {
+//          success: false,
+//          error: true,
+//          message: err instanceof Error ? err.message : "Failed to create class material",
+//       };
+//    }
+// };
 
 export const updateClassMaterial = async (
    currentState: CurrentState,
@@ -68,7 +106,7 @@ export const updateClassMaterial = async (
          },
       });
 
-      revalidatePath("/class-materials");
+      // revalidatePath("/class-materials");
       return { success: true, error: false };
    } catch (err) {
       console.error("Update class material error:", err);

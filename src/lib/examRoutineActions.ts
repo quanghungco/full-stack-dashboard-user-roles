@@ -6,7 +6,7 @@ import prisma from "./prisma";
 
 type CurrentState = { success: boolean; error: boolean };
 
-// Create Exam Routine
+
 // export const createExamRoutine = async (
 //   currentState: CurrentState,
 //   data: ExamRoutineSchema

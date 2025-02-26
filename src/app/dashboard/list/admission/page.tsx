@@ -62,7 +62,7 @@ const AdmissionListPage = async ({
     <tr
       key={item.id}
       className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]"   >
-      <td className="flex items-center p-4 justify-center">{item.studentName}</td>
+      <td className="text-center p-4 ">{item.studentName}</td>
       
       <td className="hidden md:table-cell gap-4 text-center">{item.fatherName}</td>
       <td className="hidden md:table-cell gap-4 text-center">{item.motherName}</td>

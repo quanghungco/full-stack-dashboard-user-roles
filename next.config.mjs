@@ -2,6 +2,7 @@
 const nextConfig = {
   transpilePackages: ["@react-pdf/renderer"],
   images: {
+    domains: ["uploadthing.com"],
     remotePatterns: [
       { hostname: "images.pexels.com" },
       { hostname: "images.unsplash.com" },

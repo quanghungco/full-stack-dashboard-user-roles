@@ -9,6 +9,7 @@ import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import Link from "next/link";
+import { FaDownload } from "react-icons/fa";
 
 
 type ClassMeterialList = ClassMaterial;
@@ -56,14 +57,14 @@ const ClassMeterialListPage = async ({
       key={item.id}
       className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]"
     >
-      <td className="flex items-center p-4 ">{item.title}</td>
+      <td className="text-center p-4 ">{item.title}</td>
 
       <td className="text-center ">{item.classId}</td>
       <td className="text-center ">{item.uploadedBy}</td>
 
-      <td className="text-center text-orange-400 font-semibold  ">
-        <Link href={item.pdfUrl} target="_blank" rel="noopener noreferrer">
-          {item.title}.pdf
+      <td className=" text-sky-500 font-semibold ">
+        <Link className="flex gap-2 justify-center" href={item.pdfUrl} target="_blank" rel="noopener noreferrer">
+          {item.title}.pdf <FaDownload />
         </Link>
       </td>
 
@@ -128,7 +129,7 @@ const ClassMeterialListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/sort.png" alt="" width={14} height={14} />
             </button>
-            {role === "admin" || role === "teacher" && (
+            {(role === "admin" || role === "teacher") && (
               <FormContainer table="classMaterial" type="create" />
             )}
           </div>

@@ -305,7 +305,7 @@ export const classMaterialSchema = z.object({
   pdfUrl: z.string().min(1, { message: "PDF URL is required!" }),
   classId: z.coerce.number().min(1, { message: "Class ID is required!" }),
   uploadedAt: z.coerce.date().optional(),
-  uploadedBy: z.string().min(1, { message: "Uploader username is required!" }),
+  uploadedBy: z.string().min(1, { message: "Uploader name is required!" }),
 });
 
 export type ClassMaterialSchema = z.infer<typeof classMaterialSchema>;
