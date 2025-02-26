@@ -17,7 +17,7 @@ type ClassMaterialList = ClassMaterial & {
   };
 };
 
-const ClassMaterialListPage = async ({ searchParams }: { searchParams: { [key: string]: string | undefined } }) => {
+const ClassMaterialListPage = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) => {
   const session = await getServerSession(authOptions);
   const role = session?.user?.role?.toLowerCase();
 
