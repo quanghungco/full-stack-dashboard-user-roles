@@ -7,7 +7,7 @@ const Announcements = async () => {
   // const { userId, sessionClaims } = auth();
   // const role = (sessionClaims?.metadata as { role?: string })?.role;
   // console.log("hdsajhjds =====", sessionClaims);
-  
+
 
   // const roleConditions = {
   //   teacher: { lessons: { some: { teacherId: userId! } } },
@@ -15,12 +15,12 @@ const Announcements = async () => {
   // };
 
   const data = await prisma.announcement.findMany({
-    // take: 5,
+    take: 5,
     orderBy: { startDate: "desc" },
   });
 
   return (
-    <div className="bg-white dark:bg-[#18181b] p-4 rounded-md select-none">
+    <div className="bg-white dark:bg-[#18181b] rounded-md select-none">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Announcements</h1>
         <span className="text-xs text-gray-400 cursor-pointer">View All</span>
@@ -28,17 +28,19 @@ const Announcements = async () => {
       <div className="flex flex-col gap-4 mt-4">
         {data.map((announcement) => (
           <div key={announcement.id} className="bg-lamaSkyLight dark:bg-gray-600 rounded-md p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex  justify-between">
               <h2 className="font-medium select-none">{announcement.title}</h2>
-              <span className="text-xs text-gray-400  rounded-md px-1 ">
-                Start Date: {new Intl.DateTimeFormat("en-GB").format(announcement.startDate)}
-              </span>
-              <span className="text-xs text-gray-400  rounded-md px-1">
-                End Date: {new Intl.DateTimeFormat("en-GB").format(announcement.endDate)}
-              </span>
-     
+              <div>
+                <span className="text-[10px] text-gray-400  rounded-md px-1 ">
+                  Start Date: {new Intl.DateTimeFormat("en-GB").format(announcement.startDate)}
+                </span>
+                <br />
+                <span className="text-[10px] text-gray-400  rounded-md px-1">
+                  End Date: {new Intl.DateTimeFormat("en-GB").format(announcement.endDate)}
+                </span>
+              </div>
             </div>
-           
+
             <p className="text-sm text-gray-400 mt-1 select-none">{announcement.description}</p>
             {announcement?.img && (
               <Image
@@ -50,7 +52,7 @@ const Announcements = async () => {
               />
             )}
           </div>
-          
+
         ))}
       </div>
     </div>

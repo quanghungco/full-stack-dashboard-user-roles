@@ -9,9 +9,8 @@ import { useSession } from "next-auth/react";
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems = [
-        { label: "Admission", href: "/" },
-        { label: "Academics", href: "/" },
-        { label: "Administration", href: "/" },
+        { label: "Admission", href: "/dashboard/list/admission" },
+        { label: "About", href: "#about" },
         { label: "Dashboard", href: "/dashboard" },
         { label: "Contact", href: "/" }
     ];
@@ -28,7 +27,7 @@ const Header = () => {
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center gap-2">
                             <Image src="/logo.png" alt="logo" width={32} height={32} />
-                            <span className="hidden md:block font-bold text-xl">GenSchool</span>
+                            <span className="hidden md:block font-bold text-2xl">GenSchool</span>
                         </Link>
                     </div>
 
@@ -59,10 +58,10 @@ const Header = () => {
                     <nav className="hidden md:block">
                         <ul className="flex pt-1 space-x-6">
                             {menuItems.map((item) => (
-                                <li key={item.label}>
+                                <li className="mt-1" key={item.label}>
                                     <Link
                                         href={item.href}
-                                        className="hover:text-gray-300 transition duration-200"
+                                        className="hover:text-gray-300 transition duration-200 "
                                     >
                                         {item.label}
                                     </Link>

@@ -7,8 +7,8 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { classMaterialSchema, ClassMaterialSchema } from "@/schema/formValidationSchemas";
-import { createClassMaterial, updateClassMaterial } from "@/lib/classMeterialAction";
 import { UploadDropzone } from "@/utils/uploadthing";
+import { createClassMaterial, updateClassMaterial } from "@/lib/classMeterialAction";
 
 export interface FormProps {
    type: "create" | "update";
@@ -23,24 +23,25 @@ const ClassMaterialForm: React.FC<FormProps> = ({
    setOpen,
    relatedData,
 }) => {
-   const [pdfUrl, setPdfUrl] = useState(data?.pdfUrl || ""); 
+   const [pdfUrl, setPdfUrl] = useState(data?.pdfUrl || "");
    const [loading, setLoading] = useState(false);
    const router = useRouter();
 
    const {
       register,
       handleSubmit,
+      setValue,
       formState: { errors },
    } = useForm<ClassMaterialSchema>({
       resolver: zodResolver(classMaterialSchema),
       defaultValues: {
          title: data?.title || "",
-         classId: data?.classId || relatedData?.classId || "",
+         classId: data?.classId ? Number(data.classId) : undefined,
          pdfUrl: data?.pdfUrl || "",
-      }
+      },
    });
 
-   const onSubmit = handleSubmit(async (formData) => {
+   const onSubmit = async (formData: ClassMaterialSchema) => {
       setLoading(true);
 
       try {
@@ -51,12 +52,12 @@ const ClassMaterialForm: React.FC<FormProps> = ({
 
          const payload = {
             ...formData,
-            pdfUrl: pdfUrl,
+            pdfUrl,
             classId: Number(formData.classId),
             uploadedAt: new Date(),
          };
 
-         console.log("Submitting payload:", payload);
+         // console.log("Submitting payload:", payload);
 
          const response = await (type === "create" ? createClassMaterial : updateClassMaterial)(
             { success: false, error: false },
@@ -71,23 +72,22 @@ const ClassMaterialForm: React.FC<FormProps> = ({
             toast.error(response.message || "Failed to save class material");
          }
       } catch (error) {
-         console.error("Submission error:", error);
+         // console.error("Submission error:", error);
          toast.error("Failed to save class material");
       } finally {
          setLoading(false);
       }
-   });
+   };
 
    return (
       <div>
          <form
             className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md"
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit(onSubmit)}
          >
             <h1 className="text-xl font-semibold">
                {type === "create" ? "Create a new Class Material" : "Update the Class Material"}
             </h1>
-
 
             <div className="flex gap-4 w-full">
                <InputField
@@ -108,24 +108,25 @@ const ClassMaterialForm: React.FC<FormProps> = ({
                />
             </div>
 
-               {/* PDF Upload Section */}
+            {/* PDF Upload Section */}
             <div className="flex flex-col gap-4 justify-center">
                <label className="text-gray-700 font-medium dark:text-gray-500 text-center">
-                     Upload PDF
-                  </label>
+                  Upload PDF
+               </label>
 
-                  <UploadDropzone
+               <UploadDropzone
                   endpoint="pdfUploader"
-                     onClientUploadComplete={(res) => {
-                        if (res && res.length > 0) {
-                           setPdfUrl(res[0].url);
-                           toast.success("File uploaded successfully");
-                        }
-                     }}
-                     onUploadError={(error: Error) => {
-                        toast.error(`Upload failed: ${error.message}`);
-                     }}
-                  />
+                  onClientUploadComplete={(res) => {
+                     if (res && res.length > 0) {
+                        setPdfUrl(res[0].url);
+                        setValue("pdfUrl", res[0].url, { shouldValidate: true });
+                        toast.success("File uploaded successfully");
+                     }
+                  }}
+                  onUploadError={(error: Error) => {
+                     toast.error(`Upload failed: ${error.message}`);
+                  }}
+               />
 
                {pdfUrl && (
                   <p className="text-sm text-green-600">
