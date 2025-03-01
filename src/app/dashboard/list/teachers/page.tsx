@@ -37,11 +37,6 @@ const TeacherListPage = async ({
       accessor: "subjects",
       className: "hidden md:table-cell",
     },
-    // {
-    //   header: "Classes",
-    //   accessor: "classes",
-    //   className: "hidden md:table-cell",
-    // },
     {
       header: "Phone",
       accessor: "phone",

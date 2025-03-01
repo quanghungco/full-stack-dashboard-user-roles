@@ -2,7 +2,6 @@ import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/shared/TableSearch";
-
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Class, Prisma, Student } from "@prisma/client";
@@ -34,7 +33,7 @@ const StudentListPage = async ({
     {
       header: "Phone",
       accessor: "phone",
-      className: "hidden table-cell",
+      className: "hidden lg:table-cell",
     },
     {
       header: "Address",
