@@ -51,7 +51,7 @@ export function UserNav() {
             {menuItems.map((item) => (
               <DropdownMenuItem
                 key={item.label}
-                className="p-0 hover:bg-gray-100"
+                className="p-0 hover:bg-gray-400 "
               >
                 <Link
                   href={item.href}
@@ -65,7 +65,7 @@ export function UserNav() {
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="p-2 font-semibold hover:bg-gray-100"
+            className="p-2 font-semibold hover:bg-gray-400"
           >
             <LogoutButton />
 

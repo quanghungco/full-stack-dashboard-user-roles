@@ -8,6 +8,8 @@ const AboutSection = () => {
           The Gen School was founded in 2025. The mission is to provide
           quality education and foster research in various fields of science and technology.
         </p>
+        <br />
+        <p className="font-semibold ">&ldquo;School is my school. Here the flowers of civilization bloom.&rdquo;</p>
       </section>
     );
   };

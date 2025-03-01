@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Table from "@/components/Table";
 import Pagination from "@/components/Pagination";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
 import PaymentForm from "@/components/forms/PaymentForm";
 
 

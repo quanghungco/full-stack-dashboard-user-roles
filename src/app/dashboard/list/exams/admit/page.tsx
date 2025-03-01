@@ -1,9 +1,10 @@
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
 import Pagination from "@/components/Pagination";
 import AdmitCardButton from "@/components/AdmitCardButton";
+import SortButton from "@/components/shared/SortButton";
 // import { authOptions } from "@/auth";
 // import { getServerSession } from "next-auth";
 
@@ -93,7 +94,10 @@ const [paidStudents, count] = await prisma.$transaction([
     <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold">Admit Cards</h1>
+        <div className="flex gap-2">
         <TableSearch />
+          <SortButton />
+        </div>
       </div>
 
       <Table 

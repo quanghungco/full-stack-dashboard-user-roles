@@ -1,11 +1,11 @@
 import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
+import SortButton from "@/components/shared/SortButton";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Announcement, Prisma } from "@prisma/client";
-import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 
@@ -84,7 +84,7 @@ const AnnouncementListPage = async ({
       </td>
     </tr>
   );
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
 
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
@@ -112,6 +112,9 @@ const AnnouncementListPage = async ({
       where: query,
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
+      orderBy: {
+        startDate: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.announcement.count({ where: query }),
   ]);
@@ -123,15 +126,10 @@ const AnnouncementListPage = async ({
         <h1 className="hidden md:block text-lg font-semibold">
           All Announcements
         </h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/sort.png" alt="" width={14} height={14} />
-            </button>
+            <SortButton />
             {role === "admin" && (
               <FormContainer table="announcement" type="create" />
             )} 

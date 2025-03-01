@@ -1,7 +1,7 @@
 import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
 import prisma from "@/lib/prisma";
 import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";

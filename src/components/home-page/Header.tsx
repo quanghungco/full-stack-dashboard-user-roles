@@ -106,9 +106,12 @@ const Header = () => {
                         ))}
                     </ul>
                     {/* Auth buttons */}
-                    <div className="px-4 py-2 border-t border-blue-800 md:border-0" >
+                    <div className="px-4 py-2 border-t border-sky-800 md:border-0" >
                         {user ? (
-                            <LogoutButton />
+                            <>
+                                <UserNav />
+                                <span className="ml-2">{user?.name}</span>
+                            </>
                         ) : (
                             <Link href="/auth/login">
                                 <Button

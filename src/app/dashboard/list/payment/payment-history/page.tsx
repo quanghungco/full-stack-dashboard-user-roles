@@ -2,7 +2,7 @@ import { Payment, Prisma } from "@prisma/client";
 import FormModal from "@/components/forms/FormModal";
 import DownloadPaymentPDF from "@/components/pdf/PaymentPdfDownload"; // Import the component
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
 import Pagination from "@/components/Pagination";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";

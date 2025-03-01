@@ -1,12 +1,13 @@
 import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Attendance, Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 type AttendanceWithClass = Attendance & {
   classes: { id: number; name: string };
@@ -117,8 +118,9 @@ const AttendanceListPage = async ({
         <h1 className="hidden md:block text-lg font-semibold">
           All Attendance Records
         </h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
+          <SortButton />
           <div className="flex items-center gap-4 self-end">
             {(role === "admin" || role === "teacher") && (
               <FormContainer table="attendance" type="create" />

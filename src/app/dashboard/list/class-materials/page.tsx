@@ -1,7 +1,7 @@
 import FormContainer from "@/components/forms/FormContainer";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
-import TableSearch from "@/components/TableSearch";
+import TableSearch from "@/components/shared/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { ClassMaterial, Prisma } from "@prisma/client";
@@ -9,6 +9,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import Link from "next/link";
 import { FaDownload } from "react-icons/fa";
+import SortButton from "@/components/shared/SortButton";
 
 type ClassMaterialList = ClassMaterial & {
   class: {
@@ -119,6 +120,7 @@ const ClassMaterialListPage = async ({ searchParams }: { searchParams: Promise<{
         </h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
+          <SortButton />
           <div className="flex items-center gap-4 self-end">
             {(role === "admin" || role === "teacher") && (
               <FormContainer table="classMaterial" type="create" />

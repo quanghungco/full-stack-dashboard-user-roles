@@ -10,7 +10,7 @@ export const LogoutButton = () => {
           className="flex items-center w-full gap-4 py-2 px-2 rounded-md hover:scale-105 transition-all duration-300"
         >
           <LogOut size={20} />
-          <span className="hidden lg:block">Logout</span>
+        <span className="">Logout</span>
         </Button>
     );
   };
