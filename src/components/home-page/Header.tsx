@@ -5,13 +5,13 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { LogoutButton } from "../auth/LogoutButton";
 import { useSession } from "next-auth/react";
+import { UserNav } from "../shared/UserNav";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuItems = [
         { label: "Admission", href: "/dashboard/list/admission" },
         { label: "About", href: "#about" },
-        { label: "Dashboard", href: "/dashboard" },
         { label: "Contact", href: "/" }
     ];
     const { data: session } = useSession();
@@ -69,7 +69,7 @@ const Header = () => {
                             ))}
                             <li className="px-4  border-t border-blue-800 md:border-0" >
                                 {user ? (
-                                    <LogoutButton />
+                                    <UserNav />
                                 ) : (
                                     <Link href="/auth/login">
                                         <Button
