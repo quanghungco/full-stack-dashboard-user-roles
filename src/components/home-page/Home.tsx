@@ -1,7 +1,6 @@
 import Header from "./Header";
 import HeroSection from "./HeroSection";
 import AboutSection from "./AboutSection";
-import Footer from "../shared/Footer";
 
 
 const Home = () => {
@@ -14,7 +13,7 @@ const Home = () => {
         <HeroSection />
         <AboutSection />
       </main>
-      <Footer />
+
     </>
   );
 };

@@ -123,7 +123,7 @@ const AdmissionListPage = async ({
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
       orderBy: sort ? {
-        createdAt: sort === 'asc' ? 'asc' : 'desc'
+        createdAt: sort === 'asc' ? 'desc' : 'asc'
       } : {
         createdAt: 'desc'
       },

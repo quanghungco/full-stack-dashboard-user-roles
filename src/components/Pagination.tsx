@@ -32,7 +32,7 @@ const Pagination = ({ page, count, perPage }: { page: number; count: number; per
       >
         Prev
       </button>
-      <div className="flex items-center gap-2 text-sm">
+      <div className="lg:flex items-center gap-2 text-sm hidden">
         {Array.from({ length: Math.ceil(count / perPage) }, (_, index) => {
           const pageIndex = index + 1;
           return (
