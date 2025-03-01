@@ -156,7 +156,6 @@ export const studentSchema = z.object({
   bloodType: z.string().min(1, { message: "Blood Type is required!" }),
   birthday: z.coerce.date({ message: "Birthday is required!" }),
   sex: z.enum(["MALE", "FEMALE"], { message: "Sex is required!" }),
-  gradeId: z.coerce.number().min(1, { message: "Grade is required!" }),
   classId: z.coerce.number().min(1, { message: "Class is required!" }),
   parentNId: z.coerce.number().min(1, { message: "Parent NID must be a positive number" }),
   parentName: z.string().min(1, { message: "Parent name is required!" }),

@@ -125,8 +125,6 @@ model Student {
   parentName String?
   classId    Int
   class      Class       @relation(fields: [classId], references: [id])
-  gradeId    Int
-  grade      Grade       @relation(fields: [gradeId], references: [id])
   results    Result[]
   birthday   DateTime
   payments   Payment[]
@@ -164,11 +162,6 @@ model Parent {
   createdAt DateTime @default(now())
 }
 
-model Grade {
-  id       Int       @id @default(autoincrement())
-  level    Int       @unique
-  students Student[]
-}
 
 model Class {
   id           Int           @id @default(autoincrement())

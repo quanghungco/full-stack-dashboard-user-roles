@@ -52,7 +52,6 @@ export const createStudent = async (
           bloodType: data.bloodType,
           sex: data.sex,
           birthday: data.birthday,
-          gradeId: data.gradeId,
           classId: data.classId,
           parentNId: data.parentNId,
           parentName: data.parentName,
@@ -75,12 +74,7 @@ export const createStudent = async (
       return { success: false, error: true };
     }
     try {
-      // const user = await clerkClient.users.updateUser(data.id, {
-      //   username: data.username,
-      //   ...(data.password !== "" && { password: data.password }),
-      //   firstName: data.name,
-      //   lastName: data.surname,
-      // });
+
   
       await prisma.student.update({
         where: {
@@ -98,7 +92,6 @@ export const createStudent = async (
           bloodType: data.bloodType,
           sex: data.sex,
           birthday: data.birthday,
-          gradeId: data.gradeId,
           classId: data.classId,
           parentName: data.parentName,
           parentNId: data.parentNId,

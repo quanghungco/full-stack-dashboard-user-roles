@@ -60,14 +60,7 @@ async function main() {
 
   console.log("Example users seeded successfully.");
 
-  // GRADE
-  for (let i = 1; i <= 6; i++) {
-    await prisma.grade.create({
-      data: {
-        level: i,
-      },
-    });
-  }
+
 
   // CLASS
   for (let i = 1; i <= 6; i++) {
@@ -169,7 +162,6 @@ async function main() {
         sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
         parentName: `ParentName${Math.ceil(i / 2)}`,
         parentNId: Math.ceil(i / 2),
-        gradeId: (i % 6) + 1,
         classId: (i % 6) + 1,
         birthday: new Date(
           new Date().setFullYear(new Date().getFullYear() - 10)

@@ -108,7 +108,7 @@ const AnnouncementForm: React.FC<FormProps> = ({
           ? "Create a new announcement"
           : "Update the announcement"}
       </h1>
-      <div className="flex justify-between flex-wrap gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <InputField
           label="Title"
           name="title"
@@ -139,7 +139,7 @@ const AnnouncementForm: React.FC<FormProps> = ({
           error={errors?.endDate}
           type="datetime-local"
         />
-        <div className="flex flex-col gap-4 w-1/4">
+        <div className="flex flex-col gap-4 w-1/2">
           <label className="text-gray-700 font-medium dark:text-gray-500">
             Upload Image(optional)
           </label>

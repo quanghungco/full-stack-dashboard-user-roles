@@ -372,6 +372,7 @@ const AdmissionForm: React.FC<FormProps> = ({
             />
             {errors.sscInstituteName && <p className="text-red-500">{errors.sscInstituteName.message}</p>}
           </div>
+          <br />
 
           <div>
             <label className="block text-sm font-medium text-gray-700  ">

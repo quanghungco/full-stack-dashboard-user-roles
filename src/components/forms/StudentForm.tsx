@@ -102,7 +102,7 @@ const StudentForm = ({
         {type === "create" ? "Create a new student" : "Update the student"}
       </h1>
       <span className="text-xs text-gray-400 font-medium">Personal Information</span>
-      <div className="flex justify-between flex-wrap gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
         <InputField
           label="First Name*"
@@ -146,7 +146,7 @@ const StudentForm = ({
           register={register}
           error={errors.address}
         />
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full ">
           <label className="text-xs text-gray-500">Blood Group</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
@@ -194,7 +194,7 @@ const StudentForm = ({
             register={register}
             error={errors.id}
           />
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full ">
           <label className="text-xs text-gray-500">Sex*</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
@@ -208,7 +208,7 @@ const StudentForm = ({
             <p className="text-xs text-red-400">{errors.sex.message.toString()}</p>
           )}
         </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        {/* <div className="flex flex-col gap-2 w-full">
           <label className="text-xs text-gray-500">Grade</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
@@ -224,8 +224,8 @@ const StudentForm = ({
           {errors.gradeId?.message && (
             <p className="text-xs text-red-400">{errors.gradeId.message.toString()}</p>
           )}
-        </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        </div> */}
+        <div className="flex flex-col gap-2 w-full">
           <label className="text-xs text-gray-500">Class</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
@@ -250,7 +250,7 @@ const StudentForm = ({
           )}
         </div>
               {/* Add Image Upload Field */}
-      <div className="flex flex-col w-full md:w-1/4 gap-2">
+        <div className="flex flex-col w-full md:w-1/2 gap-2">
         <label className="text-gray-700 font-medium">Upload Image</label>
         <ImageUpload
             defaultImage={data?.img}
