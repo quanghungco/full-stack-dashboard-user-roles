@@ -1,4 +1,3 @@
-import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import FormContainer from "@/components/forms/FormContainer";
 import Performance from "@/components/Performance";
@@ -14,6 +13,7 @@ import { IoMail } from "react-icons/io5";
 import { MdBloodtype } from "react-icons/md";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import AnnouncementData from "@/components/AnnouncementData";
 
 
 const SingleStudentPage = async ({
@@ -210,7 +210,7 @@ const SingleStudentPage = async ({
           </div>
         </div>
         <Performance />
-        <Announcements />
+        <AnnouncementData />
       </div>
     </div>
   );

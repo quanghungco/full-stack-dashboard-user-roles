@@ -1,4 +1,3 @@
-import Announcements from "@/components/Announcements";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import { MdBloodtype } from "react-icons/md";
 import { HiCalendarDateRange } from "react-icons/hi2";
@@ -13,6 +12,7 @@ import { IoMail } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import AnnouncementData from "@/components/AnnouncementData";
 
 const SingleTeacherPage = async ({
   params,
@@ -205,7 +205,7 @@ const SingleTeacherPage = async ({
           </div>
         </div>
         <Performance />
-        <Announcements />
+        <AnnouncementData />
       </div>
     </div>
   );
