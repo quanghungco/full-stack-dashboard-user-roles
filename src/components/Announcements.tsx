@@ -1,32 +1,37 @@
-import prisma from "@/lib/prisma";
-// import { auth } from "@clerk/nextjs/server";
+"use client";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-const Announcements = async () => {
-  // const { userId, sessionClaims } = auth();
-  // const role = (sessionClaims?.metadata as { role?: string })?.role;
-  // console.log("hdsajhjds =====", sessionClaims);
+const Announcements = ({ data }: { data: any[] }) => {
+  const [showAll, setShowAll] = useState(false);
+
+  const [displayedData, setDisplayedData] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (showAll) {
+      setDisplayedData(data);
+    } else {
+      setDisplayedData(data.slice(0, 5));
+    }
+  }, [showAll, data]);
 
 
-  // const roleConditions = {
-  //   teacher: { lessons: { some: { teacherId: userId! } } },
-  //   student: { students: { some: { id: userId! } } },
-  // };
 
-  const data = await prisma.announcement.findMany({
-    take: 5,
-    orderBy: { startDate: "desc" },
-  });
 
   return (
     <div className="bg-white dark:bg-[#18181b] rounded-md select-none p-3">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Announcements</h1>
-        <span className="text-xs text-gray-400 cursor-pointer">View All</span>
+        <span
+          onClick={() => setShowAll(!showAll)}
+          className="text-xs text-gray-400 cursor-pointer hover:text-gray-600"
+        >
+          {showAll ? "Show Less" : "View All"}
+        </span>
       </div>
       <div className="flex flex-col gap-4 mt-4">
-        {data.map((announcement) => (
+        {displayedData.map((announcement) => (
           <div key={announcement.id} className="bg-lamaSkyLight dark:bg-gray-600 rounded-md p-4">
             <div className="flex  justify-between">
               <h2 className="font-medium select-none">{announcement.title}</h2>

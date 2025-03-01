@@ -1,21 +1,14 @@
-import Announcements from "@/components/Announcements";
 import AttendanceChartContainer from "@/components/charts/AttendanceChartContainer";
 import CountChartContainer from "@/components/charts/CountChartContainer";
 import EmergencyNumbers from "@/components/shared/EmergencyNumbers";
 import FinanceChartContainer from "@/components/charts/FinanceChartContainer";
 import UserCard from "@/components/UserCard";
 import { Suspense } from "react";
-// import { getServerSession } from "next-auth/next";
-// import { authOptions } from "@/auth"
+import AnnouncementData from "@/components/AnnouncementData";
 
-const AdminPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | undefined }>;
-}) => {
-  // const session = await getServerSession(authOptions);
-  // const user = session?.user;
-  // console.log(" sadfdsa-----=====",user);
+
+const AdminPage = async () => {
+
 
   return (
     <div className="p-4 flex gap-4 flex-col md:flex-row w-full">
@@ -53,7 +46,7 @@ const AdminPage = async ({
       </div>
       {/* RIGHT */}
       <div className="w-full lg:w-1/3 flex flex-col">
-        <Announcements />
+        <AnnouncementData />
         <EmergencyNumbers />
         {/* <EventCalendarContainer searchParams={searchParams}/> */}
       </div>

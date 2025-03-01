@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+import Loading from "./shared/loading";
+
 const Table = ({
   columns,
   renderRow,
@@ -16,7 +19,9 @@ const Table = ({
           ))}
         </tr>
       </thead>
-      <tbody>{data.map((item) => renderRow(item))}</tbody>
+      <Suspense fallback={<Loading />}>
+        <tbody>{data.map((item) => renderRow(item))}</tbody>
+      </Suspense>
     </table>
   );
 };

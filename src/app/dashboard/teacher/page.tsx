@@ -1,5 +1,5 @@
 import { authOptions } from "@/auth";
-import Announcements from "@/components/Announcements";
+import AnnouncementData from "@/components/AnnouncementData";
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import EmergencyNumbers from "@/components/shared/EmergencyNumbers";
 import { getServerSession } from "next-auth";
@@ -19,7 +19,7 @@ const TeacherPage = async () => {
       </div>
       {/* RIGHT */}
       <div className="w-full xl:w-1/3 flex flex-col gap-8">
-        <Announcements />
+        <AnnouncementData />
         <EmergencyNumbers/>
       </div>
     </div>

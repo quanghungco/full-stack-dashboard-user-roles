@@ -1,12 +1,13 @@
-import Announcements from '@/components/Announcements';
+import AnnouncementData from '@/components/AnnouncementData';
 import React from 'react';
 
-const componentName = () => {
+const page = () => {
+
     return (
         <div className='w-full px-4 '>
-            <Announcements/>
+            <AnnouncementData />
         </div>
     );
 };
 
-export default componentName;
+export default page;
