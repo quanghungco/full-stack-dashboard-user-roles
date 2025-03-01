@@ -80,7 +80,7 @@ const ClassMaterialListPage = async ({ searchParams }: { searchParams: Promise<{
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await Promise.resolve(searchParams);
+  const { page, perPage, sort, ...queryParams } = await Promise.resolve(searchParams);
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
@@ -108,6 +108,9 @@ const ClassMaterialListPage = async ({ searchParams }: { searchParams: Promise<{
       },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
+      orderBy: {
+        uploadedAt: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.classMaterial.count({ where: query }),
   ]);

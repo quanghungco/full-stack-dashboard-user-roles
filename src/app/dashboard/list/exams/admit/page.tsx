@@ -5,8 +5,7 @@ import TableSearch from "@/components/shared/TableSearch";
 import Pagination from "@/components/Pagination";
 import AdmitCardButton from "@/components/AdmitCardButton";
 import SortButton from "@/components/shared/SortButton";
-// import { authOptions } from "@/auth";
-// import { getServerSession } from "next-auth";
+
 
 
 
@@ -27,9 +26,30 @@ const AdmitPage = async ({
     { header: "Actions", accessor: "actions" },
   ];
 
-  const { page, perPage } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
+
+  const query: any = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "search":
+            query.student = {
+              OR: [
+                { name: { contains: value, mode: "insensitive" } },
+                { username: { contains: value, mode: "insensitive" } },
+              ],
+            };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
 
 const [paidStudents, count] = await prisma.$transaction([
     prisma.payment.findMany({
@@ -53,6 +73,9 @@ const [paidStudents, count] = await prisma.$transaction([
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        createdAt: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.payment.count({
       where: {

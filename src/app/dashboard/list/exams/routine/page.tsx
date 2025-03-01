@@ -8,6 +8,7 @@ import { ExamRoutine, Prisma } from "@prisma/client";
 import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 type ExamRoutineList = ExamRoutine & {
   classes: {
@@ -86,7 +87,7 @@ const ExamRoutinePage = async ({ searchParams }: { searchParams: Promise<{ [key:
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   const p = page ? parseInt(page) : 1;
 
@@ -115,6 +116,9 @@ const ExamRoutinePage = async ({ searchParams }: { searchParams: Promise<{ [key:
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        startTime: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.examRoutine.count({
       where: query,
@@ -129,12 +133,10 @@ const ExamRoutinePage = async ({ searchParams }: { searchParams: Promise<{ [key:
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
+            {/* <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/sort.png" alt="" width={14} height={14} />
-            </button>
+            </button> */}
+            <SortButton />
             {role === "admin" && 
             <FormContainer table="examRoutine" type="create" />
             }

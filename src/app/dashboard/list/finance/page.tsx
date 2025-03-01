@@ -7,6 +7,7 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Finance, Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 type FinanceList = Finance & {
   // Add any related fields if necessary
@@ -71,7 +72,7 @@ const FinanceListPage = async ({
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   const p = page ? parseInt(page) : 1;
 
@@ -95,6 +96,9 @@ const FinanceListPage = async ({
       where: query,
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        date: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.finance.count({ where: query }),
 
@@ -107,6 +111,7 @@ const FinanceListPage = async ({
         <h1 className="hidden md:block text-lg font-semibold">All Finance Records</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
+          <SortButton />
           <div className="flex items-center gap-4 self-end">
             {role === "admin" && 
             <FormContainer table="finance" type="create" />

@@ -5,9 +5,9 @@ import TableSearch from "@/components/shared/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Prisma, Subject, Teacher } from "@prisma/client";
-import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 type SubjectList = Subject & { teachers: Teacher[] };
 
@@ -58,7 +58,7 @@ const SubjectListPage = async ({
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
 
@@ -91,6 +91,9 @@ const SubjectListPage = async ({
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        name: (sort as "asc" | "desc") || "asc",
+      },
     }),
     prisma.subject.count({ where: query }),
 
@@ -105,15 +108,13 @@ const SubjectListPage = async ({
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
+            {/* <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/sort.png" alt="" width={14} height={14} />
-            </button>
-            {/* {role === "admin" && ( */}
+            </button> */}
+            <SortButton />
+            {role === "admin" && (
             <FormContainer table="subject" type="create" />
-            {/* )} */}
+            )}
           </div>
         </div>
       </div>

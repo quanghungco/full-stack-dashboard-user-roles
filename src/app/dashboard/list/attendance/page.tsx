@@ -81,7 +81,7 @@ const AttendanceListPage = async ({
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   const p = page ? parseInt(page) : 1;
 
@@ -104,6 +104,9 @@ const AttendanceListPage = async ({
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        date: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.attendance.count({
       where: query,

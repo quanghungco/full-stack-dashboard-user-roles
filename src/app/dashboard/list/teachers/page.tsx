@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -91,7 +92,7 @@ const TeacherListPage = async ({
       <td>
         <div className="flex items-center gap-2 justify-center">
 
-          <Link href={`/list/teachers/${item.id}`}>
+          <Link href={`/dashboard/list/teachers/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
               <Image src="/view.png" alt="" width={16} height={16} />
             </button>
@@ -104,7 +105,7 @@ const TeacherListPage = async ({
       </td>
     </tr>
   );
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
 
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
@@ -143,9 +144,12 @@ const TeacherListPage = async ({
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        // Add sorting
+        joiningDate: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.teacher.count({ where: query }),
-
   ]);
 
   return (
@@ -154,14 +158,12 @@ const TeacherListPage = async ({
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">All Teachers</h1>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
-          <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
+            {/* <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/sort.png" alt="" width={14} height={14} />
-            </button>
+            </button> */}
+            <TableSearch />
+            <SortButton />
             {role === "admin" && (
               <FormContainer table="teacher" type="create" />
            )}

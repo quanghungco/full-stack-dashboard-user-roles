@@ -94,7 +94,7 @@ const AdmissionListPage = async ({
       </td>
     </tr>
   );
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
 
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
@@ -122,6 +122,11 @@ const AdmissionListPage = async ({
       where: query,
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: sort ? {
+        createdAt: sort === 'asc' ? 'asc' : 'desc'
+      } : {
+        createdAt: 'desc'
+      },
     }),
     prisma.admission.count({ where: query }),
   ]);

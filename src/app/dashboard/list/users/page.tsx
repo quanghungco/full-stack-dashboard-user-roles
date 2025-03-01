@@ -8,6 +8,7 @@ import Image from "next/image";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 const UsersPage = async ({
   searchParams,
@@ -65,7 +66,7 @@ const UsersPage = async ({
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
 
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
@@ -89,6 +90,9 @@ const UsersPage = async ({
       where: query,
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        username: (sort as "asc" | "desc") || "asc",
+      },
     }),
     prisma.user.count({ where: query }),
   ]);
@@ -100,12 +104,12 @@ const UsersPage = async ({
         <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
           <div className="flex items-center gap-4 self-end">
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
+            {/* <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src="/filter.png" alt="" width={14} height={14} />
-            </button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
-              <Image src="/sort.png" alt="" width={14} height={14} />
-            </button>
+            </button> */}
+
+            <SortButton />
+
             {role === "admin" && (
               <FormContainer table="users" type="create" />
             )}

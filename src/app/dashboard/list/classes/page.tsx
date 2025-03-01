@@ -5,7 +5,6 @@ import TableSearch from "@/components/shared/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Class, Prisma, Teacher } from "@prisma/client";
-import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import SortButton from "@/components/shared/SortButton";
@@ -70,7 +69,7 @@ const renderRow = (item: ClassList) => (
   </tr>
 );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
 
@@ -105,6 +104,9 @@ const renderRow = (item: ClassList) => (
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        name: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.class.count({ where: query }),
 

@@ -5,7 +5,6 @@ import TableSearch from "@/components/shared/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Assignment, Class, Prisma, Subject, Teacher } from "@prisma/client";
-import Image from "next/image";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
 import SortButton from "@/components/shared/SortButton";
@@ -83,7 +82,7 @@ const AssignmentListPage = async ({
     </tr>
   );
 
-  const { page, perPage, ...queryParams } = await searchParams;
+  const { page, perPage, sort, ...queryParams } = await searchParams;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
   const p = page ? parseInt(page) : 1;
 
@@ -134,6 +133,9 @@ const AssignmentListPage = async ({
       // },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        startDate: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.assignment.count({ where: query }),
 

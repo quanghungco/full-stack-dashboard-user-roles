@@ -81,7 +81,7 @@ const PaymentHistoryPage = async ({
   
 
   // Handle pagination and search parameters
-  const { page, perPage } = await searchParams;
+  const { page, perPage, sort } = await searchParams;
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
@@ -101,6 +101,9 @@ const PaymentHistoryPage = async ({
       },
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
+      orderBy: {
+        createdAt: (sort as "asc" | "desc") || "desc",
+      },
     }),
     prisma.payment.count({ where: query }),
   ]);
