@@ -293,7 +293,7 @@ const FormModal = ({
         <Image src={`/${type}.png`} alt="" width={16} height={16} />
       </button>
       {open && (
-        <div className="w-full h-full absolute left-0 top-0 bg-black bg-opacity-40 z-50 flex items-center  ">
+        <div className="w-full h-full absolute left-0 top-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
           <div className="bg-white ml-5 dark:bg-black p-4 rounded-md relative w-[90%] md:w-[70%] overflow-x-auto overflow-y-auto max-h-[90vh]">
             <Form />
 
