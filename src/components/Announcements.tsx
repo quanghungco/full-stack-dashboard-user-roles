@@ -20,7 +20,7 @@ const Announcements = async () => {
   });
 
   return (
-    <div className="bg-white dark:bg-[#18181b] rounded-md select-none">
+    <div className="bg-white dark:bg-[#18181b] rounded-md select-none p-3">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Announcements</h1>
         <span className="text-xs text-gray-400 cursor-pointer">View All</span>

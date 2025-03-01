@@ -30,6 +30,7 @@ const AnnouncementListPage = async ({
     {
       header: "Description", // Corrected spelling from "Discription" to "Description"
       accessor: "description", // Corrected accessor from "discription" to "description"
+      className: "hidden md:table-cell",
     },
     {
       header: "Start Date",
@@ -39,7 +40,7 @@ const AnnouncementListPage = async ({
     {
       header: "End Date",
       accessor: "endDate",
-      className: "hidden md:table-cell",
+
     },
     ...(role === "admin"
       ? [
@@ -65,7 +66,7 @@ const AnnouncementListPage = async ({
       <td className="hidden md:table-cell gap-4 text-center">
         {new Intl.DateTimeFormat("en-US").format(item.startDate)}
       </td>
-      <td className="hidden md:table-cell gap-4 text-center">
+      <td className=" gap-4 text-center">
 
         {new Intl.DateTimeFormat("en-US").format(item.endDate)}
       </td>

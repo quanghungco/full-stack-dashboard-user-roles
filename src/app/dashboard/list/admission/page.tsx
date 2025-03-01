@@ -29,10 +29,12 @@ const AdmissionListPage = async ({
     {
       header: "Father Name",
       accessor: "fatherName",
+      className: "hidden md:table-cell",
     },
     {
       header: "Mother Name",
       accessor: "motherName",
+      className: "hidden md:table-cell",
     },
     {
       header: "Contact Number", // Corrected spelling from "Discription" to "Description"
@@ -66,7 +68,7 @@ const AdmissionListPage = async ({
       
       <td className="hidden md:table-cell gap-4 text-center">{item.fatherName}</td>
       <td className="hidden md:table-cell gap-4 text-center">{item.motherName}</td>
-      <td className="hidden md:table-cell gap-4 text-center">
+      <td className=" gap-4 text-center">
 
         {item.contactNumber.length > 11 
           ? item.contactNumber.split(' ').slice(0, 11).join(' ') + '...'

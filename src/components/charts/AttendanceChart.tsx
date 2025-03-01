@@ -16,8 +16,13 @@ const AttendanceChart = ({
   data: { name: string; present: number; absent: number }[];
 }) => {
   return (
-    <ResponsiveContainer width="100%" height="90%">
-      <BarChart width={500} height={300} data={data} barSize={20}>
+    <ResponsiveContainer width="100%" height={370}>
+      <BarChart margin={{
+        top: 5,
+        right: 5,
+        left: 0,
+        bottom: 0,
+      }} data={data} barSize={20}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ddd" />
         <XAxis
           dataKey="name"
@@ -25,7 +30,7 @@ const AttendanceChart = ({
           tick={{ fill: "#d1d5db" }}
           tickLine={false}
         />
-        <YAxis axisLine={false} tick={{ fill: "#d1d5db" }} tickLine={false} />
+        <YAxis tickMargin={20} axisLine={false} tick={{ fill: "#d1d5db" }} tickLine={false} />
         <Tooltip
           contentStyle={{ borderRadius: "10px", borderColor: "lightgray" }}
         />

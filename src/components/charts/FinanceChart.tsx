@@ -71,10 +71,10 @@ const FinanceChart = ({ data }: FinanceChartProps) => {
       <BarChart
         data={data}
         margin={{
-          top: 20,
-          right: 30,
-          left: 20,
-          bottom: 5,
+          top: 5,
+          right: 5,
+          left: 0,
+          bottom: 30,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" stroke="#ddd" vertical={false} />
@@ -83,7 +83,7 @@ const FinanceChart = ({ data }: FinanceChartProps) => {
           axisLine={false}
           tick={{ fill: "#d1d5db" }}
           tickLine={false}
-          tickMargin={10}
+
         />
         <YAxis
           axisLine={false}
