@@ -89,7 +89,7 @@ const ClassMaterialForm: React.FC<FormProps> = ({
                {type === "create" ? "Create a new Class Material" : "Update the Class Material"}
             </h1>
 
-            <div className="flex gap-4 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full">
                <InputField
                   label="Title"
                   name="title"

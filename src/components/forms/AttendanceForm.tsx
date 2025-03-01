@@ -72,8 +72,8 @@ const AttendanceForm = ({
           : "Update Attendance Record"}
       </h1>
 
-      <div className="flex justify-between flex-wrap gap-4">
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-2 w-full ">
           <label className="text-xs text-gray-500">Class</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
@@ -101,7 +101,7 @@ const AttendanceForm = ({
           register={register}
           error={errors?.date}
         />
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full ">
           <label className="text-xs text-gray-500">Day</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
@@ -121,7 +121,7 @@ const AttendanceForm = ({
             <p className="text-xs text-red-400">{errors.day.message}</p>
           )}
         </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full ">
           <label className="text-xs text-gray-500">Total Students</label>
           <input
             type="number"
@@ -133,7 +133,7 @@ const AttendanceForm = ({
             <p className="text-xs text-red-400">{errors.total.message}</p>
           )}
         </div>
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full">
           <label className="text-xs text-gray-500">Present Students</label>
           <input
             type="number"

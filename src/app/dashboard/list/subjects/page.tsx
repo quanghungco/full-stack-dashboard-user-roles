@@ -92,7 +92,7 @@ const SubjectListPage = async ({
       take: itemsPerPage,
       skip: itemsPerPage * (p - 1),
       orderBy: {
-        name: (sort as "asc" | "desc") || "asc",
+        id: (sort as "asc" | "desc") || "asc",
       },
     }),
     prisma.subject.count({ where: query }),

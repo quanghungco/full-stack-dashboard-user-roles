@@ -6,8 +6,7 @@ import InputField from "../InputField";
 import { subjectSchema, SubjectSchema } from "@/schema/formValidationSchemas";
 // import { createSubject, updateSubject } from "@/lib/actions";
 import { createSubject, updateSubject } from "@/lib/subjectAction";
-import { useFormState } from "react-dom";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -33,7 +32,7 @@ const SubjectForm = ({
 
   // AFTER REACT 19 IT'LL BE USEACTIONSTATE
 
-  const [state, formAction] = useFormState(
+  const [state, formAction] = useActionState(
     type === "create" ? createSubject : updateSubject,
     {
       success: false,

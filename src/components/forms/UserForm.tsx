@@ -69,7 +69,7 @@ const UserForm = ({
         {type === "create" ? "Create a new user" : "Update the user"}
       </h1>
 
-      <div className="flex justify-between flex-wrap gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <InputField
           label="Name*"
           name="name"
@@ -108,7 +108,7 @@ const UserForm = ({
             hidden
           />
         )}
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full ">
           <label className="text-xs text-gray-500">Role*</label>
           <select
             className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"

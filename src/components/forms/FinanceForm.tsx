@@ -54,9 +54,9 @@ const FinanceForm = ({
     <form onSubmit={onSubmit} className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md">
       <h1 className="text-xl font-semibold">{type === "create" ? "Create Finance Record" : "Update Finance Record"}</h1>
 
-      <div className="flex justify-between flex-wrap gap-4 w-full ">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4  ">
         {/* Finance Type Dropdown */}
-        <div className="flex flex-col gap-2 w-full md:w-1/4">
+        <div className="flex flex-col gap-2 w-full">
           <label className="text-xs text-gray-500">Finance Type</label>
 
           <select          
