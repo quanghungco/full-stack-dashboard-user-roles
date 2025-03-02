@@ -5,6 +5,7 @@ import Table from "@/components/Table";
 import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/shared/TableSearch";
 import PaymentForm from "@/components/forms/PaymentForm";
+import SortButton from "./shared/SortButton";
 
 
 
@@ -38,11 +39,11 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
   };
 
   const columns = [
-    { header: "Student Name", accessor: "name" },
+    { header: "Student Name", accessor: "name", className: "hidden lg:table-cell" },
     { header: "Student ID", accessor: "username" },
     { header: "Fees", accessor: "fees" },
-    { header: "Due Fees", accessor: "due" },
-    { header: "Paid Fees", accessor: "paid" },
+    { header: "Due Fees", accessor: "due", className: "hidden lg:table-cell" },
+    { header: "Paid Fees", accessor: "paid", className: "hidden lg:table-cell" },
     { header: "Status", accessor: "status" },
     { header: "Action", accessor: "Action" },
 
@@ -61,11 +62,11 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
 
     return (
       <tr key={student.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
-        <td className="flex items-center gap-4 p-4 justify-center">{student.name}</td>
-        <td className="text-center ">{student.username}</td>
+        <td className="lg:flex items-center gap-4 p-4 justify-center hidden ">{student.name}</td>
+        <td className="text-center p-4">{student.username}</td>
         <td className="text-center">{classes ? classes.fees : 0}</td>
-        <td className="text-center">{due > 0 ? due : 0}</td>
-        <td className="text-center">{totalPaid}</td>
+        <td className="text-center hidden lg:block">{due > 0 ? due : 0}</td>
+        <td className="text-center hidden lg:block">{totalPaid}</td>
         <td className={`text-center `}>
           <span className={`text-center font-semibold py-1 px-2 rounded-full ${payment ? (payment.status === "Paid" ? "text-green-800 bg-green-100" : payment.status === "Not Paid" ? "text-red-500 bg-red-100"  : "text-orange-500 bg-orange-100") : "text-red-600 bg-red-100"}`}>
           {payment ? payment.status : "Not Paid"}
@@ -73,7 +74,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
         </td>
 
 
-        <td className="flex justify-center">
+        <td className="flex justify-center py-4">
           <button
             onClick={() => handleOpenForm(student.username)}
             className="bg-sky-500 text-white px-4 py-1 rounded-md"
@@ -89,9 +90,10 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
     <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex-1 m-4 mt-0">
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">Payments</h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
         </div>
+        <SortButton />
       </div>
 
       <Table columns={columns} renderRow={renderRow} data={students} />

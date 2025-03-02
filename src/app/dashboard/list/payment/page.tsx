@@ -12,7 +12,7 @@ const Payments = async ({
   const session = await getServerSession(authOptions); 
   const role = session?.user?.role?.toLowerCase();
 
-  const { page, perPage } = await searchParams;
+  const { page, perPage, sort } = await searchParams;
   const p = page ? parseInt(page) : 1;
   const itemsPerPage = perPage ? parseInt(perPage) : ITEM_PER_PAGE;
 
@@ -27,7 +27,7 @@ const Payments = async ({
             status: true,
           },
           orderBy: {
-            createdAt: "desc",
+            createdAt: (sort as "asc" | "desc") || "desc",
           },
           take: 1,
         },

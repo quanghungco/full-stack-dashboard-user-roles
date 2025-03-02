@@ -8,6 +8,7 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/auth";
+import SortButton from "@/components/shared/SortButton";
 
 export type PaymentHistory = Payment;
 
@@ -24,6 +25,7 @@ const PaymentHistoryPage = async ({
     {
       header: "Student Name",
       accessor: "studentName",
+      className: "hidden md:table-cell",
     },
     {
       header: "Student ID",
@@ -32,6 +34,7 @@ const PaymentHistoryPage = async ({
     {
       header: "Amount",
       accessor: "amount",
+      className: "hidden md:table-cell",
     },
     {
       header: "Payment Date",
@@ -41,7 +44,7 @@ const PaymentHistoryPage = async ({
     {
       header: "Status",
       accessor: "status",
-      className: "hidden md:table-cell",
+      className: "",
     },
     ...(role === "admin"
       ? [
@@ -56,8 +59,8 @@ const PaymentHistoryPage = async ({
   // Define renderRow function to render each payment row
   const renderRow = (item: PaymentHistory & { student: { name: string; surname: string; }; className: string }) => (
     <tr key={item.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
-      <td className="flex items-center p-4 justify-center">{item.student.name} {item.student.surname}</td>
-      <td className="text-center">{item.studentId}</td>
+      <td className="lg:flex items-center py-4 justify-center hidden ">{item.student.name} {item.student.surname}</td>
+      <td className="text-center py-4">{item.studentId}</td>
       <td className="hidden md:table-cell gap-4 text-center">TK {item.amount}</td>
       <td className="hidden md:table-cell gap-4 text-center">{new Intl.DateTimeFormat("en-CA").format(new Date(item.createdAt))}</td>
       <td className={`text-center font-semibold ${item ? (item.status === "Paid" ? "text-green-500 " : "text-orange-500") : "text-red-500"}`}>{item.status}</td>
@@ -122,14 +125,11 @@ const PaymentHistoryPage = async ({
       {/* TOP */}
       <div className="flex items-center justify-between">
         <h1 className="hidden md:block text-lg font-semibold">Payment History</h1>
-        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
-          {/* <div className="flex items-center gap-4 self-end">
-            {role === "admin" && (
-              <FormModal table="payment" type="create" />
-            )}
-          </div> */}
+
         </div>
+        <SortButton />
       </div>
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={payments} />

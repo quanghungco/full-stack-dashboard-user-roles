@@ -18,7 +18,7 @@ const Header = () => {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-
+    const role = user?.role.toLowerCase();
     return (
         <header className="bg-gray-900 text-white py-4 shadow-md relative">
             <div className="container mx-auto px-4">
@@ -26,7 +26,7 @@ const Header = () => {
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center gap-2">
                             <Image src="/logo.png" alt="logo" width={32} height={32} />
-                            <span className="hidden md:block font-bold text-2xl">GenSchool</span>
+                            <span className="font-bold text-2xl">GenSchool</span>
                         </Link>
                     </div>
 
@@ -89,7 +89,7 @@ const Header = () => {
                 {/* Mobile navigation */}
                 <nav
                     className={`${isMenuOpen ? "block" : "hidden"
-                        } md:hidden absolute left-0 right-0 top-full bg-sky-900 shadow-lg`}
+                        } md:hidden absolute  right-0 top-full w-[50%] bg-gray-900/90 shadow-lg`}
                 >
                     <ul className="px-4 py-2">
                         {menuItems.map((item) => (
@@ -101,16 +101,26 @@ const Header = () => {
                                 >
                                     {item.label}
                                 </Link>
+
                             </li>
                         ))}
+                        <li className="py-2">
+                            <Link
+                                href={`/dashboard/${role}`}
+                                className="block hover:text-gray-300 transition duration-200"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Dashboard
+                            </Link>
+                        </li>
                     </ul>
                     {/* Auth buttons */}
-                    <div className="px-4 py-2 border-t border-sky-800 md:border-0" >
+                    <div className="px-4 py-4 border-t border-sky-800 md:border-0 " >
                         {user ? (
-                            <>
+                            <span className="flex items-center gap-4">
                                 <UserNav />
-                                <span className="ml-2">{user?.name}</span>
-                            </>
+                                <span className="">{user?.name}</span>
+                            </span>
                         ) : (
                             <Link href="/auth/login">
                                 <Button

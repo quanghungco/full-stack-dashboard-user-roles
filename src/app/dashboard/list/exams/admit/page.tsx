@@ -19,10 +19,10 @@ const AdmitPage = async ({
 //   const role = session?.user?.role?.toLowerCase();
 
   const columns = [
-    { header: "Student Name", accessor: "studentName" },
+    { header: "Student Name", accessor: "studentName", className: "hidden md:table-cell" },
     { header: "Student ID", accessor: "studentId" },
     { header: "Class", accessor: "class" },
-    { header: "Payment Status", accessor: "status" },
+    { header: "Payment Status", accessor: "status", className: "hidden md:table-cell" },
     { header: "Actions", accessor: "actions" },
   ];
 
@@ -90,10 +90,10 @@ const [paidStudents, count] = await prisma.$transaction([
 
   const renderRow = (payment: any) => (
     <tr key={payment.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
-      <td className="px-6 py-4 text-center">{payment.student.name}</td>
+      <td className="px-6 py-4 text-center hidden lg:block">{payment.student.name}</td>
       <td className="px-6 py-4 text-center">{payment.student.username}</td>
       <td className="px-6 py-4 text-center">{payment.student.class.name}</td>
-      <td className="px-6 py-4 text-center">
+      <td className="px-6 py-4 text-center  hidden lg:block">
         <span className="px-2 py-1 font-semibold bg-green-100 text-green-800 rounded-full">
           {payment.status}
         </span>
@@ -116,8 +116,8 @@ const [paidStudents, count] = await prisma.$transaction([
   return (
     <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex-1 m-4 mt-0">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Admit Cards</h1>
-        <div className="flex gap-2">
+        <h1 className="text-xl font-bold hidden lg:block">Admit Cards</h1>
+        <div className="flex flex-row items-center gap-4 w-full md:w-auto">
         <TableSearch />
           <SortButton />
         </div>
