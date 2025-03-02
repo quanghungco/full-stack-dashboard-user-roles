@@ -36,7 +36,7 @@ const AdminPage = async () => {
         {/* BOTTOM CHART */}
         <div className="w-full h-[500px]">
           <Suspense fallback={
-            <div className="bg-white dark:bg-[#18181b] rounded-xl w-full h-full p-4 flex items-center justify-center">
+            <div className="bg-white dark:bg-[#18181b]  shadow-lg  rounded-xl w-full h-full p-4 flex items-center justify-center">
               <p>Loading finance data...</p>
             </div>
           }>

@@ -66,17 +66,17 @@ const Header = () => {
                                     </Link>
                                 </li>
                             ))}
-                            <li className="px-4  border-t border-blue-800 md:border-0" >
+                            <li className="px-4  border-t border-sky-800 md:border-0" >
                                 {user ? (
                                     <UserNav />
                                 ) : (
                                     <Link href="/auth/login">
                                         <Button
-                                            variant="outline"
+
                                             size="sm"
-                                            className="border-blue-500/30 text-blue-500 hover:text-blue-400"
+                                                className=" text-white bg-sky-400 hover:bg-sky-500"
                                         >
-                                            Sign in
+                                                Sign in
                                         </Button>
                                     </Link>
                                 )}

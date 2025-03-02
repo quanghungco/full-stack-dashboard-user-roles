@@ -82,7 +82,7 @@ const ClassMaterialForm: React.FC<FormProps> = ({
    return (
       <div>
          <form
-            className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md"
+            className="flex flex-col gap-8 bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md shadow-md"
             onSubmit={handleSubmit(onSubmit)}
          >
             <h1 className="text-xl font-semibold">

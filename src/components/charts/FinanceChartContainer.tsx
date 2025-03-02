@@ -77,7 +77,7 @@ const FinanceChartContainer = async () => {
 
 
     return (
-      <div className="bg-white dark:bg-[#18181b] rounded-xl w-full h-full p-4">
+      <div className="bg-white shadow-lg dark:bg-[#18181b] rounded-xl w-full h-full p-4">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="text-lg font-semibold">Financial Overview</h1>
@@ -119,7 +119,7 @@ const FinanceChartContainer = async () => {
   } catch (error) {
     console.error("Error in FinanceChartContainer:", error);
     return (
-      <div className="bg-white dark:bg-[#18181b] rounded-xl w-full h-full p-4 flex items-center justify-center">
+      <div className="bg-white dark:bg-[#18181b]  shadow-lg  rounded-xl w-full h-full p-4 flex items-center justify-center">
         <p className="text-red-500">Error loading finance data</p>
       </div>
     );

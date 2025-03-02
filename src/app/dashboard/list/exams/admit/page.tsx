@@ -114,7 +114,7 @@ const [paidStudents, count] = await prisma.$transaction([
   
 
   return (
-    <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex-1 m-4 mt-0">
+    <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex-1 m-4 mt-0">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold">Admit Cards</h1>
         <div className="flex gap-2">

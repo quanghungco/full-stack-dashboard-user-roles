@@ -20,7 +20,7 @@ const emergencyNumbers = [
 
 const EmergencyNumbers: React.FC = () => {
   return (
-    <div className="w-full mx-auto bg-white dark:bg-[#18181b] shadow-md rounded-lg overflow-hidden mt-10">
+    <div className="w-full mx-auto bg-white dark:bg-[#18181b]  shadow-lg  shadow-md rounded-lg overflow-hidden mt-10">
       <div className=" text-[#ff0000] text-center py-4 border-b">
         <h1 className="text-xl font-semibold flex gap-2 items-center justify-center"><MdContactEmergency /> Emergency Contacts </h1>
       </div>

@@ -73,7 +73,7 @@ const FinanceChart = ({ data }: FinanceChartProps) => {
         margin={{
           top: 5,
           right: 5,
-          left: 0,
+          left: 40,
           bottom: 30,
         }}
       >

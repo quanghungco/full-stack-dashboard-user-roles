@@ -56,7 +56,7 @@ const PaymentForm = ({
   return (
     <form
       onSubmit={onSubmit}
-      className="relative flex flex-col gap-6 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md"
+      className="relative flex flex-col gap-6 bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md shadow-md"
     >
       {/* Close Button */}
       <button

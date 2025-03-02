@@ -20,7 +20,7 @@ const Announcements = ({ data }: { data: any[] }) => {
 
 
   return (
-    <div className="bg-white dark:bg-[#18181b] rounded-md select-none p-3">
+    <div className="bg-white shadow-lg dark:bg-[#18181b] rounded-md select-none p-3">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Announcements</h1>
         <span

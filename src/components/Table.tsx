@@ -20,7 +20,17 @@ const Table = ({
         </tr>
       </thead>
       <Suspense fallback={<Loading />}>
-        <tbody>{data.map((item) => renderRow(item))}</tbody>
+        <tbody>
+          {data.length > 0 ? (
+            data.map((item) => renderRow(item))
+          ) : (
+            <tr>
+              <td colSpan={columns.length} className="text-center py-4 text-gray-500">
+                No records available
+              </td>
+            </tr>
+          )}
+        </tbody>
       </Suspense>
     </table>
   );

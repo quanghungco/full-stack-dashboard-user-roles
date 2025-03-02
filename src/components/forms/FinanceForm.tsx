@@ -51,7 +51,7 @@ const FinanceForm = ({
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-8 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md">
+    <form onSubmit={onSubmit} className="flex flex-col gap-8 bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md shadow-md">
       <h1 className="text-xl font-semibold">{type === "create" ? "Create Finance Record" : "Update Finance Record"}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4  ">

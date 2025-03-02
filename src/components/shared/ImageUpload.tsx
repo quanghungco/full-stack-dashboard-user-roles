@@ -39,7 +39,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onFileSelect, defaultImage })
   };
 
   return (
-    <div className="flex flex-col w-[250px] gap-4 bg-white dark:bg-[#18181b] p-4 rounded-md shadow-md">
+    <div className="flex flex-col w-[250px] gap-4 bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md shadow-md">
       {preview && (
         <Image
           src={preview}

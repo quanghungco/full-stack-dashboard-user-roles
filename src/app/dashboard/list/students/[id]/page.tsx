@@ -118,7 +118,7 @@ const SingleStudentPage = async ({
               </Suspense>
             </div> */}
             {/* CARD */}
-            <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex gap-4 w-full ">
+            <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex gap-4 w-full ">
               <Image
                 src="/singleBranch.png"
                 alt=""
@@ -135,7 +135,7 @@ const SingleStudentPage = async ({
               </div>
             </div>
             {/* CARD */}
-            <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex gap-4 w-full ">
+            <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex gap-4 w-full ">
               <Image
                 src="/singleLesson.png"
                 alt=""
@@ -151,7 +151,7 @@ const SingleStudentPage = async ({
               </div>
             </div>
             {/* CARD */}
-            <div className="bg-white dark:bg-[#18181b] p-4 rounded-md flex gap-4 w-full ">
+            <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex gap-4 w-full ">
               <Image
                 src="/singleClass.png"
                 alt=""
@@ -167,14 +167,14 @@ const SingleStudentPage = async ({
           </div>
         </div>
         {/* BOTTOM */}
-        <div className="h-fit mt-4 bg-white dark:bg-[#18181b] rounded-md p-4">
+        <div className="h-fit mt-4 bg-white dark:bg-[#18181b]  shadow-lg  rounded-md p-4">
           <h1>Student&apos;s Schedule</h1>
           <BigCalendarContainer type="classId" id={student.class.id} />
         </div>
       </div>
       {/* RIGHT */}
       <div className="w-full xl:w-1/3 flex flex-col gap-4">
-        <div className="bg-white dark:bg-[#18181b] p-4 rounded-md">
+        <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md">
           <h1 className="text-xl font-semibold">Shortcuts</h1>
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
             {/* <Link
