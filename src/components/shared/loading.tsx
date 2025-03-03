@@ -1,8 +1,8 @@
 const Loading = () => {
   return (
     <div className="px-4 animate-pulse w-full">
-      <div className=" rounded-lg overflow-hidden shadow-md">
-        <div className="p-4">
+      <div className=" rounded-lg overflow-hidden">
+        <div className="p-4 w-full">
           {[...Array(10)].map((_, index) => (
             <div
               key={index}
