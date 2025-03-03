@@ -1,7 +1,6 @@
 import BigCalendarContainer from "@/components/BigCalendarContainer";
 import FormContainer from "@/components/forms/FormContainer";
 import Performance from "@/components/Performance";
-// import StudentAttendanceCard from "@/components/StudentAttendanceCard";
 import prisma from "@/lib/prisma";
 import { Class, Student } from "@prisma/client";
 import Image from "next/image";
@@ -46,7 +45,7 @@ const SingleStudentPage = async ({
         {/* TOP */}
         <div className="grid grid-cols-1 lg:grid-cols-3 md:gap-4 ">
           {/* USER INFO CARD */}
-          <div className="bg-lamaSky dark:bg-gray-600 py-6 px-4 rounded-md  w-full col-span-2">
+          <div className="bg-lamaSky shadow-lg dark:bg-gray-600 py-6 px-4 rounded-md  w-full col-span-2">
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
                 <Image
@@ -102,21 +101,8 @@ const SingleStudentPage = async ({
           </div>
           {/* SMALL CARDS */}
           <div className="flex flex-col gap-y-2 w-full md:col-span-1 mt-4 md:mt-0">
-            {/* CARD */}
 
-            {/* <div className="bg-white p-4 rounded-md flex gap-4 w-full md:w-[48%] xl:w-[45%] 2xl:w-[48%]">
-              <Image
-                src="/singleAttendance.png"
-                alt=""
-                width={20}
-                height={20}
-                className="w-5 h-5"
-              />
 
-              <Suspense fallback="loading...">
-                <StudentAttendanceCard id={student.id} />
-              </Suspense>
-            </div> */}
             {/* CARD */}
             <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex gap-4 w-full ">
               <Image
@@ -177,12 +163,7 @@ const SingleStudentPage = async ({
         <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md">
           <h1 className="text-xl font-semibold">Shortcuts</h1>
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
-            {/* <Link
-              className="p-3 rounded-md bg-lamaSkyLight"
-              href={`/list/lessons?classId=${student.class.id}`}
-            >
-              Student Lessons
-            </Link> */}
+
             <Link
               className="p-3 rounded-md bg-lamaPurpleLight"
               href={`/list/teachers?classId=${student.class.id}`}

@@ -50,7 +50,7 @@ const SingleTeacherPage = async ({
         {/* TOP */}
         <div className="grid grid-cols-1 lg:grid-cols-3 md:gap-4 ">
           {/* USER INFO CARD */}
-          <div className="bg-lamaSky dark:bg-gray-600 py-6 px-4 rounded-md  w-full col-span-2">
+          <div className="bg-lamaSky shadow-lg dark:bg-gray-600 py-6 px-4 rounded-md  w-full col-span-2">
             <div className=" flex-1 flex gap-4">
               <div className="w-1/3">
                 <Image
@@ -77,7 +77,7 @@ const SingleTeacherPage = async ({
                     )}
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-300 mt-2">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    Teacher
                   </p>
                 </div>
               </div>
@@ -124,25 +124,10 @@ const SingleTeacherPage = async ({
                 <h1 className="text-xl font-semibold">
                   {teacher._count.subjects}
                 </h1>
-                <span className="text-sm text-gray-400">Branches</span>
+                <span className="text-sm text-gray-400">Subjects</span>
               </div>
             </div>
-            {/* CARD */}
-            <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex gap-4 w-full ">
-              <Image
-                src="/singleLesson.png"
-                alt=""
-                width={24}
-                height={24}
-                className="w-6 h-6"
-              />
-              <div className="">
-                <h1 className="text-xl font-semibold">
-                  {teacher._count.lessons}
-                </h1>
-                <span className="text-sm text-gray-400">Lessons</span>
-              </div>
-            </div>
+
             {/* CARD */}
             <div className="bg-white dark:bg-[#18181b]  shadow-lg  p-4 rounded-md flex gap-4 w-full ">
               <Image
@@ -163,7 +148,7 @@ const SingleTeacherPage = async ({
         </div>
         {/* BOTTOM */}
         <div className="mt-4 bg-white dark:bg-[#18181b]  shadow-lg  rounded-md p-4 h-[800px]">
-          <h1>Teacher&apos;s Schedule</h1>
+          <h1 className="text-2xl">Teacher&apos;s Schedule</h1>
           <BigCalendarContainer type="teacherId" id={teacher.id} />
         </div>
       </div>
@@ -178,24 +163,7 @@ const SingleTeacherPage = async ({
             >
               Teacher&apos;s Classes
             </Link>
-            <Link
-              className="p-3 rounded-md bg-lamaPurpleLight"
-              href={`/list/students?teacherId=${teacher.id}`}
-            >
-              Teacher&apos;s Students
-            </Link>
-            <Link
-              className="p-3 rounded-md bg-lamaYellowLight"
-              href={`/list/lessons?teacherId=${teacher.id}`}
-            >
-              Teacher&apos;s Lessons
-            </Link>
-            <Link
-              className="p-3 rounded-md bg-pink-50"
-              href={`/list/exams?teacherId=${teacher.id}`}
-            >
-              Teacher&apos;s Exams
-            </Link>
+
             <Link
               className="p-3 rounded-md bg-lamaSkyLight"
               href={`/list/assignments?teacherId=${teacher.id}`}

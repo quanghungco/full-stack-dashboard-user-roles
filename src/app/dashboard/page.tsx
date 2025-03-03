@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/auth";
+import { Suspense } from "react";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -12,5 +13,6 @@ export default async function DashboardPage() {
 
   const role = (session?.user?.role as string)?.toLowerCase();
 
-  return redirect(`/dashboard/${role}`);
+  return <Suspense fallback={<div>Loading...</div>}> {redirect(`/dashboard/${role}`)}</Suspense>;
+
 }

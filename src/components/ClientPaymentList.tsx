@@ -43,9 +43,16 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
     { header: "Student ID", accessor: "username" },
     { header: "Fees", accessor: "fees" },
     { header: "Due Fees", accessor: "due", className: "hidden lg:table-cell" },
-    { header: "Paid Fees", accessor: "paid", className: "hidden lg:table-cell" },
+    { header: "Paid Fees", accessor: "paid", },
     { header: "Status", accessor: "status" },
-    { header: "Action", accessor: "Action" },
+    ...(role === "admin"
+      ? [
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
+      : [])
 
   ];
 
@@ -55,25 +62,27 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
     const totalPaid = payments
       .filter(payment => payment.studentId === student.username)
       .reduce((sum, payment) => sum + payment.amount, 0);
-    console.log(totalPaid);
+    // console.log(totalPaid);
     const due = classes ? Math.max(classes.fees - totalPaid, 0) : 0;
     
 
 
     return (
+
+
       <tr key={student.id} className="border-b border-gray-200 dark:border-white/20 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight dark:bg-[#18181b] dark:hover:bg-gray-600 dark:even:bg-[#242429]">
         <td className="lg:flex items-center gap-4 p-4 justify-center hidden ">{student.name}</td>
         <td className="text-center p-4">{student.username}</td>
         <td className="text-center">{classes ? classes.fees : 0}</td>
         <td className="text-center hidden lg:block">{due > 0 ? due : 0}</td>
-        <td className="text-center hidden lg:block">{totalPaid}</td>
+        <td className="text-center">{totalPaid ? totalPaid : 0}</td>
         <td className={`text-center `}>
           <span className={`text-center font-semibold py-1 px-2 rounded-full ${payment ? (payment.status === "Paid" ? "text-green-800 bg-green-100" : payment.status === "Not Paid" ? "text-red-500 bg-red-100"  : "text-orange-500 bg-orange-100") : "text-red-600 bg-red-100"}`}>
           {payment ? payment.status : "Not Paid"}
           </span>
         </td>
 
-
+        {role === "admin" && (
         <td className="flex justify-center py-4">
           <button
             onClick={() => handleOpenForm(student.username)}
@@ -82,6 +91,7 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
             Pay
           </button>
         </td>
+        )}
       </tr>
     );
   };
@@ -92,8 +102,8 @@ const ClientPaymentList = ({ students, total, role, page, perPage, payments}: { 
         <h1 className="hidden md:block text-lg font-semibold">Payments</h1>
         <div className="flex flex-row items-center gap-4 w-full md:w-auto">
           <TableSearch />
+          <SortButton />
         </div>
-        <SortButton />
       </div>
 
       <Table columns={columns} renderRow={renderRow} data={students} />
