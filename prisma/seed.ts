@@ -1,5 +1,18 @@
-import { Day, PrismaClient, UserSex } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
+
+enum UserSex {
+  MALE = "MALE",
+  FEMALE = "FEMALE"
+}
+
+enum Day {
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY"
+}
 
 async function main() {
   // ADMIN
