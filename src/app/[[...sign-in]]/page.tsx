@@ -26,7 +26,7 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logoConfig, setLogoConfig] = useState<LogoConfig>({
-    imageUrl: '/default-logo.png', // Default logo
+    imageUrl: '/logo.png', // Updated path to match your public folder
     alt: 'School Logo',
     width: 200,
     height: 80
@@ -160,11 +160,11 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        {/* Logo Section */}
+        {/* Updated Logo Section */}
         <div className="flex flex-col items-center">
           <div className="w-auto relative mb-4">
             <Image
-              src={logoConfig.imageUrl}
+              src="/logo.png" // Updated path - files in public folder are served from root
               alt={logoConfig.alt}
               width={logoConfig.width}
               height={logoConfig.height}
