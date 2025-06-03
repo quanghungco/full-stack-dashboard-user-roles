@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import type { LogoConfig } from '@/types/logo';
+import { UserCircle, GraduationCap, Users2, Building2, School, Users } from 'lucide-react';
 
 type AuthStep = "identifier" | "verify" | "new-password";
 type UserRole = "superadmin" | "admin" | "accountant" | "teacher" | "student" | "parent";
@@ -19,10 +20,20 @@ const roleRoutes: Record<UserRole, string> = {
   parent: "/parent/dashboard",
 };
 
+const roleIcons = {
+  superadmin: <Building2 className="w-8 h-8" />,
+  admin: <Users2 className="w-8 h-8" />,
+  accountant: <School className="w-8 h-8" />,
+  teacher: <UserCircle className="w-8 h-8" />,
+  student: <GraduationCap className="w-8 h-8" />,
+  parent: <Users className="w-8 h-8" />
+};
+
 const LoginPage = () => {
   const router = useRouter();
   const [authStep, setAuthStep] = useState<AuthStep>("identifier");
-  const [selectedRole, setSelectedRole] = useState<UserRole>("student");
+  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<UserRole>("admin"); // Changed default to admin
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logoConfig, setLogoConfig] = useState<LogoConfig>({
@@ -65,35 +76,9 @@ const LoginPage = () => {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "User not found");
-      }
-
-      setAuthStep("verify");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleOtpVerification = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { data: session, error } = await supabase.auth.verifyOtp({
+      const { data: { user }, error } = await supabase.auth.signInWithPassword({
         email: identifier,
-        token: otp,
-        type: 'email',
+        password: password,
       });
 
       if (error) throw error;
@@ -102,45 +87,18 @@ const LoginPage = () => {
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('role')
-        .eq('email', identifier)
+        .eq('id', user.id)
         .single();
 
       if (userError) throw userError;
 
-      const userRole = userData.role as UserRole;
-      const targetRoute = roleRoutes[userRole] || '/dashboard';
-      router.push(targetRoute);
+      if (userData.role !== selectedRole) {
+        throw new Error(`Invalid role. Please select the correct role for your account.`);
+      }
 
+      router.push(roleRoutes[selectedRole]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Invalid verification code");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePasswordSetup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Replace with your API endpoint
-      const response = await fetch("/api/auth/set-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identifier, password: newPassword }),
-      });
-
-      if (!response.ok) throw new Error("Failed to set password");
-
-      router.push("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to set password");
+      setError(err instanceof Error ? err.message : "Invalid credentials");
     } finally {
       setIsLoading(false);
     }
@@ -159,159 +117,102 @@ const LoginPage = () => {
   // Update the role selection tabs in the return statement
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Updated Logo Section */}
-        <div className="flex flex-col items-center">
-          <div className="w-auto relative mb-4">
-            <Image
-              src="/logo.png" // Updated path - files in public folder are served from root
-              alt={logoConfig.alt}
-              width={logoConfig.width}
-              height={logoConfig.height}
-              priority
-              className="object-contain"
-            />
-          </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {authStep === "identifier" && "Sign in to your account"}
-            {authStep === "verify" && "Enter verification code"}
-            {authStep === "new-password" && "Set your password"}
+      <div className="w-full max-w-xl bg-white rounded-xl shadow-2xl p-8">
+        {/* Logo and Title */}
+        <div className="flex flex-col items-center mb-8">
+          <Image
+            src="/logo.png"
+            alt={logoConfig.alt}
+            width={logoConfig.width}
+            height={logoConfig.height}
+            priority
+            className="object-contain mb-4"
+          />
+          <h2 className="text-2xl font-bold text-gray-900">
+            Sign in to your account
           </h2>
         </div>
 
-        {/* Updated Role Selection Tabs */}
-        <div className="grid grid-cols-2 gap-2 rounded-md shadow-sm" role="group">
+        {/* Role Selection Grid */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
           {availableRoles.map((role) => (
             <button
               key={role}
-              type="button"
               onClick={() => setSelectedRole(role)}
               className={`
-                px-4 py-2 text-sm font-medium rounded-md
-                ${selectedRole === role
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-                }
-                border border-gray-200
-                transition-colors duration-200
+                flex flex-col items-center p-4 rounded-lg transition-all
+                ${selectedRole === role 
+                  ? 'bg-blue-50 border-2 border-blue-500 shadow-md' 
+                  : 'border-2 border-gray-200 hover:border-blue-300 hover:bg-gray-50'}
               `}
             >
-              {role.charAt(0).toUpperCase() + role.slice(1)}
+              <div className={`
+                ${selectedRole === role ? 'text-blue-500' : 'text-gray-500'}
+              `}>
+                {roleIcons[role]}
+              </div>
+              <span className={`
+                mt-2 text-sm font-medium
+                ${selectedRole === role ? 'text-blue-700' : 'text-gray-600'}
+              `}>
+                {role.charAt(0).toUpperCase() + role.slice(1)}
+              </span>
             </button>
           ))}
         </div>
 
+        {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
             {error}
           </div>
         )}
 
-        {authStep === "identifier" && (
-          <form onSubmit={handleIdentifierSubmit} className="mt-8 space-y-6">
-            <div>
-              <label
-                htmlFor="identifier"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email or Phone Number
-              </label>
-              <input
-                id="identifier"
-                type="text"
-                required
-                value={identifier}
-                onChange={(e) => setIdentifier(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                placeholder="Enter your email or phone"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              {isLoading ? "Sending..." : "Continue"}
-            </button>
-          </form>
-        )}
+        {/* Login Form */}
+        <form onSubmit={handleIdentifierSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="identifier" className="block text-sm font-medium text-gray-700">
+              Email or Phone Number
+            </label>
+            <input
+              id="identifier"
+              type="text"
+              required
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3"
+              placeholder="Enter your email or phone"
+            />
+          </div>
 
-        {authStep === "verify" && (
-          <form onSubmit={handleOtpVerification} className="mt-8 space-y-6">
-            <div>
-              <label
-                htmlFor="otp"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Verification Code
-              </label>
-              <input
-                id="otp"
-                type="text"
-                required
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                placeholder="Enter verification code"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              {isLoading ? "Verifying..." : "Verify Code"}
-            </button>
-          </form>
-        )}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              pattern="[0-9]*"
+              inputMode="numeric"
+              value={password}
+              onChange={(e) => {
+                const numericValue = e.target.value.replace(/[^0-9]/g, '');
+                setPassword(numericValue);
+              }}
+              className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3"
+              placeholder="Enter your numeric password"
+            />
+          </div>
 
-        {authStep === "new-password" && (
-          <form onSubmit={handlePasswordSetup} className="mt-8 space-y-6">
-            <div className="space-y-4">
-              <div>
-                <label
-                  htmlFor="new-password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  New Password
-                </label>
-                <input
-                  id="new-password"
-                  type="password"
-                  required
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                  placeholder="Enter new password"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="confirm-password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Confirm Password
-                </label>
-                <input
-                  id="confirm-password"
-                  type="password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                  placeholder="Confirm new password"
-                />
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              {isLoading ? "Setting up..." : "Set Password"}
-            </button>
-          </form>
-        )}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {isLoading ? "Signing in..." : "Sign in"}
+          </button>
+        </form>
       </div>
     </div>
   );
