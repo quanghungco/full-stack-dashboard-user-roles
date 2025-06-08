@@ -2,6 +2,6 @@
 export const connectorConfig = {
   connector: 'default',
   service: 'full-stack-school',
-  location: 'us-central1'
+  location: 'asia-east1'
 };
 

@@ -1,6 +1,6 @@
 specVersion: "v1"
 serviceId: "full-stack-school"
-location: "us-central1"
+location: "asia-east1"
 schema:
   source: "./schema"
   datasource:
