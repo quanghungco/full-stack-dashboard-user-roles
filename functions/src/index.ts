@@ -13,7 +13,6 @@ import {logger} from "firebase-functions";
 // Import the Genkit core libraries and plugins.
 import { genkit, z } from 'genkit';
 import GoogleGenerativeAI from '@genkit-ai/googleai';
-import { HarmCategory, HarmBlockThreshold } from '@genkit-ai/googleai';
 
 // Cloud Functions for Firebase supports Genkit natively.
 // The onCallGenkit function creates a callable function from a Genkit action.
@@ -25,13 +24,12 @@ import { onCallGenkit } from 'firebase-functions/https';
 // sensitive values can be controlled. defineSecret does this automatically.
 import { defineSecret } from 'firebase-functions/params';
 
-// The Firebase telemetry plugin exports a combination of metrics, traces,
-// and logs to Google Cloud Observability.
+// Define the API key secret
 const apiKey = defineSecret('GOOGLE_GENAI_API_KEY');
 
+// Initialize Genkit with Google AI plugin
 const ai = genkit({
   plugins: [
-    // Load the Google AI plugin.
     GoogleGenerativeAI(),
   ],
 });
@@ -64,42 +62,42 @@ const menuSuggestionFlow = ai.defineFlow(
   }
 );
 
-// Export the callable function
+// Define a flow for general text generation
+const textGenerationFlow = ai.defineFlow(
+  {
+    name: 'textGenerationFlow',
+    inputSchema: z.object({
+      prompt: z.string(),
+      context: z.string().optional(),
+    }),
+    outputSchema: z.string(),
+  },
+  async ({ prompt, context = '' }) => {
+    const fullPrompt = context ? `${prompt}\nContext: ${context}` : prompt;
+    const { response } = await ai.generate({
+      model: 'gemini-pro',
+      prompt: fullPrompt,
+    });
+    return response.text;
+  }
+);
+
+// Export the callable functions
 export const menuSuggestion = onCallGenkit(
   {
-    // Grant access to the API key to this function:
     secrets: [apiKey],
   },
   menuSuggestionFlow
 );
 
-// Generate Response Function
-export const generateResponse = async (
-  prompt: string,
-  context: string,
-): Promise<string> => {
-  try {
-    const response = await ai.generate({
-      model: 'gemini-pro',
-      prompt: prompt + context,
-      config: {
-        safetySettings: [
-          {
-            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE, // Add threshold
-          },
-        ],
-      },
-    });
-    const responseText = response.text;
-    return responseText;
-  } catch (error) {
-    console.error('Error generating response:', error);
-    throw error;
-  }
-};
+export const generateResponse = onCallGenkit(
+  {
+    secrets: [apiKey],
+  },
+  textGenerationFlow
+);
 
-// Example usage to fix unused variables warning
+// Basic API endpoint for health checks
 export const api = onRequest((req, res) => {
   logger.info("Request received:", req.path);
   res.json({status: "ok"});

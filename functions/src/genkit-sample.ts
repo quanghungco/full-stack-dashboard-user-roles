@@ -1,50 +1,68 @@
-// Import the Genkit core libraries and plugins.
+/**
+ * Import function triggers from their respective submodules:
+ *
+ * import {onCall} from "firebase-functions/v2/https";
+ * import {onDocumentWritten} from "firebase-functions/v2/firestore";
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ */
+
+import {onRequest} from "firebase-functions/v2/https";
+import {logger} from "firebase-functions";
+
+// Import the Genkit core libraries and plugins
 import {genkit, z} from "genkit";
 import GoogleGenerativeAI from '@genkit-ai/googleai';
-import HarmCategory from '@genkit-ai/googleai';
+import {HarmCategory} from '@genkit-ai/googleai';
 
-// Cloud Functions for Firebase supports Genkit natively. The onCallGenkit function creates a callable
-// function from a Genkit action. It automatically implements streaming if your flow does.
-// The https library also has other utility methods such as hasClaim, which verifies that
-// a caller's token has a specific claim (optionally matching a specific value)
+// Cloud Functions for Firebase supports Genkit natively
 import {onCallGenkit} from "firebase-functions/https";
-
-// Genkit models generally depend on an API key. APIs should be stored in Cloud Secret Manager so that
-// access to these sensitive values can be controlled. defineSecret does this for you automatically.
-// If you are using Google generative AI you can get an API key at https://aistudio.google.com/app/apikey
 import {defineSecret} from "firebase-functions/params";
+
+// Define the API key secret
 const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 
-// The Firebase telemetry plugin exports a combination of metrics, traces, and logs to Google Cloud
-// Observability. See https://firebase.google.com/docs/genkit/observability/telemetry-collection.
-// import {enableFirebaseTelemetry} from "@genkit-ai/firebase";
-// enableFirebaseTelemetry();
-
+// Initialize Genkit with Google AI plugin
 const ai = genkit({
   plugins: [
-    // Load the Google AI plugin. You can optionally specify your API key
-    // by passing in a config object; if you don't, the Google AI plugin uses
-    // the value from the GOOGLE_GENAI_API_KEY environment variable, which is
-    // the recommended practice.
     GoogleGenerativeAI(),
   ],
 });
 
-// Define a simple flow that prompts an LLM to generate menu suggestions.
+// Define safety settings for content generation
+const SAFETY_SETTINGS = [
+  {
+    category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+    threshold: "BLOCK_MEDIUM_AND_ABOVE"
+  }
+];
+
+// Menu suggestion flow
 const menuSuggestionFlow = ai.defineFlow({
   name: "menuSuggestionFlow",
   inputSchema: z.string().describe("A restaurant theme").default("seafood"),
   outputSchema: z.string(),
   streamSchema: z.string(),
 }, async (subject, {sendChunk}) => {
-  // Construct a request and send it to the model API.
-  const prompt =
-      `Suggest an item for the menu of a ${subject} themed restaurant`;
+  const prompt = `Suggest an item for the menu of a ${subject} themed restaurant`;
   const {response, stream} = ai.generateStream({
     model: 'gemini-pro',
     prompt: prompt,
     config: {
       temperature: 1,
+      safetySettings: SAFETY_SETTINGS
     },
   });
 
@@ -52,53 +70,40 @@ const menuSuggestionFlow = ai.defineFlow({
     sendChunk(chunk.text);
   }
 
-  // Handle the response from the model API. In this sample, we just
-  // convert it to a string, but more complicated flows might coerce the
-  // response into structured output or chain the response into another
-  // LLM call, etc.
   return (await response).text;
-}
-);
+});
 
+// General text generation flow
+const textGenerationFlow = ai.defineFlow({
+  name: "textGenerationFlow",
+  inputSchema: z.object({
+    prompt: z.string(),
+    context: z.string().optional(),
+  }),
+  outputSchema: z.string(),
+}, async ({prompt, context = ''}) => {
+  const fullPrompt = context ? `${prompt}\nContext: ${context}` : prompt;
+  const {response} = await ai.generate({
+    model: 'gemini-pro',
+    prompt: fullPrompt,
+    config: {
+      safetySettings: SAFETY_SETTINGS
+    },
+  });
+  return response.text;
+});
+
+// Export callable functions
 export const menuSuggestion = onCallGenkit({
-  // Uncomment to enable AppCheck. This can reduce costs by ensuring only your Verified
-  // app users can use your API. Read more at https://firebase.google.com/docs/app-check/cloud-functions
-  // enforceAppCheck: true,
-
-  // authPolicy can be any callback that accepts an AuthData (a uid and tokens dictionary) and the
-  // request data. The isSignedIn() and hasClaim() helpers can be used to simplify. The following
-  // will require the user to have the email_verified claim, for example.
-  // authPolicy: hasClaim("email_verified"),
-
-  // Grant access to the API key to this function:
   secrets: [apiKey],
 }, menuSuggestionFlow);
 
-import { HarmCategory } from '@genkit-ai/googleai';
-import { ai } from '@genkit-ai/core';
+export const generateResponse = onCallGenkit({
+  secrets: [apiKey],
+}, textGenerationFlow);
 
-// Use the Genkit ai instance to access the generative model
-// Fix line lengths and indentation
-export const generateResponse = async (
-  prompt: string,
-  context: string,
-): Promise<string> => {
-  try {
-    const { response } = await ai.generate({
-      model: 'gemini-pro',
-      prompt: prompt + context,
-      config: {
-        safetySettings: [
-          {
-            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-          },
-        ],
-      },
-    });
-    const responseText = response.text;
-    return responseText;
-  } catch (error) {
-    console.error('Error generating response:', error);
-    throw error;
-  }
-};
+// Basic API endpoint for health checks
+export const api = onRequest((req, res) => {
+  logger.info("Request received:", req.path);
+  res.json({status: "ok"});
+});
