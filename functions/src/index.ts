@@ -1,7 +1,7 @@
-import * as functions from 'firebase-functions/v2'; // Note the /v2 for new SDK
-import * as admin from 'firebase-admin';
-import { PredictionServiceClient } from '@google-cloud/aiplatform';
-import { Response } from 'express';
+import * as functions from "firebase-functions/v2"; // Note the /v2 for new SDK
+import * as admin from "firebase-admin";
+import {PredictionServiceClient} from "@google-cloud/aiplatform";
+import {Response} from "express";
 
 // Initialize Firebase
 admin.initializeApp();
@@ -12,7 +12,7 @@ let predictionClient: PredictionServiceClient | null = null;
 async function getPredictionClient(): Promise<PredictionServiceClient> {
   if (!predictionClient) {
     predictionClient = new PredictionServiceClient({
-      apiEndpoint: 'us-central1-aiplatform.googleapis.com'
+      apiEndpoint: "us-central1-aiplatform.googleapis.com"
     });
   }
   return predictionClient;
@@ -26,12 +26,12 @@ interface MenuSuggestionData {
 export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
   {
     timeoutSeconds: 60,
-    memory: '2GiB'
+    memory: "2GiB"
   },
   async (request) => {
     try {
       const client = await getPredictionClient();
-      const theme = request.data.theme || 'seafood';
+      const theme = request.data.theme || "seafood";
 
       const [response] = await client.predict({
         endpoint: `projects/${process.env.GCLOUD_PROJECT}/locations/us-central1/publishers/google/models/chat-bison@001`,
@@ -53,13 +53,13 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
       });
 
       return {
-        suggestion: response.predictions?.[0]?.structValue?.fields?.content?.stringValue || 
+        suggestion: response.predictions?.[0]?.structValue?.fields?.content?.stringValue ||
                    "No suggestion generated"
       };
     } catch (error) {
       throw new functions.https.HttpsError(
-        'internal', 
-        'AI service error', 
+        "internal",
+        "AI service error",
         (error as Error).message
       );
     }
@@ -68,6 +68,6 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
 // Health check endpoint
 export const api = functions.https.onRequest(
   (req: functions.https.Request, res: Response) => {
-    res.json({ status: "OK" });
+    res.json({status: "OK"});
   }
 );

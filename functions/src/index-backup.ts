@@ -24,8 +24,8 @@ const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 // Initialize Genkit with Google AI plugin
 const ai = genkit({
   plugins: [
-    googleGenerativeAI(),
-  ],
+    googleGenerativeAI()
+  ]
 });
 
 // Define a simple flow that prompts an LLM to generate menu suggestions.
@@ -34,7 +34,7 @@ const menuSuggestionFlow = ai.defineFlow(
     name: "menuSuggestionFlow",
     inputSchema: z.string().describe("A restaurant theme").default("seafood"),
     outputSchema: z.string(),
-    streamSchema: z.string(),
+    streamSchema: z.string()
   },
   async (subject, {sendChunk}) => {
     const prompt = "Suggest an item for the menu of a " +
@@ -43,8 +43,8 @@ const menuSuggestionFlow = ai.defineFlow(
       model: "gemini-pro",
       prompt: prompt,
       config: {
-        temperature: 1,
-      },
+        temperature: 1
+      }
     });
 
     let fullText = "";
@@ -64,15 +64,15 @@ const textGenerationFlow = ai.defineFlow(
     name: "textGenerationFlow",
     inputSchema: z.object({
       prompt: z.string(),
-      context: z.string().optional(),
+      context: z.string().optional()
     }),
-    outputSchema: z.string(),
+    outputSchema: z.string()
   },
   async ({prompt, context = ""}) => {
     const fullPrompt = context ? `${prompt}\nContext: ${context}` : prompt;
     const result = await ai.generate({
       model: "gemini-pro",
-      prompt: fullPrompt,
+      prompt: fullPrompt
     });
     return result.text;
   }
@@ -81,14 +81,14 @@ const textGenerationFlow = ai.defineFlow(
 // Export the callable functions
 export const menuSuggestion = onCallGenkit(
   {
-    secrets: [apiKey],
+    secrets: [apiKey]
   },
   menuSuggestionFlow
 );
 
 export const generateResponse = onCallGenkit(
   {
-    secrets: [apiKey],
+    secrets: [apiKey]
   },
   textGenerationFlow
 );

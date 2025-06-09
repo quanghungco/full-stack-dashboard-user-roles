@@ -1,28 +1,46 @@
 // eslint.config.js
-import ts from '@typescript-eslint/eslint-plugin';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
-import google from 'eslint-config-google';
+import globals from 'globals';
 
 export default [
   {
-    files: ['**/*.ts'],
+    files: ['src/**/*.{js,ts}'],
+    ignores: [
+      '**/*.d.ts',
+      'lib/**',
+      'node_modules/**',
+      '.git/**',
+      'firebase-debug.log',
+      'firebase-debug.*.log'
+    ],
     languageOptions: {
       parser: tsParser,
+      parserOptions: {
+        project: './tsconfig.json'
+      },
+      globals: {
+        ...globals.node
+      },
       sourceType: 'module'
     },
     plugins: {
-      '@typescript-eslint': ts
+      '@typescript-eslint': tsPlugin
     },
     rules: {
-      ...google.rules,
       'quotes': ['error', 'double'],
-      'linebreak-style': ['error', 'unix'],
-      'max-len': ['error', { 'code': 120 }],
-      'require-jsdoc': 'off',
+      'semi': ['error', 'always'],
+      'max-len': ['error', { 
+        code: 120,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true
+      }],
       'comma-dangle': ['error', 'never'],
       'object-curly-spacing': ['error', 'never'],
       'no-trailing-spaces': 'error',
-      'eol-last': ['error', 'always']
+      'eol-last': ['error', 'always'],
+      'linebreak-style': ['error', 'unix']
     }
   }
 ];
