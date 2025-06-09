@@ -1,104 +1,73 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import * as functions from 'firebase-functions/v2'; // Note the /v2 for new SDK
+import * as admin from 'firebase-admin';
+import { PredictionServiceClient } from '@google-cloud/aiplatform';
+import { Response } from 'express';
 
-import {onRequest} from "firebase-functions/v2/https";
-import {logger} from "firebase-functions";
+// Initialize Firebase
+admin.initializeApp();
 
-// Import the Genkit core libraries and plugins.
-import { genkit, z } from 'genkit';
-import GoogleGenerativeAI from '@genkit-ai/googleai';
+// Typed prediction client
+let predictionClient: PredictionServiceClient | null = null;
 
-// Cloud Functions for Firebase supports Genkit natively.
-// The onCallGenkit function creates a callable function from a Genkit action.
-// It automatically implements streaming if your flow does.
-import { onCallGenkit } from 'firebase-functions/https';
-
-// Genkit models generally depend on an API key.
-// APIs should be stored in Cloud Secret Manager so that access to these
-// sensitive values can be controlled. defineSecret does this automatically.
-import { defineSecret } from 'firebase-functions/params';
-
-// Define the API key secret
-const apiKey = defineSecret('GOOGLE_GENAI_API_KEY');
-
-// Initialize Genkit with Google AI plugin
-const ai = genkit({
-  plugins: [
-    GoogleGenerativeAI(),
-  ],
-});
-
-// Define a simple flow that prompts an LLM to generate menu suggestions.
-const menuSuggestionFlow = ai.defineFlow(
-  {
-    name: 'menuSuggestionFlow',
-    inputSchema: z.string().describe('A restaurant theme').default('seafood'),
-    outputSchema: z.string(),
-    streamSchema: z.string(),
-  },
-  async (subject, { sendChunk }) => {
-    // Construct a request and send it to the model API.
-    const prompt = `Suggest an item for the menu of a ${subject} themed restaurant`;
-    const { response, stream } = ai.generateStream({
-      model: 'gemini-pro',
-      prompt: prompt,
-      config: {
-        temperature: 1,
-      },
+async function getPredictionClient(): Promise<PredictionServiceClient> {
+  if (!predictionClient) {
+    predictionClient = new PredictionServiceClient({
+      apiEndpoint: 'us-central1-aiplatform.googleapis.com'
     });
+  }
+  return predictionClient;
+}
 
-    for await (const chunk of stream) {
-      sendChunk(chunk.text);
+// Define proper types for your callable function
+interface MenuSuggestionData {
+  theme?: string;
+}
+
+export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
+  {
+    timeoutSeconds: 60,
+    memory: '2GiB'
+  },
+  async (request) => {
+    try {
+      const client = await getPredictionClient();
+      const theme = request.data.theme || 'seafood';
+
+      const [response] = await client.predict({
+        endpoint: `projects/${process.env.GCLOUD_PROJECT}/locations/us-central1/publishers/google/models/chat-bison@001`,
+        instances: [{
+          structValue: {
+            fields: {
+              prompt: {
+                stringValue: JSON.stringify({
+                  context: "You are a restaurant menu generator.",
+                  messages: [{
+                    author: "user",
+                    content: `Suggest one menu item for a ${theme} themed restaurant`
+                  }]
+                })
+              }
+            }
+          }
+        }]
+      });
+
+      return {
+        suggestion: response.predictions?.[0]?.structValue?.fields?.content?.stringValue || 
+                   "No suggestion generated"
+      };
+    } catch (error) {
+      throw new functions.https.HttpsError(
+        'internal', 
+        'AI service error', 
+        (error as Error).message
+      );
     }
+  });
 
-    // Handle the response from the model API.
-    return (await response).text;
+// Health check endpoint
+export const api = functions.https.onRequest(
+  (req: functions.https.Request, res: Response) => {
+    res.json({ status: "OK" });
   }
 );
-
-// Define a flow for general text generation
-const textGenerationFlow = ai.defineFlow(
-  {
-    name: 'textGenerationFlow',
-    inputSchema: z.object({
-      prompt: z.string(),
-      context: z.string().optional(),
-    }),
-    outputSchema: z.string(),
-  },
-  async ({ prompt, context = '' }) => {
-    const fullPrompt = context ? `${prompt}\nContext: ${context}` : prompt;
-    const { response } = await ai.generate({
-      model: 'gemini-pro',
-      prompt: fullPrompt,
-    });
-    return response.text;
-  }
-);
-
-// Export the callable functions
-export const menuSuggestion = onCallGenkit(
-  {
-    secrets: [apiKey],
-  },
-  menuSuggestionFlow
-);
-
-export const generateResponse = onCallGenkit(
-  {
-    secrets: [apiKey],
-  },
-  textGenerationFlow
-);
-
-// Basic API endpoint for health checks
-export const api = onRequest((req, res) => {
-  logger.info("Request received:", req.path);
-  res.json({status: "ok"});
-});

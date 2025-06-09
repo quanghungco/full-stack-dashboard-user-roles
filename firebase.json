@@ -50,24 +50,37 @@
     {
       "source": "functions",
       "codebase": "default",
+      "runtime": "nodejs18",
+      "memory": "1GB",
+      "timeout": "60s",
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run lint",
         "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
-    },
-    {
-      "source": "schmeg",
-      "codebase": "schmeg",
+      ],
       "ignore": [
         "node_modules",
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log",
         "*.local"
-      ],
+      ]
+    },
+    {
+      "source": "schmeg",
+      "codebase": "schmeg",
+      "runtime": "nodejs18",
+      "memory": "1GB",
+      "timeout": "60s",
       "predeploy": [
         "npm --prefix \"$RESOURCE_DIR\" run lint",
         "npm --prefix \"$RESOURCE_DIR\" run build"
+      ],
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
       ]
     }
   ],
@@ -75,17 +88,6 @@
     {
       "backendId": "my-web-app",
       "rootDir": "full-stack-school",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "functions"
-      ]
-    },
-    {
-      "backendId": "my-web-app",
-      "rootDir": "schmeg/src",
       "ignore": [
         "node_modules",
         ".git",
@@ -117,11 +119,9 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "remoteconfig": {
-    "template": "remote.config"
-  },
-  "extensions": {},
-  "database": {
-    "rules": "database.rules.json"
-  }
+  "remoteconfig": {},
+  "predeploy": [
+  "npm --prefix \"$RESOURCE_DIR\" run lint",
+  "npm --prefix \"$RESOURCE_DIR\" run build"
+]
 }
