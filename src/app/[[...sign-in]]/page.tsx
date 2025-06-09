@@ -84,6 +84,9 @@ const LoginPage = () => {
       if (error) throw error;
 
       // Get user role from database
+      if (!user) {
+        throw new Error("User not found after sign in.");
+      }
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('role')
