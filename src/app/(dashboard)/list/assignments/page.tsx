@@ -6,7 +6,6 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Prisma } from "@prisma/client/edge";
 import Image from "next/image";
-import { auth } from "@clerk/nextjs/server";
 import { Subject, Class, Teacher } from "@prisma/client/edge";
 
 type AssignmentList = {
@@ -197,3 +196,7 @@ const AssignmentListPage = async ({
 };
 
 export default AssignmentListPage;
+function auth(): { userId: any; sessionClaims: any; } {
+  throw new Error("Function not implemented.");
+}
+

@@ -6,7 +6,6 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Class, Prisma, Teacher } from "@prisma/client";
 import Image from "next/image";
-import { auth } from "@clerk/nextjs/server";
 
 type ClassList = Class & { supervisor: Teacher };
 
@@ -138,3 +137,7 @@ const renderRow = (item: ClassList) => (
 };
 
 export default ClassListPage;
+function auth(): { sessionClaims: any; } {
+  throw new Error("Function not implemented.");
+}
+

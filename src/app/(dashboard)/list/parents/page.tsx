@@ -7,7 +7,6 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Parent, Prisma, Student } from "@prisma/client";
 import Image from "next/image";
 
-import { auth } from "@clerk/nextjs/server";
 
 type ParentList = Parent & { students: Student[] };
 
@@ -141,3 +140,7 @@ const renderRow = (item: ParentList) => (
 };
 
 export default ParentListPage;
+function auth(): { sessionClaims: any; } {
+  throw new Error("Function not implemented.");
+}
+

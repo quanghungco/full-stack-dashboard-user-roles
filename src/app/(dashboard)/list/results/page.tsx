@@ -7,8 +7,6 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
-import { auth } from "@clerk/nextjs/server";
-
 type ResultList = {
   id: number;
   title: string;
@@ -234,3 +232,7 @@ const renderRow = (item: ResultList) => (
 };
 
 export default ResultListPage;
+function auth(): { userId: any; sessionClaims: any; } {
+  throw new Error("Function not implemented.");
+}
+
