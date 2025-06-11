@@ -1,7 +1,7 @@
 import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
-import { Response } from "express";
-import { PredictionServiceClient } from "@google-cloud/aiplatform";
+import * as functions from "firebase-functions/v2";
+import {Response} from "express";
+import {PredictionServiceClient} from "@google-cloud/aiplatform";
 
 // Initialize Firebase only once
 admin.initializeApp();
@@ -19,6 +19,7 @@ async function getPredictionClient(): Promise<PredictionServiceClient> {
 }
 
 // Define proper types for your callable function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface MenuSuggestionData {
   theme?: string;
 }
@@ -38,18 +39,19 @@ interface PredictionResponse {
   };
 }
 
-export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
+export const menuSuggestion = functions.https.onCall(
   {
     timeoutSeconds: 60,
-    memory: "2GiB"
+    memory: "4GiB"
   },
-  async (request) => {
+  async (request: { data: MenuSuggestionData }) => {
     try {
       const client = await getPredictionClient();
       const theme = request.data?.theme || "seafood";
 
       const response = (await client.predict({
-        endpoint: `projects/${process.env.GCLOUD_PROJECT}/locations/us-central1/publishers/google/models/chat-bison@001`,
+        endpoint: `projects/${process.env.GCLOUD_PROJECT}/locations/` +
+          "us-central1/publishers/google/models/chat-bison@001",
         instances: [{
           structValue: {
             fields: {
@@ -58,7 +60,8 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
                   context: "You are a restaurant menu generator.",
                   messages: [{
                     author: "user",
-                    content: `Suggest one menu item for a ${theme} themed restaurant`
+                    content: "Suggest one menu item for a " +
+                      theme + " themed restaurant"
                   }]
                 })
               }
@@ -67,12 +70,17 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
         }]
       })) as unknown as PredictionResponse;
 
-      if (!response[0]?.predictions?.[0]?.structValue?.fields?.content?.stringValue) {
+      if (
+        !response[0]?.predictions?.[0]?.
+        structValue?.fields?.content?.stringValue
+      ) {
         throw new Error("Invalid response format from AI service");
       }
 
+      const menuSuggestion = 
+        response[0].predictions[0].structValue.fields.content.stringValue;
       return {
-        suggestion: response[0].predictions[0].structValue.fields.content.stringValue
+        suggestion: menuSuggestion
       };
     } catch (error) {
       throw new functions.https.HttpsError(
@@ -87,6 +95,6 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
 // Health check endpoint
 export const api = functions.https.onRequest(
   (req: functions.https.Request, res: Response) => {
-    res.json({ status: "OK" });
+    res.json({status: "OK"});
   }
 );
