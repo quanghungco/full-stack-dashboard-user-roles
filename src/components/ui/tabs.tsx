@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export type CardProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -28,8 +30,6 @@ export const CardContent: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ ch
     {children}
   </div>
 );
-
-import { createContext, useContext, useState, ReactNode } from "react";
 
 // Context to share active tab value
 type TabsContextType = {

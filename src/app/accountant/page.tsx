@@ -1,12 +1,9 @@
-"use client";
+import { useState as useStateReact } from 'react';
+import ReactToPrint from 'react-to-print';
 
-import { useRef, useState } from "react";
-import ReactToPrint from "react-to-print";
-const ReactToPrintComponent = ReactToPrint as unknown as React.FC<any>;
+"use client";
 
 // Removed duplicate Transaction type to avoid shadowing the correct one below
-
-"use client";
 
 type Student = {
   id: string;
@@ -180,14 +177,14 @@ export default function AccountantPage() {
               <div>Amount Paid: ${receipt.amount}</div>
               <div>Description: {receipt.description}</div>
               <div>Receipt No: {receipt.id}</div>
-            </div>
-            <ReactToPrintComponent
+            <ReactToPrint
               trigger={() => (
                 <button className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
                   Print Receipt
                 </button>
               )}
               content={() => receiptRef.current}
+            />
             />
           </div>
         )}
@@ -317,5 +314,14 @@ export default function AccountantPage() {
       </div>
     </div>
   );
+}
+function useState<T>(initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
+  return useStateReact<T>(initialValue);
+}
+function useState<T>(studentsData: Student[]): [any, any] {
+  throw new Error("Function not implemented.");
+}
+function useRef<T>(initialValue: T | null): { current: T | null } {
+  return useStateReact({ current: initialValue })[0];
 }
 
