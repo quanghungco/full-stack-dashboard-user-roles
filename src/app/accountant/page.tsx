@@ -1,8 +1,13 @@
 "use client";
 
-import { useState, useRef } from 'react';  // Combined imports
-import { useReactToPrint } from 'react-to-print';
+import { useState, useRef, useEffect } from 'react';
+import ReactToPrint, { useReactToPrint } from 'react-to-print'; // Import useReactToPrint here
+import { auth } from '@/lib/firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
+// Existing types and data
 type Student = {
   id: string;
   name: string;
@@ -37,6 +42,9 @@ const accounts = [
 ];
 
 export default function AccountantPage() {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState<Student[]>(studentsData);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [receipt, setReceipt] = useState<Transaction | null>(null);
@@ -58,6 +66,33 @@ export default function AccountantPage() {
   });
 
   const receiptRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setCurrentUser(user);
+        
+        // Fetch user role from Firestore
+        const userDocRef = doc(db, "users", user.uid);
+        const userDoc = await getDoc(userDocRef);
+        
+        if (userDoc.exists()) {
+          setUserRole(userDoc.data().role);
+        } else {
+          console.log("No user role found");
+        }
+      } else {
+        setCurrentUser(null);
+        setUserRole(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Use useReactToPrint hook here
+  const handlePrintReceipt = useReactToPrint({ documentTitle: "Receipt", content: () => receiptRef.current });
 
   // Example backend endpoint
   const BACKEND_URL = "http://localhost:4000/api/transactions";
@@ -121,6 +156,21 @@ export default function AccountantPage() {
     setVoucherForm({ account: "", description: "", amount: "", date: "" });
   };
 
+  if (loading) {
+    return <div className="text-center py-8">Loading...</div>;
+  }
+
+  // Check if user is accountant
+  if (!currentUser || userRole !== "accountant") {
+    return (
+      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded shadow text-center">
+        <h2 className="text-xl font-bold text-red-600">Access Denied</h2>
+        <p className="mt-4">
+          You must be logged in as an accountant to access this page.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-6 text-blue-700">Accountant Dashboard</h1>
@@ -174,12 +224,7 @@ export default function AccountantPage() {
               <div>Amount Paid: ${receipt.amount}</div>
               <div>Description: {receipt.description}</div>
               <div>Receipt No: {receipt.id}</div>
-              <button 
-                onClick={useReactToPrint({
-                  documentTitle: "Receipt",
-                  content: () => receiptRef.current,
-                })}
-                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              <button onClick={handlePrintReceipt} className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
               >
                 Print Receipt
               </button>

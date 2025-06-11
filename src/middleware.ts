@@ -1,101 +1,71 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
 
-const baseRoutes = [
-  '/superadmin',
-  '/admin',
-  '/accountant',
-  '/teacher',
-  '/student',
-  '/parent',
-] as const
+// Initialize Firebase Admin SDK (do this only once)
+// You might have this in a separate file
+if (!initializeApp.length) {
+  initializeApp({
+    credential: applicationDefault(),
+  });
+}
 
-type BaseRoute = typeof baseRoutes[number]
+const auth = getAuth();
+const db = getFirestore();
 
-const rolePathMap: Record<BaseRoute, string[]> = {
+const allowedRoles = {
   '/superadmin': ['superadmin'],
   '/admin': ['superadmin', 'admin'],
   '/accountant': ['superadmin', 'admin', 'accountant'],
   '/teacher': ['superadmin', 'admin', 'teacher'],
   '/student': ['superadmin', 'admin', 'student'],
   '/parent': ['superadmin', 'admin', 'parent'],
-}
+};
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
-  })
+  });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get: (name) => request.cookies.get(name)?.value,
-        set: (name, value, options) => {
-          response.cookies.set(name, value, options)
-        },
-        remove: (name, options) => {
-          response.cookies.set(name, '', options)
-        },
-      },
-    }
-  )
+  const token = request.cookies.get('token')?.value || request.headers.get('Authorization')?.split(' ')[1]; // Get token from cookie or header
 
-  const path = request.nextUrl.pathname
-  const baseRoute = ('/' + path.split('/')[1]) as BaseRoute
-
-  // Get the current session to access the user ID
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-
-  if (!session || !session.user) {
-    return NextResponse.redirect(new URL('/unauthorized', request.url))
+  if (!token) {
+    // Redirect to login or return unauthorized response
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Get user's school context
-  if (session?.user) {
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role, school_id')
-      .eq('id', session.user.id)
-      .single()
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
+    const uid = decodedToken.uid;
 
-    if (!userData?.school_id) {
-      return NextResponse.redirect(new URL('/school-selection', request.url))
+    const userDoc = await db.collection('users').doc(uid).get();
+    const userRole = userDoc.data()?.role as string;
+
+    const requestedPath = request.nextUrl.pathname;
+
+    // Check if the requested path requires a specific role
+    for (const path in allowedRoles) {
+      if (requestedPath.startsWith(path)) {
+        const allowedRolesForPath = allowedRoles[path as keyof typeof allowedRoles];
+        if (!allowedRolesForPath.includes(userRole)) {
+          // Redirect to an unauthorized page or return forbidden response
+          return NextResponse.redirect(new URL('/unauthorized', request.url));
+        }
+      }
     }
 
-    // Add school_id to request headers for use in API routes
-    request.headers.set('x-school-id', userData.school_id)
+    // If authorized, continue to the next middleware or page
+    return response;
+
+  } catch (error) {
+    console.error("Error verifying token or fetching user role:", error);
+    // Redirect to login or return unauthorized response for invalid token
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-
-  if (baseRoutes.includes(baseRoute)) {
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', session.user.id)
-      .single()
-
-    if (!userData || !rolePathMap[baseRoute].includes(userData.role)) {
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
-    }
-  }
-  if (rolePathMap[baseRoute]) {
-    const { data: userData } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', session.user.id)
-      .single()
-
-    if (!userData || !rolePathMap[baseRoute].includes(userData.role)) {
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
-    }
-  }
-
-  return response
 }
 
 export const config = {
@@ -107,5 +77,4 @@ export const config = {
     '/student/:path*',
     '/parent/:path*',
   ],
-}
-
+};
