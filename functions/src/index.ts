@@ -1,9 +1,9 @@
-import * as functions from "firebase-functions/v2"; // Note the /v2 for new SDK
 import * as admin from "firebase-admin";
-import {PredictionServiceClient} from "@google-cloud/aiplatform";
-import {Response} from "express";
+import * as functions from "firebase-functions";
+import { Response } from "express";
+import { PredictionServiceClient } from "@google-cloud/aiplatform";
 
-// Initialize Firebase
+// Initialize Firebase only once
 admin.initializeApp();
 
 // Typed prediction client
@@ -23,6 +23,21 @@ interface MenuSuggestionData {
   theme?: string;
 }
 
+// Update the PredictionResponse interface
+interface PredictionResponse {
+  [0]: {
+    predictions: Array<{
+      structValue: {
+        fields: {
+          content: {
+            stringValue: string;
+          };
+        };
+      };
+    }>;
+  };
+}
+
 export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
   {
     timeoutSeconds: 60,
@@ -31,9 +46,9 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
   async (request) => {
     try {
       const client = await getPredictionClient();
-      const theme = request.data.theme || "seafood";
+      const theme = request.data?.theme || "seafood";
 
-      const [response] = await client.predict({
+      const response = (await client.predict({
         endpoint: `projects/${process.env.GCLOUD_PROJECT}/locations/us-central1/publishers/google/models/chat-bison@001`,
         instances: [{
           structValue: {
@@ -50,11 +65,14 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
             }
           }
         }]
-      });
+      })) as unknown as PredictionResponse;
+
+      if (!response[0]?.predictions?.[0]?.structValue?.fields?.content?.stringValue) {
+        throw new Error("Invalid response format from AI service");
+      }
 
       return {
-        suggestion: response.predictions?.[0]?.structValue?.fields?.content?.stringValue ||
-                   "No suggestion generated"
+        suggestion: response[0].predictions[0].structValue.fields.content.stringValue
       };
     } catch (error) {
       throw new functions.https.HttpsError(
@@ -63,11 +81,12 @@ export const menuSuggestion = functions.https.onCall<MenuSuggestionData>(
         (error as Error).message
       );
     }
-  });
+  }
+);
 
 // Health check endpoint
 export const api = functions.https.onRequest(
   (req: functions.https.Request, res: Response) => {
-    res.json({status: "OK"});
+    res.json({ status: "OK" });
   }
 );
