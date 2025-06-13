@@ -3,7 +3,6 @@ import BigCalendarContainer from "@/components/BigCalendarContainer";
 import BigCalendar from "@/components/BigCalender";
 import EventCalendar from "@/components/EventCalendar";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 
 const StudentPage = async () => {
   const { userId } = auth();
@@ -34,3 +33,7 @@ const StudentPage = async () => {
 };
 
 export default StudentPage;
+function auth(): { userId: any; } {
+  throw new Error("Function not implemented.");
+}
+
