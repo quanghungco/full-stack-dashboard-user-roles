@@ -40,5 +40,13 @@
     "typescript": "^5.8.3"
   },
   "private": true,
-  "type": "module"
+  "type": "module",
+  "version": "1.0.0",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

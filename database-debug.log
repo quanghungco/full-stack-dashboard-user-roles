@@ -12,3 +12,9 @@ namespace schmeg-e4eb0, but the emulator is configured for fake-server,schmeg-e4
 opt-out of single project mode add/set the singleProjectMode: false property in 
 the firebase.json emulators config. 
 10:42:57.429 [NamespaceSystem-akka.actor.default-dispatcher-10] INFO com.firebase.core.namespace.NamespaceActor - schmeg-e4eb0 successfully activated FBKV (SurveyIdle(0)) wait: 20ms, init: 0ms
+11:07:27.813 [Thread-0] INFO com.firebase.server.forge.App$ - Attempting graceful shutdown.
+11:07:27.857 [NamespaceSystem-akka.actor.default-dispatcher-19] INFO com.firebase.core.namespace.Terminator$Terminator - 3 actors left to terminate: schmeg-e4eb0-default-rtdb, fake-server, schmeg-e4eb0
+11:07:27.871 [NamespaceSystem-akka.actor.default-dispatcher-19] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for schmeg-e4eb0-default-rtdb
+11:07:27.875 [NamespaceSystem-akka.actor.default-dispatcher-20] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for fake-server
+11:07:27.896 [NamespaceSystem-akka.actor.default-dispatcher-20] INFO com.firebase.core.namespace.NamespaceActor - stopped namespace actor for schmeg-e4eb0
+11:07:27.908 [Thread-0] INFO com.firebase.server.forge.App$ - Graceful shutdown complete.
