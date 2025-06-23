@@ -1,14 +1,14 @@
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/lib/firebase";
+import { role } from "@/lib/data";
 
 const Announcements = async () => {
-  const { userId, sessionClaims } = auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const user = auth.currentUser;
 
-  const roleConditions = {
-    teacher: { lessons: { some: { teacherId: userId! } } },
-    student: { students: { some: { id: userId! } } },
-    parent: { students: { some: { parentId: userId! } } },
+  const roleConditions: { [key: string]: any } = {
+    teacher: { lessons: { some: { teacherId: user! } } },
+    student: { students: { some: { id: user! } } },
+    parent: { students: { some: { parentId: user! } } },
   };
 
   const data = await prisma.announcement.findMany({
@@ -16,7 +16,7 @@ const Announcements = async () => {
     orderBy: { date: "desc" },
     where: {
       ...(role !== "admin" && {
-        OR: [
+        OR: [ 
           { classId: null },
           { class: roleConditions[role as keyof typeof roleConditions] || {} },
         ],

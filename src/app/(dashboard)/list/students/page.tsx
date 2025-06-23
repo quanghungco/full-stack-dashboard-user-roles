@@ -9,8 +9,6 @@ import { Class, Prisma, Student } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-import { auth } from "@clerk/nextjs/server";
-
 type StudentList = Student & { class: Class };
 
 const StudentListPage = async ({
@@ -171,3 +169,7 @@ const StudentListPage = async ({
 };
 
 export default StudentListPage;
+function auth(): { sessionClaims: any; } {
+  throw new Error("Function not implemented.");
+}
+

@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "full-stack-school"
+location: "asia-east1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "full-stack-school-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

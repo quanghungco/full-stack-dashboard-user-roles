@@ -4,16 +4,19 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { Assignment, Class, Prisma, Subject, Teacher } from "@prisma/client";
+import { Prisma } from "@prisma/client/edge";
 import Image from "next/image";
-import { auth } from "@clerk/nextjs/server";
+import { Subject, Class, Teacher } from "@prisma/client/edge";
 
-type AssignmentList = Assignment & {
+type AssignmentList = {
+  id: number;
+  dueDate: Date;
   lesson: {
     subject: Subject;
     class: Class;
     teacher: Teacher;
   };
+  // Add other Assignment fields as needed
 };
 
 const AssignmentListPage = async ({
@@ -193,3 +196,7 @@ const AssignmentListPage = async ({
 };
 
 export default AssignmentListPage;
+function auth(): { userId: any; sessionClaims: any; } {
+  throw new Error("Function not implemented.");
+}
+

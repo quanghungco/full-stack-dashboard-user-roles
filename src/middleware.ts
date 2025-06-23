@@ -1,33 +1,80 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { routeAccessMap } from "./lib/settings";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initializeApp, applicationDefault } from 'firebase-admin/app';
 
-const matchers = Object.keys(routeAccessMap).map((route) => ({
-  matcher: createRouteMatcher([route]),
-  allowedRoles: routeAccessMap[route],
-}));
+// Initialize Firebase Admin SDK (do this only once)
+// You might have this in a separate file
+if (!initializeApp.length) {
+  initializeApp({
+    credential: applicationDefault(),
+  });
+}
 
-console.log(matchers);
+const auth = getAuth();
+const db = getFirestore();
 
-export default clerkMiddleware((auth, req) => {
-  // if (isProtectedRoute(req)) auth().protect()
+const allowedRoles = {
+  '/superadmin': ['superadmin'],
+  '/admin': ['superadmin', 'admin'],
+  '/accountant': ['superadmin', 'admin', 'accountant'],
+  '/teacher': ['superadmin', 'admin', 'teacher'],
+  '/student': ['superadmin', 'admin', 'student'],
+  '/parent': ['superadmin', 'admin', 'parent'],
+};
 
-  const { sessionClaims } = auth();
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const token = request.cookies.get('token')?.value || request.headers.get('Authorization')?.split(' ')[1]; // Get token from cookie or header
 
-  for (const { matcher, allowedRoles } of matchers) {
-    if (matcher(req) && !allowedRoles.includes(role!)) {
-      return NextResponse.redirect(new URL(`/${role}`, req.url));
-    }
+  if (!token) {
+    // Redirect to login or return unauthorized response
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-});
+
+  try {
+    const decodedToken = await auth.verifyIdToken(token);
+    const uid = decodedToken.uid;
+
+    const userDoc = await db.collection('users').doc(uid).get();
+    const userRole = userDoc.data()?.role as string;
+
+    const requestedPath = request.nextUrl.pathname;
+
+    // Check if the requested path requires a specific role
+    for (const path in allowedRoles) {
+      if (requestedPath.startsWith(path)) {
+        const allowedRolesForPath = allowedRoles[path as keyof typeof allowedRoles];
+        if (!allowedRolesForPath.includes(userRole)) {
+          // Redirect to an unauthorized page or return forbidden response
+          return NextResponse.redirect(new URL('/unauthorized', request.url));
+        }
+      }
+    }
+
+    // If authorized, continue to the next middleware or page
+    return response;
+
+  } catch (error) {
+    console.error("Error verifying token or fetching user role:", error);
+    // Redirect to login or return unauthorized response for invalid token
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+}
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
+    '/superadmin/:path*',
+    '/admin/:path*',
+    '/accountant/:path*',
+    '/teacher/:path*',
+    '/student/:path*',
+    '/parent/:path*',
   ],
 };
